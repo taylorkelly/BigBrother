@@ -7,10 +7,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Timer;
 
+import org.bukkit.Server;
+
 public class BBSettings {
 
 	private static String format;
-	public static ArrayList<String> watchList;
 	public static boolean login;
 	public static boolean logout;
 	public static boolean position;
@@ -20,10 +21,8 @@ public class BBSettings {
 	public static boolean chat;
 	public static boolean verbose;
 	public static boolean blockPlacing;
-	public static ArrayList<Integer> watchedBlocks;
 	public static boolean autoWatch;
-	public static ArrayList<String> seenPlayers;
-	public static ArrayList<String> optedOut;
+
 
 	public static int defaultRadius;
 
@@ -171,5 +170,10 @@ public class BBSettings {
 			}
 		}
 		return data;
+	}
+
+	public static Watcher getWatcher(Server server) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

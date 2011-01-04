@@ -67,7 +67,8 @@ public class BBDataBlock {
 	}
 
 	private void sendFlatFile() {
-		File file = new File(BigBrother.directory, BBDATA_NAME + ".log");
+		//TODO separate into different names
+		File file = new File(BigBrother.directory + File.separator + "logs", BBDATA_NAME + ".log");
 		StringBuilder builder = new StringBuilder(cal.getTimeInMillis() + "");
 		builder.append(separator);
 		builder.append(player);
@@ -203,6 +204,12 @@ public class BBDataBlock {
 				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the table (on close)");
 			}
 		}
-
+	}
+	
+	public static String fixName(String player) {
+		return player.replace(".", "").replace(":", "").replace("<", "")
+				.replace(">", "").replace("*", "").replace("\\", "")
+				.replace("/", "").replace("?", "").replace("\"", "")
+				.replace("|", "");
 	}
 }

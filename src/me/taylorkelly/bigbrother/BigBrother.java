@@ -1,13 +1,8 @@
 package me.taylorkelly.bigbrother;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.logging.*;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
-
 import org.bukkit.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -16,8 +11,9 @@ import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.*;
 
 public class BigBrother extends JavaPlugin {
-	private final BBPlayerListener playerListener;
-	private final BBBlockListener blockListener;
+	private BBPlayerListener playerListener;
+	private BBBlockListener blockListener;
+	private Watcher watcher;
 
 	public static Logger log;
 	public final static String name = "BigBrother";
@@ -27,15 +23,7 @@ public class BigBrother extends JavaPlugin {
 
 	public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
 		super(pluginLoader, instance, desc, plugin, cLoader);
-
 		initialize();
-		playerListener = new BBPlayerListener(this);
-		blockListener = new BBBlockListener(this);
-		registerEvents();
-		BBSettings.initialize();
-		BBDataBlock.initialize();
-		log = Logger.getLogger("Minecraft");
-		log.info(name + " " + version + " initialized");
 	}
 
 	public void onDisable() {
@@ -52,6 +40,14 @@ public class BigBrother extends JavaPlugin {
 				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Unable to create bigbrother/ directory");
 			}
 		}
+		playerListener = new BBPlayerListener(this);
+		blockListener = new BBBlockListener(this);
+		registerEvents();
+		BBSettings.initialize();
+		watcher = BBSettings.getWatcher(getServer());
+		BBDataBlock.initialize();
+		log = Logger.getLogger("Minecraft");
+		log.info(name + " " + version + " initialized");
 	}
 
 	private void registerEvents() {
@@ -70,37 +66,30 @@ public class BigBrother extends JavaPlugin {
 	}
 
 	public boolean watching(Player player) {
-		// TODO Auto-generated method stub
-		return false;
+		return watcher.watching(player);
 	}
 
-	public boolean toggleWatch(String playerName) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean toggleWatch(String player) {
+		return watcher.toggleWatch(player);
 	}
 
 	public String getWatchedPlayers() {
-		// TODO Auto-generated method stub
-		return null;
+		return watcher.getWatchedPlayers();
 	}
 
 	public boolean haveSeen(Player player) {
-		// TODO Auto-generated method stub
-		return false;
+		return watcher.haveSeen(player);
 	}
 
 	public void markSeen(Player player) {
-		// TODO Auto-generated method stub
-
+		watcher.markSeen(player);
 	}
 
 	public void watchPlayer(Player player) {
-		// TODO Auto-generated method stub
-
+		watcher.watchPlayer(player);
 	}
 
 	public String getUnwatchedPlayers() {
-		// TODO Auto-generated method stub
-		return null;
+		return watcher.getUnwatchedPlayers();
 	}
 }
