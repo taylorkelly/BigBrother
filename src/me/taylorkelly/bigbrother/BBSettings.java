@@ -1,11 +1,11 @@
 package me.taylorkelly.bigbrother;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Timer;
-
 
 public class BBSettings {
 
@@ -24,25 +24,24 @@ public class BBSettings {
 	public static boolean autoWatch;
 	public static ArrayList<String> seenPlayers;
 	public static ArrayList<String> optedOut;
-	
+
 	public static int defaultRadius;
 
-	
 	public static int hours;
 	public static double hourCount;
 	public static ArrayList<String> emails;
 	public static Timer emailTimer;
-	
+
 	public static String driver = "com.mysql.jdbc.Driver";
 	public static String username = "root";
 	public static String password = "root";
 	public static String db = "jdbc:mysql://localhost:3306/minecraft";
-	
-	
+	public static DataDest dataDest;
+
 	public static String getTime() {
 		return now(format);
 	}
-	
+
 	private static String now(String dateFormat) {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
@@ -53,7 +52,7 @@ public class BBSettings {
 		loadPropertiesFile();
 		optedOut = new ArrayList<String>();
 	}
-	
+
 	private static void loadPropertiesFile() {
 		PropertiesFile pf = new PropertiesFile("bigbrother.txt");
 		try {
@@ -104,27 +103,26 @@ public class BBSettings {
 			pf.setString("watchedBlocks", "");
 			watchedBlocks = new ArrayList<Integer>();
 		}
-		
-		
+
 		if (!pf.containsKey("hours")) {
 			pf.setInt("hours", 12);
 		}
 		hours = pf.getInt("hours");
-		
+
 		if (!pf.containsKey("hourCount")) {
 			pf.setDouble("hourCount", 0);
 		}
 		hourCount = pf.getDouble("hourCount");
-		
+
 		if (!pf.containsKey("emails")) {
 			pf.setString("emails", "");
 		}
 		emails = BBEmail.processEmails(pf.getString("emails"));
-		
-		if(emails.size()==0) {
+
+		if (emails.size() == 0) {
 			hours = 0;
 		}
-		
+
 		if (hours > 0) {
 			emailTimer = new Timer();
 			emailTimer.schedule(new EmailTask(), 15 * 60 * 1000, 15 * 60 * 1000);
@@ -132,20 +130,19 @@ public class BBSettings {
 
 		pf.save();
 	}
-	
+
 	public static void saveHourCount() {
 		PropertiesFile pf = new PropertiesFile("bigbrother.txt");
 		try {
 			pf.load();
 		} catch (IOException e) {
 		}
-		
+
 		pf.setDouble("hourCount", hourCount);
 		pf.save();
 	}
-	
-	private static boolean getBooleanProperty(String key, boolean defaultValue,
-			PropertiesFile pf) {
+
+	private static boolean getBooleanProperty(String key, boolean defaultValue, PropertiesFile pf) {
 		if (pf.keyExists(key))
 			return pf.getBoolean(key);
 		else {
@@ -169,8 +166,7 @@ public class BBSettings {
 			try {
 				data.add(Integer.parseInt(str));
 			} catch (Exception e) {
-				System.out
-						.println("[BBROTHER]: Invalid block id value: " + str);
+				System.out.println("[BBROTHER]: Invalid block id value: " + str);
 			}
 		}
 		return data;

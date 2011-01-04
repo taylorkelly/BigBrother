@@ -22,52 +22,53 @@ public class BigBrother extends JavaPlugin {
 	public static Logger log;
 	public final static String name = "BigBrother";
 	public final static String version = "1.0";
-	public final static String premessage = Color.AQUA + "[BBROTHER]: "
-			+ Color.WHITE;
+	public final static String premessage = Color.AQUA + "[BBROTHER]: " + Color.WHITE;
 	public final static String directory = "bigbrother";
-	
-	public BigBrother(PluginLoader pluginLoader, Server instance,
-			PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
+
+	public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
 		super(pluginLoader, instance, desc, plugin, cLoader);
-		
+
 		initialize();
-    	playerListener = new BBPlayerListener(this);
-    	blockListener = new BBBlockListener(this);
-        registerEvents();
+		playerListener = new BBPlayerListener(this);
+		blockListener = new BBBlockListener(this);
+		registerEvents();
 		BBLogger.initialize();
 		BBSettings.initialize();
 		BBDataBlock.initialize();
 		log = Logger.getLogger("Minecraft");
 		log.info(name + " " + version + " initialized");
 	}
-	
-	public void onDisable() {}
 
-	public void onEnable() {}
-	
+	public void onDisable() {
+	}
+
+	public void onEnable() {
+	}
+
 	private void initialize() {
 		if (!new File(directory).exists()) {
 			try {
 				(new File(directory)).mkdir();
 			} catch (Exception e) {
-				BigBrother.log.log(Level.SEVERE,
-						"[BBROTHER]: Unable to create bigbrother/ directory");
+				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Unable to create bigbrother/ directory");
 			}
-		}		
+		}
 	}
 
-    private void registerEvents() {
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
-        //getServer().getPluginManager().registerEvent(Event.Type.SIGN_BUILT, playerListener, Priority.Normal, this); Sign hook
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, playerListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, blockListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
-        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Normal, this);
-        //getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICK, playerListener, Priority.Normal, this); rightclick hook
-    }
+	private void registerEvents() {
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
+		// getServer().getPluginManager().registerEvent(Event.Type.SIGN_BUILT,
+		// playerListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, playerListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, blockListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Normal, this);
+		// getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICK,
+		// playerListener, Priority.Normal, this);
+	}
 
 	public boolean watching(Player player) {
 		// TODO Auto-generated method stub
@@ -91,12 +92,12 @@ public class BigBrother extends JavaPlugin {
 
 	public void markSeen(Player player) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void watchPlayer(Player player) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public String getUnwatchedPlayers() {

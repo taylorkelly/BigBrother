@@ -10,12 +10,12 @@ public class Rollback {
 
 	public void addReciever(Player player) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void rollback() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
