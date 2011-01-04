@@ -71,36 +71,23 @@ public class BBPlayerListener extends PlayerListener {
 						Double.parseDouble(split[1]),
 						Double.parseDouble(split[2]),
 						Double.parseDouble(split[3]));
-				Teleporter tp = new Teleporter();
+				Teleporter tp = new Teleporter(loc);
 				tp.addTeleportee(player);
-				tp.setDestination(loc);
 				tp.teleport();
 			} else {
 				player.sendMessage(BigBrother.premessage + "usage is "
 						+ Color.RED + "/bbtp <x> <y> <z>");
 			}
 			event.setCancelled(true);
-		} else if (split[0].equalsIgnoreCase("/bboptout")) {
-			if (BBSettings.optedOut.contains(player.getName())) {
-				BBSettings.optedOut.remove(player.getName());
-				player.sendMessage(BigBrother.premessage
-						+ "You'll be notified of activity.");
-			} else {
-				BBSettings.optedOut.add(player.getName());
-				player.sendMessage(BigBrother.premessage
-						+ "You'll no longer receive updates.");
-			}
-			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("/bbhere")) {
 			if (split.length == 1) {
 				Finder finder = new Finder(player.getLocation());
-				finder.setRadius(BBSettings.defaultRadius);
-				finder.setReciever(player);
+				finder.addReciever(player);
 				finder.find();
 			} else if (isNumber(split[1])) {
 				Finder finder = new Finder(player.getLocation());
 				finder.setRadius(Double.parseDouble(split[1]));
-				finder.setReciever(player);
+				finder.addReciever(player);
 				finder.find();
 			} else {
 				player.sendMessage(BigBrother.premessage + "usage is "
@@ -120,8 +107,7 @@ public class BBPlayerListener extends PlayerListener {
 						Double.parseDouble(split[2]),
 						Double.parseDouble(split[3]));
 				Finder finder = new Finder(loc);
-				finder.setRadius(BBSettings.defaultRadius);
-				finder.setReciever(player);
+				finder.addReciever(player);
 				finder.find();
 			} else if (split.length == 5 && isNumber(split[1])
 					&& isNumber(split[2]) && isNumber(split[3])
@@ -134,7 +120,7 @@ public class BBPlayerListener extends PlayerListener {
 						Double.parseDouble(split[3]));
 				Finder finder = new Finder(loc);
 				finder.setRadius(Double.parseDouble(split[1]));
-				finder.setReciever(player);
+				finder.addReciever(player);
 				finder.find();
 			} else {
 				player.sendMessage(BigBrother.premessage + "usage is "

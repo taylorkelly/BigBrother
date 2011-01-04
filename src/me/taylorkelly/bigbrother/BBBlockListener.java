@@ -5,10 +5,10 @@ import org.bukkit.event.block.*;
 import org.bukkit.*;
 
 public class BBBlockListener extends BlockListener {
-	private BigBrother plugin;
+	//private BigBrother plugin;
 	
 	public BBBlockListener(BigBrother plugin) {
-		this.plugin = plugin;
+		//this.plugin = plugin;
 	}
 	
 	public void onBlockBroken(BlockBrokenEvent event) {

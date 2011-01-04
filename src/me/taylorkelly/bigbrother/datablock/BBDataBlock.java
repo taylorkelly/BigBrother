@@ -12,11 +12,11 @@ import me.taylorkelly.bigbrother.DataDest;
 public class BBDataBlock {
 	private static Calendar cal = Calendar.getInstance();
 	private static final char separator = '\u0095';
-	private final static String BBDATA_NAME = "bbdata";
-	private final static String BBDATA_TABLE = "CREATE TABLE `" + BBDATA_NAME + "` (" + "`id` int(15) NOT NULL AUTO_INCREMENT, "
-			+ "`date` bigint NOT NULL DEFAULT '0', " + "`player` varchar(30) NOT NULL DEFAULT 'Player', " + "`action` tinyint(2) NOT NULL DEFAULT '0',"
-			+ " `world` tinyint(2) NOT NULL DEFAULT '0', " + "`x` int(10) NOT NULL DEFAULT '0', " + "`y` int(10) NOT NULL DEFAULT '0', "
-			+ "`z` int(10) NOT NULL DEFAULT '0', " + "`data` varchar(50) NOT NULL DEFAULT '', " + "PRIMARY KEY (`id`));";
+	public final static String BBDATA_NAME = "bbdata";
+	private final static String BBDATA_TABLE = "CREATE TABLE `" + BBDATA_NAME + "` (`id` int(15) NOT NULL AUTO_INCREMENT, "
+			+ "`date` bigint NOT NULL DEFAULT '0', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0',"
+			+ " `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', "
+			+ "`z` int(10) NOT NULL DEFAULT '0', `data` varchar(50) NOT NULL DEFAULT '', `rbacked` boolean NOT NULL DEFAULT '0', PRIMARY KEY (`id`));";
 	private String player;
 	private int action;
 	private int x;
@@ -80,6 +80,8 @@ public class BBDataBlock {
 		builder.append(z);
 		builder.append(separator);
 		builder.append(data);
+		builder.append(separator);
+		builder.append("0");
 		BufferedWriter bwriter = null;
 		FileWriter fwriter = null;
 		try {
@@ -107,7 +109,7 @@ public class BBDataBlock {
 		ResultSet rs = null;
 		try {
 			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
-			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data) VALUES (?,?,?,?,?,?,?,?)", 1);
+			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data, rbacked) VALUES (?,?,?,?,?,?,?,?,0)", 1);
 			ps.setLong(1, cal.getTimeInMillis());
 			ps.setString(2, player);
 			ps.setInt(3, action);

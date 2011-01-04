@@ -7,6 +7,11 @@ import org.bukkit.*;
 public class Teleporter {
 	private Location destination;
 	private ArrayList<Player> players;
+	
+	public Teleporter(Location location) {
+		this.destination = location;
+		this.players = new ArrayList<Player>();
+	}
 
 	public void teleport() {
 		World world = destination.getWorld();
@@ -45,10 +50,6 @@ public class Teleporter {
 	public void addTeleportee(Player player) {
 		players.add(player);
 
-	}
-
-	public void setDestination(Location loc) {
-		this.destination = loc;
 	}
 
 	public boolean blockIsSafe(World world, double x, double y, double z) {
