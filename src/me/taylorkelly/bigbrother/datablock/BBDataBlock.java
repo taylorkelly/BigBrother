@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.DataDest;
 
 public class BBDataBlock {
 	private static Calendar cal = Calendar.getInstance();
@@ -21,6 +22,7 @@ public class BBDataBlock {
 	private int x;
 	private int y;
 	private int z;
+	private int world;
 	private String data;
 
 	public static final int BLOCK_BROKEN = 0;
@@ -36,31 +38,14 @@ public class BBDataBlock {
 	public static final int BUTTON_PRESS = 10;
 	public static final int LEVER_SWITCH = 10;
 
-	public BBDataBlock(String player, int action, int x, int y, int z, String data) {
+	public BBDataBlock(String player, int action, int world, int x, int y, int z, String data) {
 		this.player = player;
 		this.action = action;
+		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.data = data;
-	}
-
-	private static void createTable() {
-		try {
-			Connection conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
-			conn.setAutoCommit(false);
-			try {
-				Statement st = conn.createStatement();
-
-				st.executeUpdate(BBDATA_TABLE);
-
-				conn.close();
-			} catch (SQLException localSQLException) {
-				BigBrother.log.log(Level.SEVERE, "Could not create the table", localSQLException);
-			}
-		} catch (Exception e) {
-			BigBrother.log.log(Level.SEVERE, "Could not create the table", e);
-		}
 	}
 
 	public void send() {
@@ -85,6 +70,8 @@ public class BBDataBlock {
 		builder.append(player);
 		builder.append(separator);
 		builder.append(action);
+		builder.append(separator);
+		builder.append(world);
 		builder.append(separator);
 		builder.append(x);
 		builder.append(separator);
@@ -120,14 +107,15 @@ public class BBDataBlock {
 		ResultSet rs = null;
 		try {
 			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
-			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, x, y, z, data) VALUES (?,?,?,?,?,?,?)", 1);
+			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data) VALUES (?,?,?,?,?,?,?,?)", 1);
 			ps.setLong(1, cal.getTimeInMillis());
 			ps.setString(2, player);
 			ps.setInt(3, action);
-			ps.setInt(4, x);
-			ps.setInt(5, y);
-			ps.setInt(6, z);
-			ps.setString(7, data);
+			ps.setInt(4, world);
+			ps.setInt(5, x);
+			ps.setInt(6, y);
+			ps.setInt(7, z);
+			ps.setString(8, data);
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (" + action + ")");
@@ -148,13 +136,15 @@ public class BBDataBlock {
 	}
 
 	public static void initialize() {
-		if (!tableExists()) {
-			BigBrother.log.info("[BBROTHER]: Generating bbdata table");
-			createTable();
+		if (BBSettings.dataDest == DataDest.MYSQL || BBSettings.dataDest == DataDest.MYSQL_AND_FLAT) {
+			if (!bbdataTableExists()) {
+				BigBrother.log.info("[BBROTHER]: Generating bbdata table");
+				createBBDataTable();
+			}
 		}
 	}
 
-	private static boolean tableExists() {
+	private static boolean bbdataTableExists() {
 		Connection conn = null;
 		ResultSet rs = null;
 		try {
@@ -176,6 +166,24 @@ public class BBDataBlock {
 			} catch (SQLException ex) {
 				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception (on closing)");
 			}
+		}
+	}
+
+	private static void createBBDataTable() {
+		try {
+			Connection conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+			conn.setAutoCommit(false);
+			try {
+				Statement st = conn.createStatement();
+
+				st.executeUpdate(BBDATA_TABLE);
+
+				conn.close();
+			} catch (SQLException localSQLException) {
+				BigBrother.log.log(Level.SEVERE, "Could not create the table", localSQLException);
+			}
+		} catch (Exception e) {
+			BigBrother.log.log(Level.SEVERE, "Could not create the table", e);
 		}
 	}
 }

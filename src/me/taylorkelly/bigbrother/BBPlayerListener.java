@@ -65,8 +65,15 @@ public class BBPlayerListener extends PlayerListener {
 		} else if (split[0].equalsIgnoreCase("/bbtp")) {
 			if (split.length == 4 && isNumber(split[1]) && isNumber(split[2])
 					&& isNumber(split[3])) {
-				Teleporter tp = new Teleporter(player, split[1], split[2],
-						split[3]);
+				World currentWorld = plugin.getServer().getWorlds()[0];
+				// TODO better World Support
+				Location loc = new Location(currentWorld,
+						Double.parseDouble(split[1]),
+						Double.parseDouble(split[2]),
+						Double.parseDouble(split[3]));
+				Teleporter tp = new Teleporter();
+				tp.addTeleportee(player);
+				tp.setDestination(loc);
 				tp.teleport();
 			} else {
 				player.sendMessage(BigBrother.premessage + "usage is "

@@ -32,7 +32,6 @@ public class BigBrother extends JavaPlugin {
 		playerListener = new BBPlayerListener(this);
 		blockListener = new BBBlockListener(this);
 		registerEvents();
-		BBLogger.initialize();
 		BBSettings.initialize();
 		BBDataBlock.initialize();
 		log = Logger.getLogger("Minecraft");

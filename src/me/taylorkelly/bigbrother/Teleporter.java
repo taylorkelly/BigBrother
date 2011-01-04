@@ -1,56 +1,58 @@
 package me.taylorkelly.bigbrother;
 
+import java.util.ArrayList;
+
 import org.bukkit.*;
 
 public class Teleporter {
-	public static Server server = etc.getServer();
-
-	private double x;
-	private double y;
-	private double z;
-	private Player player;
-
-	public Teleporter(Player player, String x, String y, String z) {
-		this.x = Double.parseDouble(x);
-		this.y = Double.parseDouble(y);
-		if(this.y < 1) this.y = 1;
-		this.z = Double.parseDouble(z);
-		this.player = player;
-	}
+	private Location destination;
+	private ArrayList<Player> players;
 
 	public void teleport() {
-		if (!server.isChunkLoaded((int) Math.floor(x), (int) Math.floor(y),
-				(int) Math.floor(z)))
-			server.loadChunk((int) Math.floor(x), (int) Math.floor(y),
-					(int) Math.floor(z));
-		double y = this.y;
-		while (blockIsAboveAir(x, y, z)) {
+		World world = destination.getWorld();
+		double x = destination.getX();
+		double y = destination.getY();
+		double z = destination.getZ();
+		if (y < 1)
+			y = 1;
+		// TODO Chunk loading stuffs
+		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
+		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+
+		while (blockIsAboveAir(world, x, y, z)) {
 			y--;
 		}
-		while (!blockIsSafe(x, y, z)) {
+		while (!blockIsSafe(world, x, y, z)) {
 			y++;
 		}
-		if (this.y != y) {
-			player.sendMessage(BigBrother.premessage
-					+ "Supplied y location not safe...");
-			player.sendMessage("Teleporting you to (" + (int) x + ", "
-					+ (int) y + ", " + (int) z + ")");
-		} else
-			player.sendMessage(BigBrother.premessage + "Teleporting you to ("
-					+ (int) x + ", " + (int) y + ", " + (int) z + ")");
-		player.teleportTo(x, y, z, 0, 0);
+		if (destination.getY() != y) {
+			for (Player player : players) {
+				player.sendMessage(BigBrother.premessage + "Supplied y location not safe.");
+				player.sendMessage("Teleporting you to (" + (int) x + ", " + (int) y + ", " + (int) z + ")");
+			}
+		} else {
+			for (Player player : players)
+				player.sendMessage(BigBrother.premessage + "Teleporting you to (" + (int) x + ", " + (int) y + ", " + (int) z + ")");
+		}
+		for (Player player : players)
+			player.teleportTo(new Location(world, x, y, z));
 	}
 
-	private boolean blockIsAboveAir(double x2, double y2, double z2) {
-		return (server.getBlockAt((int) Math.floor(x2),
-				(int) Math.floor(y2 - 1), (int) Math.floor(z2)).getType() == 0);
+	private boolean blockIsAboveAir(World world, double x, double y, double z) {
+		return (world.getBlockAt((int) Math.floor(x), (int) Math.floor(y - 1), (int) Math.floor(z)).getType() == Material.Air);
 	}
 
-	public static boolean blockIsSafe(double x2, double y2, double z2) {
-		return (server.getBlockAt((int) Math.floor(x2), (int) Math.floor(y2),
-				(int) Math.floor(z2)).getType() == 0 && server.getBlockAt(
-				(int) Math.floor(x2), (int) Math.floor(y2 + 1),
-				(int) Math.floor(z2)).getType() == 0);
+	public void addTeleportee(Player player) {
+		players.add(player);
+
 	}
 
+	public void setDestination(Location loc) {
+		this.destination = loc;
+	}
+
+	public boolean blockIsSafe(World world, double x, double y, double z) {
+		return world.getBlockAt((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z)).getType() == Material.Air
+				&& world.getBlockAt((int) Math.floor(x), (int) Math.floor(y + 1), (int) Math.floor(z)).getType() == Material.Air;
+	}
 }
