@@ -51,13 +51,16 @@ public class BBDataBlock {
 	public void send() {
 		switch (BBSettings.dataDest) {
 		case MYSQL:
-			sendMySQL();
-			break;
-		case FLAT:
-			sendFlatFile();
+			sendSql(false);
 			break;
 		case MYSQL_AND_FLAT:
-			sendMySQL();
+			sendSql(false);
+			sendFlatFile();
+			break;
+		case SQLITE:
+			sendSql(true);
+		case SQLITE_AND_FLAT:
+			sendSql(true);
 			sendFlatFile();
 			break;
 		}
@@ -103,12 +106,19 @@ public class BBDataBlock {
 		}
 	}
 
-	private void sendMySQL() {
+	private void sendSql(boolean sqlite) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+			if (sqlite) {
+				Class.forName("org.sqlite.JDBC");  
+	            conn = DriverManager.getConnection(BBSettings.liteDb);
+			} else {
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+				conn.setAutoCommit(false);
+			}
 			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data, rbacked) VALUES (?,?,?,?,?,?,?,?,0)", 1);
 			ps.setLong(1, cal.getTimeInMillis());
 			ps.setString(2, player);
@@ -121,6 +131,8 @@ public class BBDataBlock {
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (" + action + ")");
+		} catch (ClassNotFoundException e) {
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
 		} finally {
 			try {
 				if (ps != null) {

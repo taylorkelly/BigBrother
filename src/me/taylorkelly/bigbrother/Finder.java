@@ -33,13 +33,14 @@ public class Finder {
 	}
 
 	public void find() {
-		switch(BBSettings.dataDest) {
+		switch (BBSettings.dataDest) {
 		case MYSQL:
 		case MYSQL_AND_FLAT:
-			mysqlFind();
+			mysqlFind(false);
 			break;
-		case FLAT:
-			flatFind();
+		case SQLITE:
+		case SQLITE_AND_FLAT:
+			mysqlFind(true);
 			break;
 		}
 	}
@@ -51,19 +52,20 @@ public class Finder {
 	public void find(ArrayList<Player> players) {
 		//TODO find around player
 	}
-	
-	private void flatFind() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	private void mysqlFind() {
+	private void mysqlFind(boolean sqlite) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
-			conn.setAutoCommit(false);
+			if (sqlite) {
+				Class.forName("org.sqlite.JDBC");  
+	            conn = DriverManager.getConnection(BBSettings.liteDb);
+			} else {
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+				conn.setAutoCommit(false);
+			}
 			
 			//TODO maybe more customizable actions?
 			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED;
@@ -101,6 +103,8 @@ public class Finder {
 			}
 		} catch (SQLException ex) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception");
+		} catch (ClassNotFoundException e) {
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
 		} finally {
 			try {
 				if (rs != null)

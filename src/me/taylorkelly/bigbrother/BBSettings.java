@@ -37,6 +37,7 @@ public class BBSettings {
 	public static String password = "root";
 	public static String db = "jdbc:mysql://localhost:3306/minecraft";
 	public static DataDest dataDest;
+	public static String liteDb = "jdbc:sqlite:bigbrother/bigbrother.db";
 
 	public static String getTime() {
 		return now(format);
