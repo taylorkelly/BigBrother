@@ -1,3 +1,4 @@
+package me.taylorkelly.bigbrother;
 public class BBTP {
 	public static Server server = etc.getServer();
 

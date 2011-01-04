@@ -1,3 +1,4 @@
+package me.taylorkelly.bigbrother;
 
 public class BBReporter {
 	public static Server server = etc.getServer();

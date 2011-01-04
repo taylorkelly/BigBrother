@@ -1,3 +1,4 @@
+package me.taylorkelly.bigbrother;
 
 public class BBNotify {
 	public static Server server = etc.getServer();
