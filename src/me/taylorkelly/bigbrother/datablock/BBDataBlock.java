@@ -21,7 +21,7 @@ public class BBDataBlock {
 	public static final int BLOCK_PLACED = 1;
 	public static final int SIGN_TEXT = 2;
 	public static final int TELEPORT = 3;
-	public static final int CHEST_STEAL = 4;
+	public static final int DELTA_CHEST = 4;
 	public static final int COMMAND = 5;
 	public static final int CHAT = 6;
 	public static final int DISCONNECT = 7;
