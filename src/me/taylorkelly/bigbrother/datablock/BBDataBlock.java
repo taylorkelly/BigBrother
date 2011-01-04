@@ -172,20 +172,25 @@ public class BBDataBlock {
 	}
 
 	private static void createBBDataTable() {
+		Connection conn = null;
+		Statement st = null;
 		try {
-			Connection conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
 			conn.setAutoCommit(false);
+			st = conn.createStatement();
+			st.executeUpdate(BBDATA_TABLE);
+		} catch (SQLException e) {
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the table");
+		} finally {
 			try {
-				Statement st = conn.createStatement();
-
-				st.executeUpdate(BBDATA_TABLE);
-
-				conn.close();
-			} catch (SQLException localSQLException) {
-				BigBrother.log.log(Level.SEVERE, "Could not create the table", localSQLException);
+				if (conn != null)
+					conn.close();
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the table (on close)");
 			}
-		} catch (Exception e) {
-			BigBrother.log.log(Level.SEVERE, "Could not create the table", e);
 		}
+
 	}
 }

@@ -57,11 +57,12 @@ public class Finder {
 		
 	}
 
-	public void mysqlFind() {
+	private void mysqlFind() {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
+			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
 			conn.setAutoCommit(false);
 			
 			//TODO maybe more customizable actions?

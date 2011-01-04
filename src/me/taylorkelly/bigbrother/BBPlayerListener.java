@@ -54,7 +54,7 @@ public class BBPlayerListener extends PlayerListener {
 				String playerName = (rollbacker == null) ? split[1]
 						: rollbacker.getName();
 
-				Rollback rollback = new Rollback(playerName);
+				Rollback rollback = new Rollback(plugin.getServer(), playerName);
 				rollback.addReciever(player);
 				rollback.rollback();
 			} else {
