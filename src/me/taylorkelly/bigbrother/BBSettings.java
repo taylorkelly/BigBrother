@@ -25,6 +25,9 @@ public class BBSettings {
 	public static ArrayList<String> seenPlayers;
 	public static ArrayList<String> optedOut;
 	
+	public static int defaultRadius;
+
+	
 	public static int hours;
 	public static double hourCount;
 	public static ArrayList<String> emails;

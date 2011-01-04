@@ -1,6 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 import java.sql.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
@@ -9,7 +10,7 @@ public class BBDataBlock {
 	private final static String BBDATA_NAME = "bbdata";
 	private final static String BBDATA_TABLE = "CREATE TABLE `"
 			+ BBDATA_NAME
-			+ "` (`id` int(15) NOT NULL AUTO_INCREMENT, `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', `z` int(10) NOT NULL DEFAULT '0', `data` varchar(50) NOT NULL DEFAULT '', PRIMARY KEY (`id`));";
+			+ "` (`id` int(15) NOT NULL AUTO_INCREMENT, `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0', `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', `z` int(10) NOT NULL DEFAULT '0', `data` varchar(50) NOT NULL DEFAULT '', PRIMARY KEY (`id`));";
 	private String player;
 	private int action;
 	private int x;
@@ -26,6 +27,10 @@ public class BBDataBlock {
 	public static final int CHAT = 6;
 	public static final int DISCONNECT = 7;
 	public static final int LOGIN = 8;
+	public static final int DOOR_OPEN = 9;
+	public static final int BUTTON_PRESS = 10;
+	public static final int LEVER_SWITCH = 10;
+	
 	
 
 	public BBDataBlock(String player, int action, int x, int y, int z,
@@ -59,6 +64,10 @@ public class BBDataBlock {
 	}
 
 	public void send() {
+		sendMySQL();
+	}
+	
+	private void sendMySQL() {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -80,7 +89,7 @@ public class BBDataBlock {
 			ps.executeUpdate();
 		} catch (SQLException ex) {
 			BigBrother.log.log(Level.SEVERE,
-					"[BBROTHER]: Data Insert SQL Exception");
+					"[BBROTHER]: Data Insert SQL Exception (" + action + ")");
 		} finally {
 			try {
 				if (ps != null) {
@@ -93,17 +102,15 @@ public class BBDataBlock {
 					conn.close();
 			} catch (SQLException ex) {
 				BigBrother.log.log(Level.SEVERE,
-						"[BBROTHER]: Data Insert SQL Exception (on close)");
+						"[BBROTHER]: Data Insert SQL Exception (on close)  (" + action + ")");
 			}
 		}
 	}
 
 	public static void initialize() {
 		if (!tableExists()) {
-			System.out.println("Table doesn't exist... creating");
+			BigBrother.log.info("[BBROTHER]: Generating bbdata table");
 			createTable();
-		} else {
-			System.out.println("Table exists!");
 		}
 	}
 

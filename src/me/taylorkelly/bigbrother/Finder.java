@@ -6,9 +6,15 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
-public class BBFinder {
-	public static Server server = etc.getServer();
+import org.bukkit.Location;
+import org.bukkit.Player;
+
+public class Finder {
 	public static String directory = "bigbrother";
+
+	public Finder(Location location) {
+		// TODO Auto-generated constructor stub
+	}
 
 	public static void bbfind(Player p, Location loc, double dist) {
 
@@ -133,8 +139,24 @@ public class BBFinder {
 	}
 
 	public static double distance(Location loc1, Location loc2) {
-		return Math.sqrt(Math.pow(loc1.x - loc2.x, 2)
-				+ Math.pow(loc1.y - loc2.y, 2) + Math.pow(loc1.z - loc2.z, 2));
+		return Math.sqrt(Math.pow(loc1.getX() - loc2.getX(), 2)
+				+ Math.pow(loc1.getY() - loc2.getY(), 2) + Math.pow(loc1.getZ() - loc2.getZ(), 2));
 	}
+
+	public void setRadius(double defaultRadius) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setReciever(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void find() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

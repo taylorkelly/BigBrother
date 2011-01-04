@@ -1,9 +1,12 @@
 package me.taylorkelly.bigbrother;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.*;
 import org.bukkit.event.Event;
@@ -13,23 +16,27 @@ import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.*;
 
 public class BigBrother extends JavaPlugin {
-	private final BBPlayerListener playerListener = new BBPlayerListener();
-	private final BBBlockListener blockListener = new BBBlockListener();
+	private final BBPlayerListener playerListener;
+	private final BBBlockListener blockListener;
 
 	public static Logger log;
-	public static String name = "BigBrother";
-	public static String version = "1.0";
-	public static String premessage = Color.AQUA + "[BBROTHER]: "
+	public final static String name = "BigBrother";
+	public final static String version = "1.0";
+	public final static String premessage = Color.AQUA + "[BBROTHER]: "
 			+ Color.WHITE;
+	public final static String directory = "bigbrother";
 	
 	public BigBrother(PluginLoader pluginLoader, Server instance,
 			PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
 		super(pluginLoader, instance, desc, plugin, cLoader);
 		
+		initialize();
+    	playerListener = new BBPlayerListener(this);
+    	blockListener = new BBBlockListener(this);
         registerEvents();
 		BBLogger.initialize();
 		BBSettings.initialize();
-		BBData.initialize();
+		BBDataBlock.initialize();
 		log = Logger.getLogger("Minecraft");
 		log.info(name + " " + version + " initialized");
 	}
@@ -38,6 +45,16 @@ public class BigBrother extends JavaPlugin {
 
 	public void onEnable() {}
 	
+	private void initialize() {
+		if (!new File(directory).exists()) {
+			try {
+				(new File(directory)).mkdir();
+			} catch (Exception e) {
+				BigBrother.log.log(Level.SEVERE,
+						"[BBROTHER]: Unable to create bigbrother/ directory");
+			}
+		}		
+	}
 
     private void registerEvents() {
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Normal, this);
@@ -50,95 +67,40 @@ public class BigBrother extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Normal, this);
         //getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICK, playerListener, Priority.Normal, this); rightclick hook
-
     }
-	
-	static boolean toggleWatch(String player) {
-		boolean watching = false;
 
-		if (BBSettings.watchList.contains(player)) {
-			BBSettings.watchList.remove(player);
-			if (BBSettings.verbose) {
-				BBLogger.log(player, (BBSettings.getTime()
-						+ ": No longer watching " + player + "\n"));
-				BBNotify.notify("No longer watching " + player + "\n");
-			} else {
-				BBLogger.log(player, BBSettings.getTime() + ": NotWatching\n");
-				BBNotify.notify("Not watching " + player + "\n");
-			}
-			saveWatchList();
-		} else {
-			watch(player);
-			watching = true;
-		}
-		return watching;
+	public boolean watching(Player player) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	static void watch(String player) {
-		if (!BBSettings.watchList.contains(player)) {
-			BBSettings.watchList.add(player);
-			if (BBSettings.verbose) {
-				BBLogger.log(player, (BBSettings.getTime() + ": Now watching "
-						+ player + "\n"));
-				BBNotify.notify("Now watching " + player + "\n");
-			} else {
-				BBLogger.log(player, BBSettings.getTime() + ": NotWatching\n");
-				BBNotify.notify("Watching " + player + "\n");
-			}
-			saveWatchList();
-		}
+	public boolean toggleWatch(String playerName) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	private static void saveWatchList() {
-		String list = "";
-
-		for (String player : BBSettings.watchList) {
-			list += player + ",";
-		}
-
-		if (list.startsWith(","))
-			list = list.substring(1);
-		if (list.endsWith(","))
-			list = list.substring(0, list.length() - 1);
-
-		PropertiesFile pf = new PropertiesFile("bigbrother.txt");
-		try {
-			pf.load();
-		} catch (IOException e) {
-		}
-		pf.setString("watchedplayers", list);
-		pf.save();
+	public String getWatchedPlayers() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	static void saveSeenPlayers() {
-		String list = "";
-
-		for (String player : BBSettings.seenPlayers) {
-			list += player + ",";
-		}
-
-		if (list.startsWith(","))
-			list = list.substring(1);
-		if (list.endsWith(","))
-			list = list.substring(0, list.length() - 1);
-
-		PropertiesFile pf = new PropertiesFile("bigbrother.txt");
-		try {
-			pf.load();
-		} catch (IOException e) {
-		}
-		pf.setString("seenPlayers", list);
-		pf.save();
+	public boolean haveSeen(Player player) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-	public boolean verifyAdmin(String apt, String input, Player heir) {
-		return (heir.canUseCommand(apt) && input.equalsIgnoreCase(apt));
+	public void markSeen(Player player) {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public static String fixName(String player) {
-		return player.replace(".", "").replace(":", "").replace("<", "")
-				.replace(">", "").replace("*", "").replace("\\", "")
-				.replace("/", "").replace("?", "").replace("\"", "")
-				.replace("|", "");
+	public void watchPlayer(Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getUnwatchedPlayers() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,5 +1,8 @@
 package me.taylorkelly.bigbrother;
-public class BBTP {
+
+import org.bukkit.*;
+
+public class Teleporter {
 	public static Server server = etc.getServer();
 
 	private double x;
@@ -7,7 +10,7 @@ public class BBTP {
 	private double z;
 	private Player player;
 
-	public BBTP(Player player, String x, String y, String z) {
+	public Teleporter(Player player, String x, String y, String z) {
 		this.x = Double.parseDouble(x);
 		this.y = Double.parseDouble(y);
 		if(this.y < 1) this.y = 1;
