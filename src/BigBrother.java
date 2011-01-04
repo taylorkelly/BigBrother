@@ -4,13 +4,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import org.bukkit.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -22,7 +15,7 @@ public class BigBrother extends JavaPlugin {
 	private final BBPlayerListener playerListener = new BBPlayerListener();
 	private final BBBlockListener blockListener = new BBBlockListener();
 
-	private Logger log;
+	public static Logger log;
 	public static String name = "BigBrother";
 	public static String version = "1.0";
 	public static String premessage = Color.AQUA + "[BBROTHER]: "
