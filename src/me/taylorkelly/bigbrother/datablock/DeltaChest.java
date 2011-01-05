@@ -20,10 +20,18 @@ public class DeltaChest extends BBDataBlock {
 
 	@Override
 	public void rollback(Server server) {
+		// TODO Chunk loading stuffs
+		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
+		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+
 		// TODO this.
 	}
 
 	public void redo(Server server) {
+		// TODO Chunk loading stuffs
+		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
+		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+
 		// TODO this.
 	}
 

@@ -27,6 +27,10 @@ public class SignText extends BBDataBlock {
 	}
 
 	public void rollback(Server server) {
+		// TODO Chunk loading stuffs
+		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
+		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+
 		String[] lines = data.split("\u0095"); 
 		//if block at x, y, z is a sign
 		//get sign
@@ -36,6 +40,10 @@ public class SignText extends BBDataBlock {
 	}
 	
 	public void redo(Server server) {
+		// TODO Chunk loading stuffs
+		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
+		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+
 		//funky stuff.
 	}
 }

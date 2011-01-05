@@ -39,7 +39,8 @@ public class Watcher {
 			list.append(name);
 			list.append(", ");
 		}
-		list.delete(list.lastIndexOf(","), list.length());
+		if (list.toString().contains(","))
+			list.delete(list.lastIndexOf(","), list.length());
 		return list.toString();
 	}
 
@@ -74,7 +75,8 @@ public class Watcher {
 				list.append(", ");
 			}
 		}
-		list.delete(list.lastIndexOf(","), list.length());
+		if (list.toString().contains(","))
+			list.delete(list.lastIndexOf(","), list.length());
 		return list.toString();
 	}
 
@@ -85,8 +87,7 @@ public class Watcher {
 	private void saveSeenList() {
 		store("SeenPlayers.txt", seenList);
 	}
-	
-	
+
 	private void store(String fileName, ArrayList<String> playerList) {
 		File file = new File(BigBrother.directory, fileName);
 		BufferedWriter bwriter = null;
@@ -94,7 +95,7 @@ public class Watcher {
 		try {
 			fwriter = new FileWriter(file);
 			bwriter = new BufferedWriter(fwriter);
-			for(String name: playerList) {
+			for (String name : playerList) {
 				bwriter.write(name);
 				bwriter.newLine();
 			}
@@ -106,7 +107,8 @@ public class Watcher {
 				if (bwriter != null) {
 					bwriter.flush();
 					bwriter.close();
-				} if (fwriter != null)
+				}
+				if (fwriter != null)
 					fwriter.close();
 			} catch (IOException e) {
 				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception (on close) (" + fileName + ")");

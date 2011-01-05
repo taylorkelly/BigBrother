@@ -20,6 +20,10 @@ public class BrokenBlock extends BBDataBlock {
 	}
 
 	public void rollback(Server server) {
+		// TODO Chunk loading stuffs
+		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
+		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+
 		String[] datas = data.split(";");
 		int type = Integer.parseInt(datas[0]);
 		byte data = Byte.parseByte(datas[1]);
@@ -28,6 +32,10 @@ public class BrokenBlock extends BBDataBlock {
 	}
 	
 	public void redo(Server server) {
+		// TODO Chunk loading stuffs
+		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
+		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+
 		server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(0);
 	}
 	

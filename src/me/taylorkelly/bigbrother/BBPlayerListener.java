@@ -34,12 +34,22 @@ public class BBPlayerListener extends PlayerListener {
 			}
 			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("/watched")) {
-			player.sendMessage(BigBrother.premessage + "Now watching:");
-			player.sendMessage(plugin.getWatchedPlayers());
+			String watchedPlayers = plugin.getWatchedPlayers();
+			if(watchedPlayers.equals("")) {
+				player.sendMessage(BigBrother.premessage + "Not currently watching anyone.");
+			} else {
+				player.sendMessage(BigBrother.premessage + "Now watching:");
+				player.sendMessage(watchedPlayers);
+			}
 			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("/unwatched")) {
-			player.sendMessage(BigBrother.premessage + "Not watching:");
-			player.sendMessage(plugin.getUnwatchedPlayers());
+			String unwatchedPlayers = plugin.getUnwatchedPlayers();
+			if(unwatchedPlayers.equals("")) {
+				player.sendMessage(BigBrother.premessage + "Everyone on is being watched.");
+			} else {
+				player.sendMessage(BigBrother.premessage + "Not currently watching:");
+				player.sendMessage(unwatchedPlayers);
+			}
 			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("/rollback")) {
 			if (split.length == 2) {
