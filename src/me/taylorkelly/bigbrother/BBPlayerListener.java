@@ -52,13 +52,15 @@ public class BBPlayerListener extends PlayerListener {
 			}
 			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("/rollback")) {
-			if (split.length == 2) {
-				Player rollbacker = plugin.getServer().getPlayer(split[1]);
-				// TODO matchplayer
-				String playerName = (rollbacker == null) ? split[1] : rollbacker.getName();
-
-				Rollback rollback = new Rollback(plugin.getServer(), playerName);
+			if (split.length > 1) {
+				Rollback rollback = new Rollback(plugin.getServer());
 				rollback.addReciever(player);
+				for(int i = 1; i < split.length; i++) {
+					Player rollbacker = plugin.getServer().getPlayer(split[i]);
+					// TODO matchplayer
+					String playerName = (rollbacker == null) ? split[i] : rollbacker.getName();
+					rollback.addPlayer(playerName);
+				}
 				rollback.rollback();
 			} else {
 				player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/rollback <player>");

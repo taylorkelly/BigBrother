@@ -72,12 +72,13 @@ public class Rollback {
 			ps = conn.prepareStatement("SELECT * from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
 					+ ")" + playerString + " and rbacked = 0 order by date desc");
 
+
 			set = ps.executeQuery();
 
 			int size = 0;
 			while (set.next()) {
 				list.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), set.getInt("action"), set.getInt("world"), set.getInt("x"), set.getInt("y"),
-						set.getInt("z"), set.getString("data")));
+						set.getInt("z"), set.getInt("type"), set.getString("data")));
 				size++;
 			}
 			if (size > 0) {
@@ -125,7 +126,7 @@ public class Rollback {
 		for(String name: players) {
 			builder.append(" ");
 			builder.append(name);
-			builder.append("'s, ");
+			builder.append("'s,");
 		}
 		if (builder.toString().contains(","))
 			builder.delete(builder.lastIndexOf(","), builder.length());
@@ -137,9 +138,9 @@ public class Rollback {
 		StringBuilder builder = new StringBuilder(" and (");
 		for(String name: players) {
 			builder.append("player");
-			builder.append(" = ");
+			builder.append(" = '");
 			builder.append(name);
-			builder.append(" or ");
+			builder.append("' or ");
 		}
 		if (builder.toString().contains("or"))
 			builder.delete(builder.lastIndexOf("or")-1, builder.length());
