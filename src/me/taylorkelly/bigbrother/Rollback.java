@@ -18,13 +18,13 @@ public class Rollback {
 	private Server server;
 	private String playerName;
 	private ArrayList<Player> players;
-	private LinkedList<RollbackDataBlock> list;
+	private LinkedList<BBDataBlock> list;
 
 	public Rollback(Server server, String playerName) {
 		this.server = server;
 		this.playerName = playerName;
 		players = new ArrayList<Player>();
-		list = new LinkedList<RollbackDataBlock>();
+		list = new LinkedList<BBDataBlock>();
 	}
 
 	public void addReciever(Player player) {
@@ -78,7 +78,7 @@ public class Rollback {
 				for (Player player : players) {
 					player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
 				}
-				list.addLast(new RollbackDataBlock(set.getString("player"), set.getInt("action"), set.getInt("world"), set.getInt("x"), set.getInt("y"), set
+				list.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), set.getInt("action"), set.getInt("world"), set.getInt("x"), set.getInt("y"), set
 						.getInt("z"), set.getString("data")));
 
 				try {
@@ -114,22 +114,9 @@ public class Rollback {
 	}
 
 	private void rollbackBlocks() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private class RollbackDataBlock {
-		private String player;
-		private int action;
-		private Location location;
-		private String data;
-
-		public RollbackDataBlock(String player, int action, int world, int x, int y, int z, String data) {
-			this.player = player;
-			this.action = action;
-			this.location = new Location(server.getWorlds()[world], x, y, z);
-			this.data = data;
+		while(list.size() > 0) {
+			BBDataBlock dataBlock = list.removeFirst();
+			if(dataBlock != null) dataBlock.rollback(server);
 		}
-
 	}
 }

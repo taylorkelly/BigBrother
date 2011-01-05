@@ -5,11 +5,13 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.logging.Level;
 
+import org.bukkit.Server;
+
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.DataDest;
 
-public class BBDataBlock {
+public abstract class BBDataBlock {
 	private static Calendar cal = Calendar.getInstance();
 	private static final char separator = '\u0095';
 	public final static String BBDATA_NAME = "bbdata";
@@ -17,13 +19,13 @@ public class BBDataBlock {
 			+ "`date` bigint NOT NULL DEFAULT '0', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0',"
 			+ " `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', "
 			+ "`z` int(10) NOT NULL DEFAULT '0', `data` varchar(50) NOT NULL DEFAULT '', `rbacked` boolean NOT NULL DEFAULT '0', PRIMARY KEY (`id`));";
-	private String player;
-	private int action;
-	private int x;
-	private int y;
-	private int z;
-	private int world;
-	private String data;
+	protected String player;
+	protected int action;
+	protected int x;
+	protected int y;
+	protected int z;
+	protected int world;
+	protected String data;
 
 	public static final int BLOCK_BROKEN = 0;
 	public static final int BLOCK_PLACED = 1;
@@ -36,7 +38,7 @@ public class BBDataBlock {
 	public static final int LOGIN = 8;
 	public static final int DOOR_OPEN = 9;
 	public static final int BUTTON_PRESS = 10;
-	public static final int LEVER_SWITCH = 10;
+	public static final int LEVER_SWITCH = 11;
 
 	public BBDataBlock(String player, int action, int world, int x, int y, int z, String data) {
 		this.player = player;
@@ -212,5 +214,41 @@ public class BBDataBlock {
 				.replace(">", "").replace("*", "").replace("\\", "")
 				.replace("/", "").replace("?", "").replace("\"", "")
 				.replace("|", "");
+	}
+	
+	public abstract void rollback(Server server);
+	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
+		return null;
+	}
+	
+	public static BBDataBlock getBBDataBlock(String player, int action, int world, int x, int y, int z, String data) {
+		switch(action) {
+		case(BLOCK_BROKEN):
+			return BrokenBlock.getBBDataBlock(player, world, x, y, z, data);
+		case(BLOCK_PLACED):
+			return PlacedBlock.getBBDataBlock(player, world, x, y, z, data);
+		case(SIGN_TEXT):
+			return SignText.getBBDataBlock(player, world, x, y, z, data);
+		case(TELEPORT):
+			return Teleport.getBBDataBlock(player, world, x, y, z, data);
+		case(DELTA_CHEST):
+			return DeltaChest.getBBDataBlock(player, world, x, y, z, data);
+		case(COMMAND):
+			return Command.getBBDataBlock(player, world, x, y, z, data);
+		case(CHAT):
+			return Chat.getBBDataBlock(player, world, x, y, z, data);
+		case(DISCONNECT):
+			return Disconnect.getBBDataBlock(player, world, x, y, z, data);
+		case(LOGIN):
+			return Login.getBBDataBlock(player, world, x, y, z, data);
+		case(DOOR_OPEN):
+			return DoorOpen.getBBDataBlock(player, world, x, y, z, data);
+		case(BUTTON_PRESS):
+			return ButtonPress.getBBDataBlock(player, world, x, y, z, data);
+		case(LEVER_SWITCH):
+			return LeverSwitch.getBBDataBlock(player, world, x, y, z, data);
+		default:
+			return null;
+		}
 	}
 }

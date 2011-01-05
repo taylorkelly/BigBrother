@@ -10,7 +10,25 @@ public class BrokenBlock extends BBDataBlock {
 		//TODO chest check
 	}
 	
+	private BrokenBlock(String player, int world, int x, int y, int z, String data) {
+		super(player, BLOCK_BROKEN, world, x, y, z, data);
+	}
+	
 	public void send() {
+		//TODO send bystanders
 		super.send();
 	}
+
+	public void rollback(Server server) {
+		String[] datas = data.split(";");
+		int type = Integer.parseInt(datas[0]);
+		byte data = Byte.parseByte(datas[1]);
+		server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(type);
+		server.getWorlds()[world].getBlockAt(x, y, z).setData(data);
+	}
+	
+	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
+		return new BrokenBlock(player, world, x, y, z, data);
+	}
+
 }

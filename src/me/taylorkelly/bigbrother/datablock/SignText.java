@@ -12,9 +12,25 @@ public class SignText extends BBDataBlock {
 	private static String getText(Sign sign) {
 		String message = "";
 		for (int i = 0; i < 4; i++) {
-			if (!sign.getText(i).equals(""))
-				message += sign.getText(i) + " ";
+			message += sign.getText(i) + "\u0095";
 		}
 		return message;
+	}
+	
+	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
+		return new SignText(player, world, x, y, z, data);
+	}
+
+	private SignText(String player, int world, int x, int y, int z, String data) {
+		super(player, SIGN_TEXT, world, x, y, z, data);
+	}
+
+	public void rollback(Server server) {
+		String[] lines = data.split("\u0095"); 
+		//if block at x, y, z is a sign
+		//get sign
+		for (int i = 0; i < 4; i++) {
+			sign.setText(lines[i]);
+		}
 	}
 }
