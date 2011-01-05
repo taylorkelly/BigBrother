@@ -166,12 +166,15 @@ public abstract class BBDataBlock {
 			break;
 		}
 		
-		if (BBSettings.dataDest == DataDest.MYSQL || BBSettings.dataDest == DataDest.MYSQL_AND_FLAT) {
-			if (!bbdataTableExists(sqlite)) {
-				BigBrother.log.info("[BBROTHER]: Generating bbdata table");
-				createBBDataTable(sqlite);
-			}
+
+		if (!bbdataTableExists(sqlite)) {
+			BigBrother.log.info("[BBROTHER]: Generating bbdata table");
+			System.out.println("create table");
+			createBBDataTable(sqlite);
+		} else {
+			System.out.println("already table");
 		}
+		
 	}
 
 	private static boolean bbdataTableExists(boolean sqlite) {
@@ -223,6 +226,7 @@ public abstract class BBDataBlock {
 			}
 			st = conn.createStatement();
 			st.executeUpdate(BBDATA_TABLE);
+			System.out.println("created table");
 		} catch (SQLException e) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create Table SQL Exception" + ((sqlite)?"sqlite":"mysql"));
 		} catch (ClassNotFoundException e) {

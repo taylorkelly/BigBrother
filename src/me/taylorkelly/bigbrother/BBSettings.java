@@ -74,24 +74,24 @@ public class BBSettings {
 		pf = new PropertiesFile(new File(BigBrother.directory, "BigBrother.properties"));
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
 		defaultSearchRadius = pf.getInt("defaultSearchRadius", 3, "Default search radius for bbhere and bbfind");
-		boolean sqlite = pf.getBoolean("MySQL", false, "If true, uses MySQL. If false, uses Sqlite");
+		boolean mysql = pf.getBoolean("MySQL", false, "If true, uses MySQL. If false, uses Sqlite");
 		boolean flatlog = pf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)");
 		mysqlUser = pf.getString("mysqlUser", "root", "Username for MySQL db (if applicable)");
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL db (if applicable)");
 		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "DB for MySQL (if applicable)");
 		pf.save();
 
-		if (sqlite) {
-			if (flatlog) {
-				dataDest = DataDest.SQLITE_AND_FLAT;
-			} else {
-				dataDest = DataDest.SQLITE;
-			}
-		} else {
+		if (mysql) {
 			if (flatlog) {
 				dataDest = DataDest.MYSQL_AND_FLAT;
 			} else {
 				dataDest = DataDest.MYSQL;
+			}
+		} else {
+			if (flatlog) {
+				dataDest = DataDest.SQLITE_AND_FLAT;
+			} else {
+				dataDest = DataDest.SQLITE;
 			}
 		}
 	}
