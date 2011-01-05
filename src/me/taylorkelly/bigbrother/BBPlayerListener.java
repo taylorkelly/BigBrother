@@ -65,7 +65,6 @@ public class BBPlayerListener extends PlayerListener {
 			} else {
 				player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/rollback <player>");
 				player.sendMessage(" or " + Color.RED + "/rollback <player> <player1> <player2> ...");
-
 			}
 			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("/undo")) {
