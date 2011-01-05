@@ -19,6 +19,8 @@ public class Rollback {
 	private String playerName;
 	private ArrayList<Player> players;
 	private LinkedList<BBDataBlock> list;
+	
+	private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
 
 	public Rollback(Server server, String playerName) {
 		this.server = server;
@@ -113,10 +115,34 @@ public class Rollback {
 	}
 
 	private void rollbackBlocks() {
+		lastRollback.clear();
 		while (list.size() > 0) {
 			BBDataBlock dataBlock = list.removeFirst();
-			if (dataBlock != null)
+			if (dataBlock != null) {
+				lastRollback.addLast(dataBlock);
 				dataBlock.rollback(server);
+			}
+		}
+	}
+	
+	public static boolean canUndo() {
+		if(lastRollback != null) {
+			return lastRollback.size() > 0;
+		} else return false;
+	}
+	
+	public static int undoSize() {
+		if(lastRollback != null) {
+			return lastRollback.size();
+		} else return 0;
+	}
+	
+	public static void undo(Server server) {
+		while (lastRollback.size() > 0) {
+			BBDataBlock dataBlock = lastRollback.removeFirst();
+			if (dataBlock != null) {
+				dataBlock.redo(server);
+			}
 		}
 	}
 }

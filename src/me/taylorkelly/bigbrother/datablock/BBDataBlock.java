@@ -278,6 +278,8 @@ public abstract class BBDataBlock {
 	}
 	
 	public abstract void rollback(Server server);
+	public abstract void redo(Server server);
+
 	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
 		return null;
 	}

@@ -17,4 +17,5 @@ public class Teleport extends BBDataBlock {
 	}
 
 	public void rollback(Server server) {}
+	public void redo(Server server) {}
 }

@@ -27,6 +27,10 @@ public class BrokenBlock extends BBDataBlock {
 		server.getWorlds()[world].getBlockAt(x, y, z).setData(data);
 	}
 	
+	public void redo(Server server) {
+		server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(0);
+	}
+	
 	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
 		return new BrokenBlock(player, world, x, y, z, data);
 	}

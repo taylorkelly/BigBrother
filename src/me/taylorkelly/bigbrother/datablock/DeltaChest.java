@@ -23,6 +23,11 @@ public class DeltaChest extends BBDataBlock {
 		// TODO this.
 	}
 
+	public void redo(Server server) {
+		// TODO this.
+	}
+
+	
 	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
 		return new DeltaChest(player, world, x, y, z, data);
 	}

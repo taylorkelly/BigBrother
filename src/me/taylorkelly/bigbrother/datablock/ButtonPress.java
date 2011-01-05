@@ -11,6 +11,7 @@ public class ButtonPress extends BBDataBlock {
 	}
 
 	public void rollback(Server server) {}
+	public void redo(Server server) {}
 	
 	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
 		return new ButtonPress(player, world, x, y, z, data);
