@@ -169,8 +169,7 @@ public class Finder {
 			int size = 0;
 			while (rs.next()) {
 				int action = rs.getInt("action");
-				String[] data = rs.getString("data").split(";");
-				int type = Integer.parseInt(data[0]);
+				int type = rs.getInt("type");
 
 				switch (action) {
 				case (BBDataBlock.BLOCK_BROKEN):
