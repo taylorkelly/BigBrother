@@ -151,7 +151,7 @@ public class BBPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerQuit(PlayerEvent event) {
-		if (BBSettings.logout && plugin.watching(event.getPlayer())) {
+		if (BBSettings.disconnect && plugin.watching(event.getPlayer())) {
 			Disconnect dataBlock = new Disconnect(event.getPlayer());
 			dataBlock.send();
 		}
@@ -161,7 +161,7 @@ public class BBPlayerListener extends PlayerListener {
 		Location from = event.getFrom();
 		Location to = event.getTo();
 		
-		if (BBSettings.position && plugin.watching(event.getPlayer()) && distance(from, to) > 5) {
+		if (BBSettings.teleport && plugin.watching(event.getPlayer()) && distance(from, to) > 5) {
 			Teleport dataBlock = new Teleport(event.getPlayer(), event.getTo());
 			dataBlock.send();
 		}

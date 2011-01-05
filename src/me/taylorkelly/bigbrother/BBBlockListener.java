@@ -13,7 +13,7 @@ public class BBBlockListener extends BlockListener {
 	
 	public void onBlockBroken(BlockBrokenEvent event) {
 		Player player = event.getPlayer();
-		if (BBSettings.blockDestroying && plugin.watching(player)) {
+		if (BBSettings.blockBreak && plugin.watching(player)) {
 			Block block = event.getBlock();
 			BrokenBlock dataBlock = new BrokenBlock(player, block);
 			dataBlock.send();
@@ -22,7 +22,7 @@ public class BBBlockListener extends BlockListener {
 
 	public void onBlockPlaced(BlockPlacedEvent event) {
 		Player player = event.getPlayer();
-		if (BBSettings.blockPlacing && plugin.watching(player)) {
+		if (BBSettings.blockPlace && plugin.watching(player)) {
 			Block block = event.getBlock();
 			PlacedBlock dataBlock = new PlacedBlock(player, block);
 			dataBlock.send();
