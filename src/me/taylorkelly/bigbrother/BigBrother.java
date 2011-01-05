@@ -33,6 +33,7 @@ public class BigBrother extends JavaPlugin {
 	}
 
 	private void initialize() {
+		log = Logger.getLogger("Minecraft");
 		if (!new File(directory).exists()) {
 			try {
 				(new File(directory)).mkdir();
@@ -46,7 +47,6 @@ public class BigBrother extends JavaPlugin {
 		BBSettings.initialize();
 		watcher = BBSettings.getWatcher(getServer());
 		BBDataBlock.initialize();
-		log = Logger.getLogger("Minecraft");
 		log.info(name + " " + version + " initialized");
 	}
 
