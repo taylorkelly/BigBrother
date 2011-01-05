@@ -154,26 +154,48 @@ public abstract class BBDataBlock {
 	}
 
 	public static void initialize() {
+		boolean sqlite = false;
+		switch (BBSettings.dataDest) {
+		case MYSQL:
+		case MYSQL_AND_FLAT:
+			sqlite = false;
+			break;
+		case SQLITE:
+		case SQLITE_AND_FLAT:
+			sqlite = true;
+			break;
+		}
+		
 		if (BBSettings.dataDest == DataDest.MYSQL || BBSettings.dataDest == DataDest.MYSQL_AND_FLAT) {
-			if (!bbdataTableExists()) {
+			if (!bbdataTableExists(sqlite)) {
 				BigBrother.log.info("[BBROTHER]: Generating bbdata table");
-				createBBDataTable();
+				createBBDataTable(sqlite);
 			}
 		}
 	}
 
-	private static boolean bbdataTableExists() {
+	private static boolean bbdataTableExists(boolean sqlite) {
 		Connection conn = null;
 		ResultSet rs = null;
 		try {
-			conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
+			if (sqlite) {
+				Class.forName("org.sqlite.JDBC");  
+	            conn = DriverManager.getConnection(BBSettings.liteDb);
+			} else {
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
+				conn.setAutoCommit(false);
+			}
 			DatabaseMetaData dbm = conn.getMetaData();
 			rs = dbm.getTables(null, null, BBDATA_NAME, null);
 			if (!rs.next())
 				return false;
 			return true;
 		} catch (SQLException ex) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception");
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception" + ((sqlite)?"sqlite":"mysql"), ex);
+			return false;
+		} catch (ClassNotFoundException e) {
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
 			return false;
 		} finally {
 			try {
@@ -187,16 +209,24 @@ public abstract class BBDataBlock {
 		}
 	}
 
-	private static void createBBDataTable() {
+	private static void createBBDataTable(boolean sqlite) {
 		Connection conn = null;
 		Statement st = null;
 		try {
-			conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-			conn.setAutoCommit(false);
+			if (sqlite) {
+				Class.forName("org.sqlite.JDBC");  
+	            conn = DriverManager.getConnection(BBSettings.liteDb);
+			} else {
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
+				conn.setAutoCommit(false);
+			}
 			st = conn.createStatement();
 			st.executeUpdate(BBDATA_TABLE);
 		} catch (SQLException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the table");
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create Table SQL Exception" + ((sqlite)?"sqlite":"mysql"));
+		} catch (ClassNotFoundException e) {
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create Table SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
 		} finally {
 			try {
 				if (conn != null)
