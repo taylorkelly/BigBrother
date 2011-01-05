@@ -5,11 +5,11 @@ import org.bukkit.*;
 public class PlacedBlock extends BBDataBlock {
 	public PlacedBlock(Player player, Block block) {
 		//TODO Better World support
-		super(player.getName(), BLOCK_PLACED, 0, block.getX(), block.getY(), block.getZ(), block.getTypeID() + ";" + block.getData());
+		super(player.getName(), BLOCK_PLACED, 0, block.getX(), block.getY(), block.getZ(), block.getTypeID(), block.getData() + "");
 	}
 	
-	private PlacedBlock(String player, int world, int x, int y, int z, String data) {
-		super(player, BLOCK_PLACED, world, x, y, z, data);
+	private PlacedBlock(String player, int world, int x, int y, int z, int type, String data) {
+		super(player, BLOCK_PLACED, world, x, y, z, type, data);
 	}
 
 	public void rollback(Server server) {
@@ -25,15 +25,13 @@ public class PlacedBlock extends BBDataBlock {
 		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
 		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
 
-		String[] datas = data.split(";");
-		int type = Integer.parseInt(datas[0]);
-		byte data = Byte.parseByte(datas[1]);
+		byte blockData = Byte.parseByte(data);
 		server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(type);
-		server.getWorlds()[world].getBlockAt(x, y, z).setData(data);
+		server.getWorlds()[world].getBlockAt(x, y, z).setData(blockData);
 	}
 	
-	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
-		return new PlacedBlock(player, world, x, y, z, data);
+	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+		return new PlacedBlock(player, world, x, y, z, type, data);
 	}
 
 }

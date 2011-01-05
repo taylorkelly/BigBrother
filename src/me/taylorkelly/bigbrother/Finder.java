@@ -154,7 +154,7 @@ public class Finder {
 
 			// TODO maybe more customizable actions?
 			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED;
-			ps = conn.prepareStatement("SELECT action, data from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
+			ps = conn.prepareStatement("SELECT action, type from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
 					+ ") and rbacked = 0 and x < ? and x > ? and y < ? and y > ?  and z < ? and z > ? and player = ? order by date desc");
 
 			ps.setInt(1, location.getBlockX() + radius);

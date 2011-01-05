@@ -5,15 +5,15 @@ import org.bukkit.*;
 public class Login extends BBDataBlock {
 	public Login(Player player) {
 		//TODO Better World support
-		super(player.getName(), LOGIN, 0, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), "");
+		super(player.getName(), LOGIN, 0, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, "");
 	}
 	
-	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
-		return new Login(player, world, x, y, z, data);
+	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+		return new Login(player, world, x, y, z, type, data);
 	}
 
-	private Login(String player, int world, int x, int y, int z, String data) {
-		super(player, LOGIN, world, x, y, z, data);
+	private Login(String player, int world, int x, int y, int z, int type,  String data) {
+		super(player, LOGIN, world, x, y, z, type, data);
 	}
 
 	public void rollback(Server server) {}

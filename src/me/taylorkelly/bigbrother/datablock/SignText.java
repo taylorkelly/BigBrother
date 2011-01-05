@@ -6,8 +6,7 @@ public class SignText extends BBDataBlock {
 	public SignText(Player player, Sign sign) {
 		//TODO Better World support
 		//TODO creating text vs destroying text?
-		super(player.getName(), 0, SIGN_TEXT, sign.getX(), sign.getY(), sign.getZ(),
-				getText(sign));
+		super(player.getName(), 0, SIGN_TEXT, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
 	}
 
 	private static String getText(Sign sign) {
@@ -18,12 +17,12 @@ public class SignText extends BBDataBlock {
 		return message;
 	}
 	
-	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
-		return new SignText(player, world, x, y, z, data);
+	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+		return new SignText(player, world, x, y, z, type, data);
 	}
 
-	private SignText(String player, int world, int x, int y, int z, String data) {
-		super(player, SIGN_TEXT, world, x, y, z, data);
+	private SignText(String player, int world, int x, int y, int z, int type, String data) {
+		super(player, SIGN_TEXT, world, x, y, z, type, data);
 	}
 
 	public void rollback(Server server) {

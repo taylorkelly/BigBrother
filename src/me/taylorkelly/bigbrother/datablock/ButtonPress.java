@@ -7,18 +7,18 @@ public class ButtonPress extends BBDataBlock {
 
 	public ButtonPress(String player, Block button) {
 		//TODO Better world support
-		super(player, BUTTON_PRESS, 0, button.getX(), button.getY(), button.getZ(), button.getData() + "");
+		super(player, BUTTON_PRESS, 0, button.getX(), button.getY(), button.getZ(), 77, button.getData() + "");
 	}
 
 	public void rollback(Server server) {}
 	public void redo(Server server) {}
 	
-	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, String data) {
-		return new ButtonPress(player, world, x, y, z, data);
+	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+		return new ButtonPress(player, world, x, y, z, type, data);
 	}
 
-	private ButtonPress(String player, int world, int x, int y, int z, String data) {
-		super(player, BUTTON_PRESS, world, x, y, z, data);
+	private ButtonPress(String player, int world, int x, int y, int z, int type, String data) {
+		super(player, BUTTON_PRESS, world, x, y, z, type, data);
 	}
 
 }
