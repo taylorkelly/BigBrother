@@ -150,7 +150,6 @@ public abstract class BBDataBlock {
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-				conn.setAutoCommit(false);
 				System.out.println("test");
 			}
 			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data, rbacked) VALUES (?,?,?,?,?,?,?,?,0)");
@@ -213,7 +212,6 @@ public abstract class BBDataBlock {
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-				conn.setAutoCommit(false);
 			}
 			DatabaseMetaData dbm = conn.getMetaData();
 			rs = dbm.getTables(null, null, BBDATA_NAME, null);

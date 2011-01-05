@@ -63,7 +63,6 @@ public class Finder {
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-				conn.setAutoCommit(false);
 			}
 
 			// TODO maybe more customizable actions?
