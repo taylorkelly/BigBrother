@@ -11,7 +11,6 @@ import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 
 public abstract class BBDataBlock {
-	private static Calendar cal = Calendar.getInstance();
 	public final static String BBDATA_NAME = "bbdata";
 	private final static String BBDATA_TABLE_MYSQL = "CREATE TABLE `" + BBDATA_NAME + "` (`id` int(15) NOT NULL AUTO_INCREMENT, `date` bigint NOT NULL DEFAULT '0', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0', `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', `z` int(10) NOT NULL DEFAULT '0', `type` smallint NOT NULL DEFAULT '0', `data` varchar(150) NOT NULL DEFAULT '', `rbacked` boolean NOT NULL DEFAULT '0', PRIMARY KEY (`id`));";
 	private final static String BBDATA_TABLE_SQLITE = "CREATE TABLE `" + BBDATA_NAME + "` (`id` INTEGER PRIMARY KEY, `date` bigint NOT NULL DEFAULT '0', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0', `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', `z` int(10) NOT NULL DEFAULT '0', `type` smallint NOT NULL DEFAULT '0', `data` varchar(150) NOT NULL DEFAULT '', `rbacked` boolean NOT NULL DEFAULT '0');";
@@ -153,7 +152,7 @@ public abstract class BBDataBlock {
 				System.out.println("test");
 			}
 			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
-			ps.setLong(1, cal.getTimeInMillis());
+			ps.setLong(1, System.currentTimeMillis());
 			ps.setString(2, player);
 			ps.setInt(3, action);
 			ps.setInt(4, world);
