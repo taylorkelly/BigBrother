@@ -19,7 +19,7 @@ public class BigBrother extends JavaPlugin {
 	public final static String name = "BigBrother";
 	public final static String version = "1.0";
 	public final static String premessage = Color.AQUA + "[BBROTHER]: " + Color.WHITE;
-	public final static String directory = "bigbrother";
+	public final static String directory = "BigBrother";
 
 	public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
 		super(pluginLoader, instance, desc, plugin, cLoader);

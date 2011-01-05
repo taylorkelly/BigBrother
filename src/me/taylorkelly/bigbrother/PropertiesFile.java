@@ -96,15 +96,15 @@ public class PropertiesFile {
 		try {
 			if (!file.exists())
 				file.createNewFile();
-			fwriter = new FileWriter(file, true);
+			fwriter = new FileWriter(file);
 			bwriter = new BufferedWriter(fwriter);
 			for (Entry<String, PropertiesEntry> entry : map.entrySet()) {
 				StringBuilder builder = new StringBuilder();
 				builder.append(entry.getKey());
-				builder.append("=");
+				builder.append(" = ");
 				builder.append(entry.getValue().value);
 				if(!entry.getValue().comment.equals("")) {
-					builder.append(" #");
+					builder.append("   #");
 					builder.append(entry.getValue().comment);
 				}
 				bwriter.write(builder.toString());

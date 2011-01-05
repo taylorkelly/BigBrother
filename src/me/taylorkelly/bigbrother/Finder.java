@@ -2,6 +2,8 @@ package me.taylorkelly.bigbrother;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -20,7 +22,7 @@ public class Finder {
 	}
 
 	public void setRadius(double radius) {
-		this.radius = (int)radius;
+		this.radius = (int) radius;
 	}
 
 	public void addReciever(Player player) {
@@ -41,33 +43,33 @@ public class Finder {
 	}
 
 	public void find(Player p) {
-		//TODO find around player
+		// TODO find around player
 	}
-	
+
 	public void find(ArrayList<Player> players) {
-		//TODO find around player
+		// TODO find around player
 	}
 
 	private void mysqlFind(boolean sqlite) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+		
+		HashMap<String, Integer> modifications = new HashMap<String, Integer>();
 		try {
 			if (sqlite) {
-				Class.forName("org.sqlite.JDBC");  
-	            conn = DriverManager.getConnection(BBSettings.liteDb);
+				Class.forName("org.sqlite.JDBC");
+				conn = DriverManager.getConnection(BBSettings.liteDb);
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 				conn.setAutoCommit(false);
 			}
-			
-			//TODO maybe more customizable actions?
+
+			// TODO maybe more customizable actions?
 			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED;
-			ps = conn
-					.prepareStatement(
-							"SELECT player from " + BBDataBlock.BBDATA_NAME + " where (" + actionString + ") and rbacked = 0 and x < ? and x > ? and y < ? and y > ?  and z < ? and z > ? order by date desc limit 15",
-							Statement.RETURN_GENERATED_KEYS);
+			ps = conn.prepareStatement("SELECT player from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
+					+ ") and rbacked = 0 and x < ? and x > ? and y < ? and y > ?  and z < ? and z > ? order by date desc limit 15");
 
 			ps.setInt(1, location.getBlockX() + radius);
 			ps.setInt(2, location.getBlockX() - radius);
@@ -77,29 +79,39 @@ public class Finder {
 			ps.setInt(6, location.getBlockZ() - radius);
 			rs = ps.executeQuery();
 
-			if(!rs.next()) {
-				for(Player player: players) {
-					player.sendMessage(BigBrother.premessage + "No modifications in this area.");
+			int size = 0;
+			while (rs.next()) {
+				String player = rs.getString("player");
+				if (modifications.containsKey(player)) {
+					modifications.put(player, modifications.get(player) + 1);
+				} else {
+					modifications.put(player, 1);				
+					size++;
 				}
-			} else {				
-				rs.last();
-				int size = rs.getRow();
-				rs.first();
+			}
+			if (size > 0) {
 				StringBuilder playerList = new StringBuilder();
-				while(rs.next()) {
-					playerList.append(rs.getString("player"));
-					playerList.append(", ");
+				for(Entry<String, Integer> entry: modifications.entrySet()) {
+					playerList.append(entry.getKey());
+					playerList.append(" (");
+					playerList.append(entry.getValue());
+					playerList.append("), ");
 				}
-				playerList.delete(playerList.lastIndexOf(", "), playerList.length());
-				for(Player player: players) {
-					player.sendMessage(BigBrother.premessage + "(" + size + ") players have modified this area.");
+				playerList.delete(playerList.lastIndexOf(","), playerList.length());
+				for (Player player : players) {
+					player.sendMessage(BigBrother.premessage + size + " player(s) have modified this area:");
 					player.sendMessage(playerList.toString());
 				}
+			} else {
+				for (Player player : players) {
+					player.sendMessage(BigBrother.premessage + "No modifications in this area.");
+				}
+
 			}
 		} catch (SQLException ex) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception");
 		} catch (ClassNotFoundException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (cnf)" + ((sqlite) ? "sqlite" : "mysql"));
 		} finally {
 			try {
 				if (rs != null)
@@ -113,5 +125,4 @@ public class Finder {
 			}
 		}
 	}
-
 }

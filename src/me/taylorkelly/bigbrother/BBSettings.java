@@ -73,7 +73,7 @@ public class BBSettings {
 
 		pf = new PropertiesFile(new File(BigBrother.directory, "BigBrother.properties"));
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
-		defaultSearchRadius = pf.getInt("defaultSearchRadius", 3, "Default search radius for bbhere and bbfind");
+		defaultSearchRadius = pf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind");
 		boolean mysql = pf.getBoolean("MySQL", false, "If true, uses MySQL. If false, uses Sqlite");
 		boolean flatlog = pf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)");
 		mysqlUser = pf.getString("mysqlUser", "root", "Username for MySQL db (if applicable)");
@@ -104,6 +104,7 @@ public class BBSettings {
 			Scanner sc = new Scanner(file);
 			while(sc.hasNextLine()) {
 				String player = sc.nextLine();
+				if(player.equals("")) continue;
 				if(player.contains(" ")) continue;
 				watchList.add(player);
 			}
@@ -120,6 +121,7 @@ public class BBSettings {
 			Scanner sc = new Scanner(file);
 			while(sc.hasNextLine()) {
 				String player = sc.nextLine();
+				if(player.equals("")) continue;
 				if(player.contains(" ")) continue;
 				seenList.add(player);
 			}

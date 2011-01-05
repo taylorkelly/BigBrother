@@ -50,8 +50,8 @@ public class Rollback {
 		ResultSet set = null;
 		try {
 			if (sqlite) {
-				Class.forName("org.sqlite.JDBC");  
-	            conn = DriverManager.getConnection(BBSettings.liteDb);
+				Class.forName("org.sqlite.JDBC");
+				conn = DriverManager.getConnection(BBSettings.liteDb);
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
@@ -62,44 +62,44 @@ public class Rollback {
 			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED + " or action = "
 					+ BBDataBlock.DELTA_CHEST + " or action = " + BBDataBlock.SIGN_TEXT;
 			ps = conn.prepareStatement("SELECT * from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
-					+ ") player = ? and rbacked = 0 order by date desc", Statement.RETURN_GENERATED_KEYS);
+					+ ") and player = ? and rbacked = 0 order by date desc");
 
 			ps.setString(1, playerName);
 			set = ps.executeQuery();
 
-			if (!set.next()) {
-				for (Player player : players) {
-					player.sendMessage(BigBrother.premessage + "Nothing to rollback.");
-				}
-			} else {
-				set.last();
-				int size = set.getRow();
-				set.first();
+			int size = 0;
+			while (set.next()) {
+				list.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), set.getInt("action"), set.getInt("world"), set.getInt("x"), set.getInt("y"),
+						set.getInt("z"), set.getString("data")));
+				size++;
+			}
+			if (size > 0) {
 				for (Player player : players) {
 					player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
 				}
-				list.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), set.getInt("action"), set.getInt("world"), set.getInt("x"), set.getInt("y"), set
-						.getInt("z"), set.getString("data")));
-
 				try {
 					rollbackBlocks();
 					ps = conn.prepareStatement("UPDATE " + BBDataBlock.BBDATA_NAME + " set rbacked = 1 where (" + actionString
-							+ ") player = ? and rbacked = 0 order by date desc");
+							+ ") and player = ? and rbacked = 0");
 					ps.setString(1, playerName);
 					ps.execute();
 					for (Player player : players) {
 						player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
 					}
 				} catch (SQLException ex) {
-					BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception");
+					BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception", ex);
+				}
+			} else {
+				for (Player player : players) {
+					player.sendMessage(BigBrother.premessage + "Nothing to rollback.");
 				}
 			}
 		} catch (SQLException ex) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception");
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception", ex);
 		} catch (ClassNotFoundException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback SQL Exception (cnf)" + ((sqlite) ? "sqlite" : "mysql"));
 		} finally {
-	
+
 			try {
 				if (set != null)
 					set.close();
@@ -114,9 +114,10 @@ public class Rollback {
 	}
 
 	private void rollbackBlocks() {
-		while(list.size() > 0) {
+		while (list.size() > 0) {
 			BBDataBlock dataBlock = list.removeFirst();
-			if(dataBlock != null) dataBlock.rollback(server);
+			if (dataBlock != null)
+				dataBlock.rollback(server);
 		}
 	}
 }

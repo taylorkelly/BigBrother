@@ -15,10 +15,9 @@ public abstract class BBDataBlock {
 	private static Calendar cal = Calendar.getInstance();
 	private static final char separator = '\u0095';
 	public final static String BBDATA_NAME = "bbdata";
-	private final static String BBDATA_TABLE = "CREATE TABLE `" + BBDATA_NAME + "` (`id` int(15) NOT NULL AUTO_INCREMENT, "
-			+ "`date` bigint NOT NULL DEFAULT '0', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0',"
-			+ " `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', "
-			+ "`z` int(10) NOT NULL DEFAULT '0', `data` varchar(50) NOT NULL DEFAULT '', `rbacked` boolean NOT NULL DEFAULT '0', PRIMARY KEY (`id`));";
+	private final static String BBDATA_TABLE_MYSQL = "CREATE TABLE `" + BBDATA_NAME + "` (`id` int(15) NOT NULL AUTO_INCREMENT, `date` bigint NOT NULL DEFAULT '0', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0', `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', `z` int(10) NOT NULL DEFAULT '0', `data` varchar(50) NOT NULL DEFAULT '', `rbacked` boolean NOT NULL DEFAULT '0', PRIMARY KEY (`id`));";
+	private final static String BBDATA_TABLE_SQLITE = "CREATE TABLE `" + BBDATA_NAME + "` (`id` INTEGER PRIMARY KEY, `date` bigint NOT NULL DEFAULT '0', `player` varchar(30) NOT NULL DEFAULT 'Player', `action` tinyint(2) NOT NULL DEFAULT '0', `world` tinyint(2) NOT NULL DEFAULT '0', `x` int(10) NOT NULL DEFAULT '0', `y` int(10) NOT NULL DEFAULT '0', `z` int(10) NOT NULL DEFAULT '0', `data` varchar(50) NOT NULL DEFAULT '', `rbacked` boolean NOT NULL DEFAULT '0');";
+
 	protected String player;
 	protected int action;
 	protected int x;
@@ -61,6 +60,7 @@ public abstract class BBDataBlock {
 			break;
 		case SQLITE:
 			sendSql(true);
+			break;
 		case SQLITE_AND_FLAT:
 			sendSql(true);
 			sendFlatFile();
@@ -69,31 +69,29 @@ public abstract class BBDataBlock {
 	}
 
 	private void sendFlatFile() {
-		//TODO separate into different names
-		File file = new File(BigBrother.directory + File.separator + "logs", BBDATA_NAME + ".log");
+		File dir = new File(BigBrother.directory + File.separator + "logs");
+		if(!dir.exists()) dir.mkdir();
+		File file = new File(BigBrother.directory + File.separator + "logs", fixName(player) + ".log");
 		StringBuilder builder = new StringBuilder(cal.getTimeInMillis() + "");
-		builder.append(separator);
-		builder.append(player);
-		builder.append(separator);
-		builder.append(action);
-		builder.append(separator);
+		builder.append(" - ");
+		builder.append(getAction(action));
+		builder.append(" ");
 		builder.append(world);
-		builder.append(separator);
+		builder.append("@(");
 		builder.append(x);
-		builder.append(separator);
+		builder.append(",");
 		builder.append(y);
-		builder.append(separator);
+		builder.append(",");
 		builder.append(z);
-		builder.append(separator);
+		builder.append(") info: ");
 		builder.append(data);
-		builder.append(separator);
-		builder.append("0");
 		BufferedWriter bwriter = null;
 		FileWriter fwriter = null;
 		try {
 			fwriter = new FileWriter(file, true);
 			bwriter = new BufferedWriter(fwriter);
 			bwriter.write(builder.toString());
+			bwriter.newLine();
 			bwriter.flush();
 		} catch (IOException e) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception (" + action + ")");
@@ -110,6 +108,37 @@ public abstract class BBDataBlock {
 		}
 	}
 
+	private String getAction(int action) {
+		switch(action) {
+		case(BLOCK_BROKEN):
+			return "brokeBlock";
+		case(BLOCK_PLACED):
+			return "placedBlock";
+		case(SIGN_TEXT):
+			return "signText";
+		case(TELEPORT):
+			return "teleport";
+		case(DELTA_CHEST):
+			return "deltaChest";
+		case(COMMAND):
+			return "command";
+		case(CHAT):
+			return "chat";
+		case(DISCONNECT):
+			return "disconnect";
+		case(LOGIN):
+			return "login";
+		case(DOOR_OPEN):
+			return "door";
+		case(BUTTON_PRESS):
+			return "button";
+		case(LEVER_SWITCH):
+			return "lever";
+		default:
+			return "";
+		}
+	}
+
 	private void sendSql(boolean sqlite) {
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -122,8 +151,9 @@ public abstract class BBDataBlock {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 				conn.setAutoCommit(false);
+				System.out.println("test");
 			}
-			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data, rbacked) VALUES (?,?,?,?,?,?,?,?,0)", 1);
+			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data, rbacked) VALUES (?,?,?,?,?,?,?,?,0)");
 			ps.setLong(1, cal.getTimeInMillis());
 			ps.setString(2, player);
 			ps.setInt(3, action);
@@ -134,7 +164,7 @@ public abstract class BBDataBlock {
 			ps.setString(8, data);
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (" + action + ")");
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (" + action + ")", ex);
 		} catch (ClassNotFoundException e) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
 		} finally {
@@ -169,12 +199,8 @@ public abstract class BBDataBlock {
 
 		if (!bbdataTableExists(sqlite)) {
 			BigBrother.log.info("[BBROTHER]: Generating bbdata table");
-			System.out.println("create table");
 			createBBDataTable(sqlite);
-		} else {
-			System.out.println("already table");
 		}
-		
 	}
 
 	private static boolean bbdataTableExists(boolean sqlite) {
@@ -195,10 +221,10 @@ public abstract class BBDataBlock {
 				return false;
 			return true;
 		} catch (SQLException ex) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception" + ((sqlite)?"sqlite":"mysql"), ex);
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception" + ((sqlite)?" sqlite":" mysql"), ex);
 			return false;
 		} catch (ClassNotFoundException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception (cnf)"  + ((sqlite)?" sqlite":" mysql"));
 			return false;
 		} finally {
 			try {
@@ -225,12 +251,15 @@ public abstract class BBDataBlock {
 				conn.setAutoCommit(false);
 			}
 			st = conn.createStatement();
-			st.executeUpdate(BBDATA_TABLE);
-			System.out.println("created table");
+			if(sqlite) {
+				st.executeUpdate(BBDATA_TABLE_SQLITE);
+			} else {
+				st.executeUpdate(BBDATA_TABLE_MYSQL);
+			}
 		} catch (SQLException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create Table SQL Exception" + ((sqlite)?"sqlite":"mysql"));
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create Table SQL Exception" + ((sqlite)?" sqlite":" mysql"), e);
 		} catch (ClassNotFoundException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create Table SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create Table SQL Exception (cnf)"  + ((sqlite)?" sqlite":" mysql"));
 		} finally {
 			try {
 				if (conn != null)

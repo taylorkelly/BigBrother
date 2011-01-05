@@ -79,11 +79,11 @@ public class Watcher {
 	}
 
 	private void saveWatchList() {
-		store("watchList.txt", watchList);
+		store("WatchedPlayers.txt", watchList);
 	}
 
 	private void saveSeenList() {
-		store("seenList.txt", seenList);
+		store("SeenPlayers.txt", seenList);
 	}
 	
 	

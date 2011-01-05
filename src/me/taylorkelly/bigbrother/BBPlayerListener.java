@@ -16,7 +16,7 @@ public class BBPlayerListener extends PlayerListener {
 		String[] split = event.getMessage().split(" ");
 		Player player = event.getPlayer();
 
-		if (split[0].equalsIgnoreCase("/watchplayer")) {
+		if (split[0].equalsIgnoreCase("/watch")) {
 			if (split.length == 2) {
 				Player watchee = plugin.getServer().getPlayer(split[1]);
 				// TODO Change to matchPlayer
@@ -36,7 +36,7 @@ public class BBPlayerListener extends PlayerListener {
 				}
 			} else {
 				player.sendMessage(BigBrother.premessage + "usage is "
-						+ Color.RED + "/watchplayer <player>");
+						+ Color.RED + "/watch <player>");
 			}
 			event.setCancelled(true);
 		} else if (split[0].equalsIgnoreCase("/watched")) {
