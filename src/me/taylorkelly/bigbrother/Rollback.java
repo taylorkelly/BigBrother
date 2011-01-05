@@ -16,23 +16,28 @@ import org.bukkit.*;
 
 public class Rollback {
 	private Server server;
-	private String playerName;
-	private ArrayList<Player> players;
+	private ArrayList<Player> recievers;
+	private ArrayList<String> players;
+
 	private LinkedList<BBDataBlock> list;
 	
 	private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
 
-	public Rollback(Server server, String playerName) {
+	public Rollback(Server server) {
 		this.server = server;
-		this.playerName = playerName;
-		players = new ArrayList<Player>();
+		recievers = new ArrayList<Player>();
 		list = new LinkedList<BBDataBlock>();
+		players = new ArrayList<String>();
 	}
 
 	public void addReciever(Player player) {
+		recievers.add(player);
+	}
+	
+	public void addPlayer(String player) {
 		players.add(player);
 	}
-
+	
 	public void rollback() {
 		switch (BBSettings.dataDest) {
 		case MYSQL:
@@ -62,10 +67,11 @@ public class Rollback {
 			// TODO maybe more customizable actions?
 			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED + " or action = "
 					+ BBDataBlock.DELTA_CHEST + " or action = " + BBDataBlock.SIGN_TEXT;
+			
+			String playerString = createPlayerString();
 			ps = conn.prepareStatement("SELECT * from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
-					+ ") and player = ? and rbacked = 0 order by date desc");
+					+ ")" + playerString + " and rbacked = 0 order by date desc");
 
-			ps.setString(1, playerName);
 			set = ps.executeQuery();
 
 			int size = 0;
@@ -75,23 +81,22 @@ public class Rollback {
 				size++;
 			}
 			if (size > 0) {
-				for (Player player : players) {
+				for (Player player : recievers) {
 					player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
 				}
 				try {
 					rollbackBlocks();
 					ps = conn.prepareStatement("UPDATE " + BBDataBlock.BBDATA_NAME + " set rbacked = 1 where (" + actionString
-							+ ") and player = ? and rbacked = 0");
-					ps.setString(1, playerName);
+							+ ")" + playerString + " and rbacked = 0");
 					ps.execute();
-					for (Player player : players) {
-						player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
+					for (Player player : recievers) {
+						player.sendMessage(BigBrother.premessage + "Successfully rollback'd all" + getPlayerSimpleString() + " changes.");
 					}
 				} catch (SQLException ex) {
 					BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception", ex);
 				}
 			} else {
-				for (Player player : players) {
+				for (Player player : recievers) {
 					player.sendMessage(BigBrother.premessage + "Nothing to rollback.");
 				}
 			}
@@ -112,6 +117,34 @@ public class Rollback {
 				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception (on close)");
 			}
 		}
+	}
+
+	private String getPlayerSimpleString() {
+		if(players.size() == 0) return "";
+		StringBuilder builder = new StringBuilder(" of");
+		for(String name: players) {
+			builder.append(" ");
+			builder.append(name);
+			builder.append("'s, ");
+		}
+		if (builder.toString().contains(","))
+			builder.delete(builder.lastIndexOf(","), builder.length());
+		return builder.toString();
+	}
+
+	private String createPlayerString() {
+		if(players.size() == 0) return "";
+		StringBuilder builder = new StringBuilder(" and (");
+		for(String name: players) {
+			builder.append("player");
+			builder.append(" = ");
+			builder.append(name);
+			builder.append(" or ");
+		}
+		if (builder.toString().contains("or"))
+			builder.delete(builder.lastIndexOf("or")-1, builder.length());
+		builder.append(")");
+		return builder.toString();
 	}
 
 	private void rollbackBlocks() {
