@@ -54,7 +54,7 @@ public class Rollback {
 	            conn = DriverManager.getConnection(BBSettings.liteDb);
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 				conn.setAutoCommit(false);
 			}
 

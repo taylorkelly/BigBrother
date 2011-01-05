@@ -1,12 +1,7 @@
 package me.taylorkelly.bigbrother;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Stack;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -20,7 +15,7 @@ public class Finder {
 
 	public Finder(Location location) {
 		this.location = location;
-		this.radius = BBSettings.defaultRadius;
+		this.radius = BBSettings.defaultSearchRadius;
 		players = new ArrayList<Player>();
 	}
 
@@ -63,7 +58,7 @@ public class Finder {
 	            conn = DriverManager.getConnection(BBSettings.liteDb);
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 				conn.setAutoCommit(false);
 			}
 			
