@@ -4,7 +4,8 @@ import org.bukkit.*;
 
 public class SignText extends BBDataBlock {
 	public SignText(Player player, Sign sign) {
-		super(player.getName(), SIGN_TEXT, sign.getX(), sign.getY(), sign.getZ(),
+		//TODO Better World support
+		super(player.getName(), 0, SIGN_TEXT, sign.getX(), sign.getY(), sign.getZ(),
 				getText(sign));
 	}
 
