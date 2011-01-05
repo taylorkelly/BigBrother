@@ -97,9 +97,10 @@ public class BBDataBlock {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception (" + action + ")");
 		} finally {
 			try {
-				if (bwriter != null)
+				if (bwriter != null) {
+					bwriter.flush();
 					bwriter.close();
-				if (fwriter != null)
+				} if (fwriter != null)
 					fwriter.close();
 			} catch (IOException e) {
 				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception (on close) (" + action + ")");
@@ -117,7 +118,7 @@ public class BBDataBlock {
 	            conn = DriverManager.getConnection(BBSettings.liteDb);
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 				conn.setAutoCommit(false);
 			}
 			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, data, rbacked) VALUES (?,?,?,?,?,?,?,?,0)", 1);
@@ -163,7 +164,7 @@ public class BBDataBlock {
 		Connection conn = null;
 		ResultSet rs = null;
 		try {
-			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+			conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 			DatabaseMetaData dbm = conn.getMetaData();
 			rs = dbm.getTables(null, null, BBDATA_NAME, null);
 			if (!rs.next())
@@ -188,7 +189,7 @@ public class BBDataBlock {
 		Connection conn = null;
 		Statement st = null;
 		try {
-			conn = DriverManager.getConnection(BBSettings.db, BBSettings.username, BBSettings.password);
+			conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 			conn.setAutoCommit(false);
 			st = conn.createStatement();
 			st.executeUpdate(BBDATA_TABLE);

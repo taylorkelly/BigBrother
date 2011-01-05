@@ -158,7 +158,10 @@ public class BBPlayerListener extends PlayerListener {
 	}
 
 	public void onPlayerTeleport(PlayerMoveEvent event) {
-		if (BBSettings.position && plugin.watching(event.getPlayer())) {
+		Location from = event.getFrom();
+		Location to = event.getTo();
+		
+		if (BBSettings.position && plugin.watching(event.getPlayer()) && distance(from, to) > 5) {
 			Teleport dataBlock = new Teleport(event.getPlayer(), event.getTo());
 			dataBlock.send();
 		}
@@ -187,5 +190,9 @@ public class BBPlayerListener extends PlayerListener {
 			return false;
 		}
 		return true;
+	}
+	
+	private double distance(Location from, Location to) {
+		return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
 	}
 }
