@@ -60,6 +60,7 @@ public class Finder {
 		// TODO find around player
 	}
 
+	//TODO use IN(1,2,3)
 	private void mysqlFind(boolean sqlite) {
 		Connection conn = null;
 		PreparedStatement ps = null;

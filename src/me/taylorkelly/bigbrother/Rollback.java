@@ -50,7 +50,8 @@ public class Rollback {
 			break;
 		}
 	}
-
+ 
+	//TODO Use IN(1,2,3)
 	private void mysqlRollback(boolean sqlite) {
 		Connection conn = null;
 		PreparedStatement ps = null;
