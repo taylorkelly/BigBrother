@@ -8,6 +8,7 @@ import java.util.logging.Level;
 public class PropertiesFile {
 	private HashMap<String, PropertiesEntry> map;
 	private File file;
+	private boolean modified;
 
 	public PropertiesFile(File file) {
 		this.file = file;
@@ -49,6 +50,7 @@ public class PropertiesFile {
 			return Boolean.parseBoolean(map.get(key).value);
 		} else {
 			map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+			modified = true;
 			return defaultValue;
 		}
 	}
@@ -58,6 +60,7 @@ public class PropertiesFile {
 			return map.get(key).value;
 		} else {
 			map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+			modified = true;
 			return defaultValue;
 		}
 	}
@@ -72,6 +75,7 @@ public class PropertiesFile {
 			}
 		} else {
 			map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+			modified = true;
 			return defaultValue;
 		}
 	}
@@ -86,11 +90,13 @@ public class PropertiesFile {
 			}
 		} else {
 			map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+			modified = true;
 			return defaultValue;
 		}
 	}
 
 	public void save() {
+		if(!modified) return;
 		BufferedWriter bwriter = null;
 		FileWriter fwriter = null;
 		try {
@@ -137,5 +143,4 @@ public class PropertiesFile {
 			this.comment = comment;
 		}
 	}
-
 }

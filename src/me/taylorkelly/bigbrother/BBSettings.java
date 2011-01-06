@@ -63,9 +63,9 @@ public class BBSettings {
 		teleport = pf.getBoolean("teleport", true, "Watch when players teleport around");
 		chestChanges = pf.getBoolean("chestChanges", true, "Watch when players add/remove items from chests");
 		commands = pf.getBoolean("commands", true, "Watch for all player commands");
-		chat = pf.getBoolean("chat", false, "Watch for player chat");
-		login = pf.getBoolean("login", false, "Watch for player logins");
-		disconnect = pf.getBoolean("disconnect", false, "Watch for player disconnects");
+		chat = pf.getBoolean("chat", true, "Watch for player chat");
+		login = pf.getBoolean("login", true, "Watch for player logins");
+		disconnect = pf.getBoolean("disconnect", true, "Watch for player disconnects");
 		doorOpen = pf.getBoolean("doorOpen", false, "Watch for when player opens doors");
 		buttonPress = pf.getBoolean("buttonPress", false, "Watch for when player pushes buttons");
 		leverSwitch = pf.getBoolean("leverSwitch", false, "Watch for when player switches levers");
@@ -74,7 +74,7 @@ public class BBSettings {
 		pf = new PropertiesFile(new File(BigBrother.directory, "BigBrother.properties"));
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
 		defaultSearchRadius = pf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind");
-		boolean mysql = pf.getBoolean("MySQL", false, "If true, uses MySQL. If false, uses Sqlite");
+		boolean mysql = pf.getBoolean("MySQL", true, "If true, uses MySQL. If false, uses Sqlite");
 		boolean flatlog = pf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)");
 		mysqlUser = pf.getString("mysqlUser", "root", "Username for MySQL db (if applicable)");
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL db (if applicable)");
