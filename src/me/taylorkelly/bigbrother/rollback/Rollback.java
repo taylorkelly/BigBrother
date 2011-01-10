@@ -1,41 +1,45 @@
-package me.taylorkelly.bigbrother;
+package me.taylorkelly.bigbrother.rollback;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 
+import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.*;
 
 public class Rollback {
-	private Server server;
-	private ArrayList<Player> recievers;
-	private ArrayList<String> players;
-
-	private LinkedList<BBDataBlock> list;
+	Server server;
+	ArrayList<Player> recievers;
+	ArrayList<String> players;
+	boolean rollbackAll;
+	long time;
+	ArrayList<Integer> blockTypes;
 	
+	
+	private LinkedList<BBDataBlock> listBlocks;
 	private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
 
 	public Rollback(Server server) {
+	    this.rollbackAll = false;
 		this.server = server;
-		recievers = new ArrayList<Player>();
-		list = new LinkedList<BBDataBlock>();
+		this.time = 0;
+		blockTypes = new ArrayList<Integer>();
 		players = new ArrayList<String>();
+		recievers = new ArrayList<Player>();
+		
+		listBlocks = new LinkedList<BBDataBlock>();
 	}
 
 	public void addReciever(Player player) {
 		recievers.add(player);
-	}
-	
-	public void addPlayer(String player) {
-		players.add(player);
 	}
 	
 	public void rollback() {
@@ -64,21 +68,14 @@ public class Rollback {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
 			}
-
-			// TODO maybe more customizable actions?
-			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED + " or action = "
-					+ BBDataBlock.DELTA_CHEST + " or action = " + BBDataBlock.CREATE_SIGN_TEXT  + " or action = " + BBDataBlock.DESTROY_SIGN_TEXT;
-			
-			String playerString = createPlayerString();
-			ps = conn.prepareStatement("SELECT * from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
-					+ ")" + playerString + " and rbacked = 0 order by date DESC");
-
+		
+			ps = conn.prepareStatement(RollbackPreparedStatement.create(this));
 
 			set = ps.executeQuery();
 
 			int size = 0;
 			while (set.next()) {
-				list.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), set.getInt("action"), set.getInt("world"), set.getInt("x"), set.getInt("y"),
+				listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), set.getInt("action"), set.getInt("world"), set.getInt("x"), set.getInt("y"),
 						set.getInt("z"), set.getInt("type"), set.getString("data")));
 				size++;
 			}
@@ -88,8 +85,7 @@ public class Rollback {
 				}
 				try {
 					rollbackBlocks();
-					ps = conn.prepareStatement("UPDATE " + BBDataBlock.BBDATA_NAME + " set rbacked = 1 where (" + actionString
-							+ ")" + playerString + " and rbacked = 0");
+					ps = conn.prepareStatement(RollbackPreparedStatement.update(this));
 					ps.execute();
 					for (Player player : recievers) {
 						player.sendMessage(BigBrother.premessage + "Successfully rollback'd all" + getPlayerSimpleString() + " changes.");
@@ -134,70 +130,51 @@ public class Rollback {
 		return builder.toString();
 	}
 
-	private String createPlayerString() {
-		if(players.size() == 0) return "";
-		StringBuilder builder = new StringBuilder(" and (");
-		for(String name: players) {
-			builder.append("player");
-			builder.append(" = '");
-			builder.append(name);
-			builder.append("' or ");
-		}
-		if (builder.toString().contains("or"))
-			builder.delete(builder.lastIndexOf("or")-1, builder.length());
-		builder.append(")");
-		return builder.toString();
-	}
-
-	private void rollbackBlocks() {
-		lastRollback.clear();
-		while (list.size() > 0) {
-			BBDataBlock dataBlock = list.removeFirst();
-			if (dataBlock != null) {
-				lastRollback.addLast(dataBlock);
-				dataBlock.rollback(server);
-			}
-		}
-	}
-	
-	public static boolean canUndo() {
-		if(lastRollback != null) {
-			return lastRollback.size() > 0;
-		} else return false;
-	}
-	
-	public static int undoSize() {
-		if(lastRollback != null) {
-			return lastRollback.size();
-		} else return 0;
-	}
-	
-	public static void undo(Server server) {
-		while (lastRollback.size() > 0) {
-			BBDataBlock dataBlock = lastRollback.removeFirst();
-			if (dataBlock != null) {
-				dataBlock.redo(server);
-			}
-		}
-	}
-
     public void rollbackAll() {
-        // TODO Auto-generated method stub
-        
+        rollbackAll = true;
     }
 
     public void addPlayers(ArrayList<String> playerList) {
-        // TODO Auto-generated method stub
-        
+        players.addAll(playerList);
     }
 
     public void setTime(long l) {
-        // TODO Auto-generated method stub
-        
+        this.time = l;
     }
 
     public void addTypes(ArrayList<Integer> blockTypes) {
-        // TODO Auto-generated method stub
-        
+        this.blockTypes.addAll(blockTypes);
+    }
+    
+    private void rollbackBlocks() {
+        lastRollback.clear();
+        while (listBlocks.size() > 0) {
+            BBDataBlock dataBlock = listBlocks.removeFirst();
+            if (dataBlock != null) {
+                lastRollback.addLast(dataBlock);
+                dataBlock.rollback(server);
+            }
+        }
+    }
+    
+    public static boolean canUndo() {
+        if(lastRollback != null) {
+            return lastRollback.size() > 0;
+        } else return false;
+    }
+    
+    public static int undoSize() {
+        if(lastRollback != null) {
+            return lastRollback.size();
+        } else return 0;
+    }
+    
+    public static void undo(Server server) {
+        while (lastRollback.size() > 0) {
+            BBDataBlock dataBlock = lastRollback.removeFirst();
+            if (dataBlock != null) {
+                dataBlock.redo(server);
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 package me.taylorkelly.bigbrother;
 
 import me.taylorkelly.bigbrother.datablock.*;
+import me.taylorkelly.bigbrother.rollback.Rollback;
+import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
 
 import org.bukkit.*;
 import org.bukkit.craftbukkit.CraftBlock;
