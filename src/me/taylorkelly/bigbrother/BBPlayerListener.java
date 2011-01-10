@@ -60,15 +60,8 @@ public class BBPlayerListener extends PlayerListener {
 				event.setCancelled(true);
 			} else if (split[1].equalsIgnoreCase("rollback")) {
 				if (split.length > 2) {
-					Rollback rollback = new Rollback(plugin.getServer());
-					rollback.addReciever(player);
-					for (int i = 2; i < split.length; i++) {
-						Player rollbacker = plugin.getServer().getPlayer(split[i]);
-						// TODO matchplayer
-						String playerName = (rollbacker == null) ? split[i] : rollbacker.getName();
-						rollback.addPlayer(playerName);
-					}
-					rollback.rollback();
+				    RollbackInterpreter interpreter = new RollbackInterpreter(player, split, plugin.getServer());
+				    interpreter.interpret();
 				} else {
 					player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb rollback <player>");
 					player.sendMessage(" or " + Color.RED + "/bb rollback <player> <player1> <player2> ...");

@@ -14,7 +14,8 @@ public abstract class BBDataBlock {
 	public final static String BBDATA_NAME = "bbdata";
 	private final static String BBDATA_TABLE_SQLITE = 
 		"CREATE TABLE `bbdata` (" +
-			"`date` bigint UNSIGNED NOT NULL DEFAULT '0'," +
+            "`id` INTEGER PRIMARY KEY," +
+			"`date` INT UNSIGNED NOT NULL DEFAULT '0'," +
 			"`player` varchar(32) NOT NULL DEFAULT 'Player'," +
 			"`action` tinyint NOT NULL DEFAULT '0'," +
 			"`world` tinyint NOT NULL DEFAULT '0'," +
@@ -36,7 +37,8 @@ public abstract class BBDataBlock {
 		"CREATE INDEX rbackedIndex on bbdata (rbacked);";
 	private final static String BBDATA_TABLE_MYSQL = 
 		"CREATE TABLE `bbdata` (" +
-			"`date` bigint UNSIGNED NOT NULL DEFAULT '0'," +
+            "`id` INT NOT NULL AUTO_INCREMENT," +
+			"`date` INT UNSIGNED NOT NULL DEFAULT '0'," +
 			"`player` varchar(32) NOT NULL DEFAULT 'Player'," +
 			"`action` tinyint NOT NULL DEFAULT '0'," +
 			"`world` tinyint NOT NULL DEFAULT '0'," +
@@ -46,6 +48,7 @@ public abstract class BBDataBlock {
 			"`type` tinyint NOT NULL DEFAULT '0'," +
 			"`data` varchar(150) NOT NULL DEFAULT ''," +
 			"`rbacked` boolean NOT NULL DEFAULT '0'," +
+			"PRIMARY KEY (`id`)," + 
 			"INDEX(`world`)," + 
 			"INDEX(`x`)," +
 			"INDEX(`y`)," +
@@ -200,7 +203,7 @@ public abstract class BBDataBlock {
 				System.out.println("test");
 			}
 			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
-			ps.setLong(1, System.currentTimeMillis());
+			ps.setLong(1, System.currentTimeMillis()/1000); //Seconds instead of milliseconds
 			ps.setString(2, player);
 			ps.setInt(3, action);
 			ps.setInt(4, world);

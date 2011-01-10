@@ -180,4 +180,24 @@ public class Rollback {
 			}
 		}
 	}
+
+    public void rollbackAll() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void addPlayers(ArrayList<String> playerList) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setTime(long l) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void addTypes(ArrayList<Integer> blockTypes) {
+        // TODO Auto-generated method stub
+        
+    }
 }
