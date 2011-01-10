@@ -78,8 +78,8 @@ public class Finder {
 
 			// TODO maybe more customizable actions?
 			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED;
-			ps = conn.prepareStatement("SELECT player from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
-					+ ") and rbacked = 0 and x < ? and x > ? and y < ? and y > ?  and z < ? and z > ? order by date desc");
+			ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataBlock.BBDATA_NAME + " WHERE (" + actionString
+					+ ") AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
 
 			ps.setInt(1, location.getBlockX() + radius);
 			ps.setInt(2, location.getBlockX() - radius);
@@ -92,12 +92,9 @@ public class Finder {
 			int size = 0;
 			while (rs.next()) {
 				String player = rs.getString("player");
-				if (modifications.containsKey(player)) {
-					modifications.put(player, modifications.get(player) + 1);
-				} else {
-					modifications.put(player, 1);
-					size++;
-				}
+                int mods = rs.getInt("modifications");
+                modifications.put(player, mods);
+                size++;
 			}
 			if (size > 0) {
 				StringBuilder playerList = new StringBuilder();
@@ -176,6 +173,7 @@ public class Finder {
 				case (BBDataBlock.BLOCK_BROKEN):
 					if (destructions.containsKey(type)) {
 						destructions.put(type, destructions.get(type) + 1);
+						size++;
 					} else {
 						destructions.put(type, 1);
 						size++;
@@ -184,6 +182,7 @@ public class Finder {
 				case (BBDataBlock.BLOCK_PLACED):
 					if (creations.containsKey(type)) {
 						creations.put(type, creations.get(type) + 1);
+						size++;
 					} else {
 						creations.put(type, 1);
 						size++;
@@ -193,9 +192,10 @@ public class Finder {
 
 			}
 			if (size > 0) {
-				StringBuilder creationList = new StringBuilder(Color.BLUE.toString());
+				StringBuilder creationList = new StringBuilder();
+				//creationList.append(Color.AQUA);
 				creationList.append("Placed Blocks: ");
-				creationList.append(Color.WHITE);
+				//creationList.append(Color.WHITE);
 				for (Entry<Integer, Integer> entry : creations.entrySet()) {
 					creationList.append(Material.getMaterial(entry.getKey()));
 					creationList.append(" (");
@@ -204,9 +204,10 @@ public class Finder {
 				}
 				if (creationList.toString().contains(","))
 					creationList.delete(creationList.lastIndexOf(","), creationList.length());
-				StringBuilder brokenList = new StringBuilder(Color.RED.toString());
+				StringBuilder brokenList = new StringBuilder();
+				//brokenList.append(Color.RED);
 				brokenList.append("Broken Blocks: ");
-				brokenList.append(Color.WHITE);
+				//brokenList.append(Color.WHITE);
 				for (Entry<Integer, Integer> entry : destructions.entrySet()) {
 					brokenList.append(Material.getMaterial(entry.getKey()));
 					brokenList.append(" (");
@@ -217,9 +218,9 @@ public class Finder {
 					brokenList.delete(brokenList.lastIndexOf(","), brokenList.length());
 				for (Player player : players) {
 					player.sendMessage(BigBrother.premessage + playerName + " has made " + size + " modifications");
-					if (!creationList.toString().equals(""))
+					if (creations.entrySet().size() > 0)
 						player.sendMessage(creationList.toString());
-					if (!brokenList.toString().equals(""))
+					if (destructions.entrySet().size() > 0)
 						player.sendMessage(brokenList.toString());
 				}
 			} else {
