@@ -25,9 +25,9 @@ public class RollbackInterpreter {
             String argument = split[i].trim();
             if (argument.equals("") || argument.equals(" "))
                 continue;
-            if (argument.substring(0, 2).equalsIgnoreCase("t:")) {
+            if (argument.length() > 2 && argument.substring(0, 2).equalsIgnoreCase("t:")) {
                 parseTime(argument.substring(2));
-            } else if (argument.substring(0, 3).equalsIgnoreCase("id:")) {
+            } else if (argument.length() > 3 && argument.substring(0, 3).equalsIgnoreCase("id:")) {
                 parseId(argument.substring(3));
             } else if (argument.equalsIgnoreCase("*")) {
                 all = true;
