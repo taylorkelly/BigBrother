@@ -67,11 +67,11 @@ public class Rollback {
 
 			// TODO maybe more customizable actions?
 			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED + " or action = "
-					+ BBDataBlock.DELTA_CHEST + " or action = " + BBDataBlock.SIGN_TEXT;
+					+ BBDataBlock.DELTA_CHEST + " or action = " + BBDataBlock.CREATE_SIGN_TEXT  + " or action = " + BBDataBlock.DESTROY_SIGN_TEXT;
 			
 			String playerString = createPlayerString();
 			ps = conn.prepareStatement("SELECT * from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
-					+ ")" + playerString + " and rbacked = 0 order by date desc");
+					+ ")" + playerString + " and rbacked = 0 order by date DESC");
 
 
 			set = ps.executeQuery();

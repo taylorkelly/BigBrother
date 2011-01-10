@@ -3,6 +3,8 @@ package me.taylorkelly.bigbrother;
 import me.taylorkelly.bigbrother.datablock.*;
 
 import org.bukkit.*;
+import org.bukkit.craftbukkit.CraftBlock;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.event.player.*;
 
 public class BBPlayerListener extends PlayerListener {
@@ -84,18 +86,6 @@ public class BBPlayerListener extends PlayerListener {
 					}
 				} else {
 					player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb undo");
-				}
-				event.setCancelled(true);
-			} else if (split[1].equalsIgnoreCase("tp")) {
-				if (split.length == 5 && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4])) {
-					World currentWorld = plugin.getServer().getWorlds()[0];
-					// TODO better World Support
-					Location loc = new Location(currentWorld, Double.parseDouble(split[2]), Double.parseDouble(split[3]), Double.parseDouble(split[4]));
-					Teleporter tp = new Teleporter(loc);
-					tp.addTeleportee(player);
-					tp.teleport();
-				} else {
-					player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb tp <x> <y> <z>");
 				}
 				event.setCancelled(true);
 			} else if (split[1].equalsIgnoreCase("here")) {
@@ -229,4 +219,5 @@ public class BBPlayerListener extends PlayerListener {
 	private double distance(Location from, Location to) {
 		return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
 	}
+	
 }

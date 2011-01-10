@@ -14,7 +14,7 @@ public abstract class BBDataBlock {
 	public final static String BBDATA_NAME = "bbdata";
 	private final static String BBDATA_TABLE_SQLITE = 
 		"CREATE TABLE `bbdata` (" +
-			"`date` INT UNSIGNED NOT NULL DEFAULT '0'," +
+			"`date` bigint UNSIGNED NOT NULL DEFAULT '0'," +
 			"`player` varchar(32) NOT NULL DEFAULT 'Player'," +
 			"`action` tinyint NOT NULL DEFAULT '0'," +
 			"`world` tinyint NOT NULL DEFAULT '0'," +
@@ -28,6 +28,7 @@ public abstract class BBDataBlock {
 		"CREATE INDEX dateIndex on bbdata (date);" +
 		"CREATE INDEX playerIndex on bbdata (player);" +
 		"CREATE INDEX actionIndex on bbdata (action);" +
+		"CREATE INDEX worldIndex on bbdata (world);" +
 		"CREATE INDEX xIndex on bbdata (x);" +
 		"CREATE INDEX yIndex on bbdata (y);" +
 		"CREATE INDEX zIndex on bbdata (z);" +
@@ -35,7 +36,7 @@ public abstract class BBDataBlock {
 		"CREATE INDEX rbackedIndex on bbdata (rbacked);";
 	private final static String BBDATA_TABLE_MYSQL = 
 		"CREATE TABLE `bbdata` (" +
-			"`date` INT UNSIGNED NOT NULL DEFAULT '0'," +
+			"`date` bigint UNSIGNED NOT NULL DEFAULT '0'," +
 			"`player` varchar(32) NOT NULL DEFAULT 'Player'," +
 			"`action` tinyint NOT NULL DEFAULT '0'," +
 			"`world` tinyint NOT NULL DEFAULT '0'," +
@@ -45,6 +46,7 @@ public abstract class BBDataBlock {
 			"`type` tinyint NOT NULL DEFAULT '0'," +
 			"`data` varchar(150) NOT NULL DEFAULT ''," +
 			"`rbacked` boolean NOT NULL DEFAULT '0'," +
+			"INDEX(`world`)," + 
 			"INDEX(`x`)," +
 			"INDEX(`y`)," +
 			"INDEX(`z`)," +
@@ -66,7 +68,7 @@ public abstract class BBDataBlock {
 
 	public static final int BLOCK_BROKEN = 0;
 	public static final int BLOCK_PLACED = 1;
-	public static final int SIGN_TEXT = 2;
+	public static final int DESTROY_SIGN_TEXT = 2;
 	public static final int TELEPORT = 3;
 	public static final int DELTA_CHEST = 4;
 	public static final int COMMAND = 5;
@@ -76,6 +78,8 @@ public abstract class BBDataBlock {
 	public static final int DOOR_OPEN = 9;
 	public static final int BUTTON_PRESS = 10;
 	public static final int LEVER_SWITCH = 11;
+	public static final int CREATE_SIGN_TEXT = 12;
+
 
 	public BBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
 		this.player = player;
@@ -155,8 +159,8 @@ public abstract class BBDataBlock {
 			return "brokeBlock";
 		case(BLOCK_PLACED):
 			return "placedBlock";
-		case(SIGN_TEXT):
-			return "signText";
+		case(DESTROY_SIGN_TEXT):
+			return "destroySignText";
 		case(TELEPORT):
 			return "teleport";
 		case(DELTA_CHEST):
@@ -175,6 +179,8 @@ public abstract class BBDataBlock {
 			return "button";
 		case(LEVER_SWITCH):
 			return "lever";
+	    case(CREATE_SIGN_TEXT):
+	        return "createSignText";
 		default:
 			return "";
 		}
@@ -194,7 +200,7 @@ public abstract class BBDataBlock {
 				System.out.println("test");
 			}
 			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
-			ps.setLong(1, System.currentTimeMillis()/1000); //Seconds instead of milliseconds
+			ps.setLong(1, System.currentTimeMillis());
 			ps.setString(2, player);
 			ps.setInt(3, action);
 			ps.setInt(4, world);
@@ -332,8 +338,8 @@ public abstract class BBDataBlock {
 			return BrokenBlock.getBBDataBlock(player, world, x, y, z, type, data);
 		case(BLOCK_PLACED):
 			return PlacedBlock.getBBDataBlock(player, world, x, y, z, type, data);
-		case(SIGN_TEXT):
-			return SignText.getBBDataBlock(player, world, x, y, z, type, data);
+		case(DESTROY_SIGN_TEXT):
+			return DestroySignText.getBBDataBlock(player, world, x, y, z, type, data);
 		case(TELEPORT):
 			return Teleport.getBBDataBlock(player, world, x, y, z, type, data);
 		case(DELTA_CHEST):
@@ -352,6 +358,8 @@ public abstract class BBDataBlock {
 			return ButtonPress.getBBDataBlock(player, world, x, y, z, type, data);
 		case(LEVER_SWITCH):
 			return LeverSwitch.getBBDataBlock(player, world, x, y, z, type, data);
+	    case(CREATE_SIGN_TEXT):
+	        return CreateSignText.getBBDataBlock(player, world, x, y, z, type, data);
 		default:
 			return null;
 		}
