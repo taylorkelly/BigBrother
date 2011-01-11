@@ -213,6 +213,54 @@ public class BBPlayerListener extends PlayerListener {
         }
     }
 
+    public void onPlayerItem(PlayerItemEvent event) {
+        if (BBSettings.blockPlace && plugin.watching(event.getPlayer()) && !event.isCancelled()) {
+            int x;
+            int y;
+            int z;
+            int type;
+            PlacedBlock dataBlock;
+            switch(event.getMaterial()) {
+            case LavaBucket:
+                x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
+                y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
+                z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
+                type = Material.Lava.getID();
+                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
+                dataBlock.send();
+                break;
+            case WaterBucket:
+                x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
+                y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
+                z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
+                type = Material.Water.getID();
+                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
+                dataBlock.send();
+                break;
+            case Bucket:
+                BrokenBlock dataBlock2;
+                switch(event.getBlockClicked().getType()) {
+                case StationaryLava:
+                    x = event.getBlockClicked().getX();
+                    y = event.getBlockClicked().getY();
+                    z = event.getBlockClicked().getZ();
+                    type = Material.Lava.getID();
+                    dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
+                    dataBlock2.send();
+                    break;
+                case StationaryWater:
+                    x = event.getBlockClicked().getX();
+                    y = event.getBlockClicked().getY();
+                    z = event.getBlockClicked().getZ();
+                    type = Material.Water.getID();
+                    dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
+                    dataBlock2.send();
+                }
+                break;
+            }
+        }
+    }
+
     public static boolean isInteger(String string) {
         try {
             Integer.parseInt(string);

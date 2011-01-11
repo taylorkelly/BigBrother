@@ -14,6 +14,11 @@ public class PlacedBlock extends BBDataBlock {
         bystanders = new ArrayList<BBDataBlock>();
         // TODO snow check once it gets fixed
     }
+    
+    public PlacedBlock(Player player, int x, int y, int z, int type, int data) {
+        super(player.getName(), BLOCK_PLACED, 0, x, y, z, type, data + "");
+        bystanders = new ArrayList<BBDataBlock>();
+    }
 
     public void send() {
         for (BBDataBlock block : bystanders) {
@@ -25,6 +30,8 @@ public class PlacedBlock extends BBDataBlock {
     private PlacedBlock(String player, int world, int x, int y, int z, int type, String data) {
         super(player, BLOCK_PLACED, world, x, y, z, type, data);
     }
+
+
 
     public void rollback(Server server) {
         World worldy = server.getWorlds()[world];

@@ -18,6 +18,11 @@ public class BrokenBlock extends BBDataBlock {
         signCheck(player, block);
         checkGnomesLivingOnTop(player, block);
     }
+    
+    public BrokenBlock(Player player, int x, int y, int z, int type, int data) {
+        super(player.getName(), BLOCK_BROKEN, 0, x, y, z, type, data + "");
+        bystanders = new ArrayList<BBDataBlock>();
+    }
 
     public void send() {
         for(BBDataBlock block: bystanders) {
@@ -53,6 +58,8 @@ public class BrokenBlock extends BBDataBlock {
     private BrokenBlock(String player, int world, int x, int y, int z, int type, String data) {
         super(player, BLOCK_BROKEN, world, x, y, z, type, data);
     }
+
+
 
     private void torchCheck(Player player, Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
@@ -122,8 +129,19 @@ public class BrokenBlock extends BBDataBlock {
     }
     
     private void checkGnomesLivingOnTop(Player player, Block block) {
-        // TODO Auto-generated method stub
+        ArrayList<Integer> gnomes = new ArrayList<Integer>();
+        gnomes.add(50);
+        gnomes.add(75);
+        gnomes.add(76);
         
+        int x = block.getX();
+        int y = block.getY();
+        int z = block.getZ();
+        Block mrGnome = block.getWorld().getBlockAt(x, y + 1, z);
+        
+        if (gnomes.contains(torchTop.getTypeID()) && torchTop.getData() == 5) {
+            bystanders.add(new BrokenBlock(player, torchTop));
+        }
     }
 
 }
