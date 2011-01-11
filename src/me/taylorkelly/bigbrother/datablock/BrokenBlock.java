@@ -18,14 +18,14 @@ public class BrokenBlock extends BBDataBlock {
         signCheck(player, block);
         checkGnomesLivingOnTop(player, block);
     }
-    
+
     public BrokenBlock(Player player, int x, int y, int z, int type, int data) {
         super(player.getName(), BLOCK_BROKEN, 0, x, y, z, type, data + "");
         bystanders = new ArrayList<BBDataBlock>();
     }
 
     public void send() {
-        for(BBDataBlock block: bystanders) {
+        for (BBDataBlock block : bystanders) {
             block.send();
         }
         super.send();
@@ -33,8 +33,8 @@ public class BrokenBlock extends BBDataBlock {
 
     public void rollback(Server server) {
         World worldy = server.getWorlds()[world];
-        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
-            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
         }
 
         byte blockData = Byte.parseByte(data);
@@ -44,8 +44,8 @@ public class BrokenBlock extends BBDataBlock {
 
     public void redo(Server server) {
         World worldy = server.getWorlds()[world];
-        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
-            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
         }
 
         worldy.getBlockAt(x, y, z).setTypeID(0);
@@ -59,14 +59,12 @@ public class BrokenBlock extends BBDataBlock {
         super(player, BLOCK_BROKEN, world, x, y, z, type, data);
     }
 
-
-
     private void torchCheck(Player player, Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
         torchTypes.add(50);
         torchTypes.add(75);
         torchTypes.add(76);
-        
+
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -93,7 +91,7 @@ public class BrokenBlock extends BBDataBlock {
             bystanders.add(new BrokenBlock(player, torchWest));
         }
     }
-    
+
     private void surroundingSignChecks(Player player, Block block) {
         int x = block.getX();
         int y = block.getY();
@@ -120,27 +118,40 @@ public class BrokenBlock extends BBDataBlock {
             bystanders.add(new BrokenBlock(player, west));
         }
     }
-    
+
     private void signCheck(Player player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             bystanders.add(new DestroySignText(player, sign));
         }
     }
-    
+
     private void checkGnomesLivingOnTop(Player player, Block block) {
         ArrayList<Integer> gnomes = new ArrayList<Integer>();
-        gnomes.add(50);
-        gnomes.add(75);
-        gnomes.add(76);
-        
+        gnomes.add(6); // Sapling
+        gnomes.add(37); // Yellow Flower
+        gnomes.add(38); // Red Flower
+        gnomes.add(39); // Brown Mushroom
+        gnomes.add(40); // Red Mushroom
+        gnomes.add(55); // Redstone
+        gnomes.add(59); // Crops
+        gnomes.add(64); // Wood Door
+        gnomes.add(66); // Tracks
+        gnomes.add(69); // Lever
+        gnomes.add(70); // Stone pressure plate
+        gnomes.add(71); // Iron Door
+        gnomes.add(72); // Wood pressure ePlate
+        gnomes.add(78); // Snow
+        gnomes.add(81); // Cactus
+        gnomes.add(83); // Reeds
+
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
         Block mrGnome = block.getWorld().getBlockAt(x, y + 1, z);
-        
-        if (gnomes.contains(torchTop.getTypeID()) && torchTop.getData() == 5) {
-            bystanders.add(new BrokenBlock(player, torchTop));
+
+        if (gnomes.contains(mrGnome.getTypeID())) {
+            bystanders.add(new BrokenBlock(player, mrGnome));
         }
     }
 
