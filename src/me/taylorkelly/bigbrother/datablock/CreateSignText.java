@@ -1,48 +1,71 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import java.util.logging.Level;
+
+import me.taylorkelly.bigbrother.BigBrother;
+
 import org.bukkit.*;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.CraftWorld;
 
 public class CreateSignText extends BBDataBlock {
-	public CreateSignText(Player player, Sign sign) {
-		//TODO Better World support
-		super(player.getName(), 0, CREATE_SIGN_TEXT, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
-	}
+    public CreateSignText(Player player, Sign sign) {
+        // TODO Better World support
+        super(player.getName(), CREATE_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
+    }
 
-	private static String getText(Sign sign) {
-		String message = "";
-		for (int i = 0; i < 4; i++) {
-			message += sign.getText(i) + "\u0095";
-		}
-		return message;
-	}
-	
-	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
-		return new CreateSignText(player, world, x, y, z, type, data);
-	}
+    private static String getText(Sign sign) {
+        StringBuilder message = new StringBuilder();
+        String[] lines = sign.getLines();
+        for (int i = 0; i < lines.length; i++) {
+            message.append(lines[i]);
+            if(i < lines.length - 1) message.append("\u0060");
+        }
+        return message.toString();
+    }
 
-	private CreateSignText(String player, int world, int x, int y, int z, int type, String data) {
-		super(player, CREATE_SIGN_TEXT, world, x, y, z, type, data);
-	}
+    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+        return new CreateSignText(player, world, x, y, z, type, data);
+    }
 
-	public void rollback(Server server) {
-		// TODO Chunk loading stuffs
-		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
-		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+    private CreateSignText(String player, int world, int x, int y, int z, int type, String data) {
+        super(player, CREATE_SIGN_TEXT, world, x, y, z, type, data);
+    }
 
-		String[] lines = data.split("\u0095"); 
-		//if block at x, y, z is a sign
-		//get sign
-		for (int i = 0; i < 4; i++) {
-			sign.setText(lines[i]);
-		}
-	}
-	
-	public void redo(Server server) {
-		// TODO Chunk loading stuffs
-		// if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(), destination.getBlockZ())))
-		// 		world.loadChunk(world.getChunkAt(destination.getBlockX(), destination.getBlockZ()));
+    public void redo(Server server) {
+        World worldy = server.getWorlds()[world];
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
 
-		//funky stuff.
-	}
+        String[] lines = data.split("\u0060");
+
+        
+        Block block = worldy.getBlockAt(x, y, z);
+        if (block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            for (int i = 0; i < lines.length; i++) {
+                sign.setLine(i, lines[i]);
+            }
+        } else {
+            BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring sign");
+        }
+    }
+
+    public void rollback(Server server) {
+        World worldy = server.getWorlds()[world];
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
+        
+        Block block = worldy.getBlockAt(x, y, z);
+        if (block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            for (int i = 0; i < sign.getLines().length; i++) {
+                sign.setLine(i, "");
+            }
+        } else {
+            BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring sign");
+        }
+     }
 }

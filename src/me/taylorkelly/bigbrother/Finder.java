@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.*;
-import org.bukkit.Color;
 
 public class Finder {
 	private Location location;

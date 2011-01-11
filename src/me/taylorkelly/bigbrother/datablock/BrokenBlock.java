@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.*;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.CraftWorld;
 
 public class BrokenBlock extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
@@ -13,9 +14,9 @@ public class BrokenBlock extends BBDataBlock {
         super(player.getName(), BLOCK_BROKEN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeID(), block.getData() + "");
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
-        //other torch checks
+        surroundingSignChecks(player, block);
         signCheck(player, block);
-        // TODO chest check
+        checkGnomesLivingOnTop(player, block);
     }
 
     public void send() {
@@ -26,25 +27,23 @@ public class BrokenBlock extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        // TODO Chunk loading stuffs
-        // if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ())))
-        // world.loadChunk(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ()));
+        World worldy = server.getWorlds()[world];
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
 
         byte blockData = Byte.parseByte(data);
-        server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(type);
-        server.getWorlds()[world].getBlockAt(x, y, z).setData(blockData);
+        worldy.getBlockAt(x, y, z).setTypeID(type);
+        worldy.getBlockAt(x, y, z).setData(blockData);
     }
 
     public void redo(Server server) {
-        // TODO Chunk loading stuffs
-        // if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ())))
-        // world.loadChunk(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ()));
+        World worldy = server.getWorlds()[world];
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
 
-        server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(0);
+        worldy.getBlockAt(x, y, z).setTypeID(0);
     }
 
     public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
@@ -56,29 +55,62 @@ public class BrokenBlock extends BBDataBlock {
     }
 
     private void torchCheck(Player player, Block block) {
+        ArrayList<Integer> torchTypes = new ArrayList<Integer>();
+        torchTypes.add(50);
+        torchTypes.add(75);
+        torchTypes.add(76);
+        
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
 
         Block torchTop = block.getWorld().getBlockAt(x, y + 1, z);
-        if (torchTop.getTypeID() == 50 && torchTop.getData() == 5) {
+
+        if (torchTypes.contains(torchTop.getTypeID()) && torchTop.getData() == 5) {
             bystanders.add(new BrokenBlock(player, torchTop));
         }
         Block torchNorth = block.getWorld().getBlockAt(x + 1, y, z);
-        if (torchNorth.getTypeID() == 50 && torchNorth.getData() == 1) {
+        if (torchTypes.contains(torchNorth.getTypeID()) && torchNorth.getData() == 1) {
             bystanders.add(new BrokenBlock(player, torchNorth));
         }
         Block torchSouth = block.getWorld().getBlockAt(x - 1, y, z);
-        if (torchSouth.getTypeID() == 50 && torchSouth.getData() == 2) {
+        if (torchTypes.contains(torchSouth.getTypeID()) && torchSouth.getData() == 2) {
             bystanders.add(new BrokenBlock(player, torchSouth));
         }
         Block torchEast = block.getWorld().getBlockAt(x, y, z + 1);
-        if (torchEast.getTypeID() == 50 && torchEast.getData() == 3) {
+        if (torchTypes.contains(torchEast.getTypeID()) && torchEast.getData() == 3) {
             bystanders.add(new BrokenBlock(player, torchEast));
         }
         Block torchWest = block.getWorld().getBlockAt(x, y, z - 1);
-        if (torchWest.getTypeID() == 50 && torchWest.getData() == 4) {
+        if (torchTypes.contains(torchWest.getTypeID()) && torchWest.getData() == 4) {
             bystanders.add(new BrokenBlock(player, torchWest));
+        }
+    }
+    
+    private void surroundingSignChecks(Player player, Block block) {
+        int x = block.getX();
+        int y = block.getY();
+        int z = block.getZ();
+
+        Block top = block.getWorld().getBlockAt(x, y + 1, z);
+        if (top.getTypeID() == 63) {
+            bystanders.add(new BrokenBlock(player, top));
+        }
+        Block north = block.getWorld().getBlockAt(x + 1, y, z);
+        if (north.getTypeID() == 68 && north.getData() == 5) {
+            bystanders.add(new BrokenBlock(player, north));
+        }
+        Block south = block.getWorld().getBlockAt(x - 1, y, z);
+        if (south.getTypeID() == 68 && south.getData() == 4) {
+            bystanders.add(new BrokenBlock(player, south));
+        }
+        Block east = block.getWorld().getBlockAt(x, y, z + 1);
+        if (east.getTypeID() == 68 && east.getData() == 3) {
+            bystanders.add(new BrokenBlock(player, east));
+        }
+        Block west = block.getWorld().getBlockAt(x, y, z - 1);
+        if (west.getTypeID() == 68 && west.getData() == 2) {
+            bystanders.add(new BrokenBlock(player, west));
         }
     }
     
@@ -87,6 +119,11 @@ public class BrokenBlock extends BBDataBlock {
             Sign sign = (Sign) block.getState();
             bystanders.add(new DestroySignText(player, sign));
         }
+    }
+    
+    private void checkGnomesLivingOnTop(Player player, Block block) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

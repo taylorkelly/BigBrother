@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.rollback;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.bukkit.Color;
 import org.bukkit.Player;
@@ -32,7 +33,12 @@ public class RollbackInterpreter {
             } else if (argument.equalsIgnoreCase("*")) {
                 all = true;
             } else {
-                playerList.add(argument);
+                List<Player> targets = server.matchPlayer(argument);
+                Player findee = null;
+                if (targets.size() == 1) {
+                    findee = targets.get(0);
+                }
+                playerList.add((findee == null) ? argument : findee.getName());
             }
         }
     }

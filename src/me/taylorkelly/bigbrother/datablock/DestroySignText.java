@@ -1,12 +1,12 @@
 package me.taylorkelly.bigbrother.datablock;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BigBrother;
 
 import org.bukkit.*;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.CraftWorld;
 
 public class DestroySignText extends BBDataBlock {
     public DestroySignText(Player player, Sign sign) {
@@ -33,16 +33,15 @@ public class DestroySignText extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        // TODO Chunk loading stuffs
-        // if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ())))
-        // world.loadChunk(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ()));
+        World worldy = server.getWorlds()[world];
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
 
         String[] lines = data.split("\u0060");
 
         
-        Block block = server.getWorlds()[world].getBlockAt(x, y, z);
+        Block block = worldy.getBlockAt(x, y, z);
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             for (int i = 0; i < lines.length; i++) {
@@ -54,12 +53,19 @@ public class DestroySignText extends BBDataBlock {
     }
 
     public void redo(Server server) {
-        // TODO Chunk loading stuffs
-        // if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ())))
-        // world.loadChunk(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ()));
-
-        // funky stuff.
-    }
+        World worldy = server.getWorlds()[world];
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
+        
+        Block block = worldy.getBlockAt(x, y, z);
+        if (block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            for (int i = 0; i < sign.getLines().length; i++) {
+                sign.setLine(i, "");
+            }
+        } else {
+            BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring sign");
+        }
+     }
 }

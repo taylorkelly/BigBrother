@@ -2,7 +2,6 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.io.*;
 import java.sql.*;
-import java.util.Calendar;
 import java.util.logging.Level;
 
 import org.bukkit.Server;

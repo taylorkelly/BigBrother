@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import java.util.ArrayList;
 
 import org.bukkit.*;
+import org.bukkit.craftbukkit.CraftWorld;
 
 public class PlacedBlock extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
@@ -11,9 +12,8 @@ public class PlacedBlock extends BBDataBlock {
         // TODO Better World support
         super(player.getName(), BLOCK_PLACED, 0, block.getX(), block.getY(), block.getZ(), block.getTypeID(), block.getData() + "");
         bystanders = new ArrayList<BBDataBlock>();
-        //TODO snow check once it gets fixed
+        // TODO snow check once it gets fixed
     }
-
 
     public void send() {
         for (BBDataBlock block : bystanders) {
@@ -27,25 +27,23 @@ public class PlacedBlock extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        // TODO Chunk loading stuffs
-        // if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ())))
-        // world.loadChunk(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ()));
+        World worldy = server.getWorlds()[world];
+        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
 
-        server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(0);
+        worldy.getBlockAt(x, y, z).setTypeID(0);
     }
 
     public void redo(Server server) {
-        // TODO Chunk loading stuffs
-        // if (!world.isChunkLoaded(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ())))
-        // world.loadChunk(world.getChunkAt(destination.getBlockX(),
-        // destination.getBlockZ()));
+        World worldy = server.getWorlds()[world];
+        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+        }
 
         byte blockData = Byte.parseByte(data);
-        server.getWorlds()[world].getBlockAt(x, y, z).setTypeID(type);
-        server.getWorlds()[world].getBlockAt(x, y, z).setData(blockData);
+        worldy.getBlockAt(x, y, z).setTypeID(type);
+        worldy.getBlockAt(x, y, z).setData(blockData);
     }
 
     public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {

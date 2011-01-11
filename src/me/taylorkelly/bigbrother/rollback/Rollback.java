@@ -56,7 +56,6 @@ public class Rollback {
         }
     }
 
-    // TODO Use IN(1,2,3)
     private void mysqlRollback(boolean sqlite) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -131,7 +130,7 @@ public class Rollback {
         }
     }
 
-    private String getSimpleString(ArrayList list) {
+    private String getSimpleString(ArrayList<?> list) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
             builder.append(list.get(i).toString());
