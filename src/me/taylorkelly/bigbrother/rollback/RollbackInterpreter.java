@@ -67,12 +67,12 @@ public class RollbackInterpreter {
         int lastIndex = 0;
         int currIndex = 1;
         while (currIndex <= strTime.length()) {
-            while (isInteger(strTime.substring(0, currIndex)) && currIndex <= strTime.length()) {
+            while (isInteger(strTime.substring(lastIndex, currIndex)) && currIndex <= strTime.length()) {
                 currIndex++;
             }
             if (currIndex - 1 == lastIndex) {
                 player.sendMessage(Color.RED + "Ignoring time quantifier with no time value: " + strTime.substring(currIndex - 1, currIndex));
-                continue;
+                return;
             } else {
                 if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("d")) {
                     if (days != 0) {
@@ -103,6 +103,8 @@ public class RollbackInterpreter {
                     return;
                 }
             }
+            lastIndex = currIndex;
+            currIndex += 1;
         }
 
         if(days == 0 && hours == 0 && minutes == 0 && seconds == 0) {

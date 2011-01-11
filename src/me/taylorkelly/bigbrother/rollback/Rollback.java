@@ -90,9 +90,9 @@ public class Rollback {
                     }
                     if (time != 0) {
                         Calendar cal = Calendar.getInstance();
-                        String DATE_FORMAT = "kk:mm:ss on MMM d";
+                        String DATE_FORMAT = "kk:mm:ss 'on' MMM d";
                         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-                        cal.setTimeInMillis(time);
+                        cal.setTimeInMillis(time*1000);
                         player.sendMessage(Color.BLUE + "Since: " + Color.WHITE + sdf.format(cal.getTime()));
                     }
 
@@ -134,7 +134,7 @@ public class Rollback {
     private String getSimpleString(ArrayList list) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < list.size(); i++) {
-            builder.append(list.toString());
+            builder.append(list.get(i).toString());
             if (i + 1 < list.size())
                 builder.append(", ");
         }

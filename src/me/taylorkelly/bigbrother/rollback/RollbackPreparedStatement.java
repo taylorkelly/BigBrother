@@ -22,7 +22,7 @@ public class RollbackPreparedStatement {
         }
         if (rollback.time != 0) {
             statement.append(" AND ");
-            statement.append("time > ");
+            statement.append("date > ");
             statement.append("'");
             statement.append(rollback.time);
             statement.append("'");
@@ -95,7 +95,7 @@ public class RollbackPreparedStatement {
         }
         if (rollback.time != 0) {
             statement.append(" AND ");
-            statement.append("time > ");
+            statement.append("date > ");
             statement.append("'");
             statement.append(rollback.time);
             statement.append("'");
