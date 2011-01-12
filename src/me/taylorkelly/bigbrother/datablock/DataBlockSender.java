@@ -143,7 +143,7 @@ public class DataBlockSender {
                 fwriter.close();
             }
         } catch (IOException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception");
+            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception", e);
         } finally {
             try {
                 if (bwriter != null) {

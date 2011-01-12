@@ -76,9 +76,9 @@ public class Finder {
 			}
 
 			// TODO maybe more customizable actions?
-			String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED;
+			String actionString = "action = '" + BBDataBlock.BLOCK_BROKEN + "' or action = '" + BBDataBlock.BLOCK_PLACED + "'";
 			ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataBlock.BBDATA_NAME + " WHERE (" + actionString
-					+ ") AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
+					+ ") AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
 
 			ps.setInt(1, location.getBlockX() + radius);
 			ps.setInt(2, location.getBlockX() - radius);
@@ -115,7 +115,7 @@ public class Finder {
 
 			}
 		} catch (SQLException ex) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception");
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
 		} catch (ClassNotFoundException e) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (cnf)" + ((sqlite) ? "sqlite" : "mysql"));
 		} finally {
@@ -229,7 +229,7 @@ public class Finder {
 
 			}
 		} catch (SQLException ex) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception");
+			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
 		} catch (ClassNotFoundException e) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (cnf)" + ((sqlite) ? "sqlite" : "mysql"));
 		} finally {
