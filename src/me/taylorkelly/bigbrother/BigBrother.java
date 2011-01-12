@@ -3,6 +3,8 @@ package me.taylorkelly.bigbrother;
 import java.io.*;
 import java.util.logging.*;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datablock.DataBlockSender;
+
 import org.bukkit.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -13,11 +15,12 @@ import org.bukkit.plugin.java.*;
 public class BigBrother extends JavaPlugin {
     private BBPlayerListener playerListener;
     private BBBlockListener blockListener;
+    private DataBlockSender sender;
     private Watcher watcher;
 
     public static Logger log;
     public final static String name = "BigBrother";
-    public final static String version = "1.0";
+    public final static String version = "1.1";
     public final static String premessage = Color.AQUA + "[BBROTHER]: " + Color.WHITE;
     public final static String directory = "BigBrother";
 
@@ -26,6 +29,7 @@ public class BigBrother extends JavaPlugin {
     }
 
     public void onDisable() {
+        DataBlockSender.disable();
     }
 
     public void onEnable() {
@@ -43,6 +47,7 @@ public class BigBrother extends JavaPlugin {
         BBSettings.initialize();
         watcher = BBSettings.getWatcher(getServer());
         BBDataBlock.initialize();
+        DataBlockSender.initialize();
         log.info(name + " " + version + " initialized");
     }
 

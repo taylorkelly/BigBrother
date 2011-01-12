@@ -67,6 +67,7 @@ public abstract class BBDataBlock {
 	protected int world;
 	protected int type;
 	protected String data;
+	protected long date;
 
 	public static final int BLOCK_BROKEN = 0;
 	public static final int BLOCK_PLACED = 1;
@@ -84,6 +85,7 @@ public abstract class BBDataBlock {
 
 
 	public BBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
+	    this.date = System.currentTimeMillis()/1000;
 		this.player = player;
 		this.action = action;
 		this.world = world;
@@ -95,141 +97,7 @@ public abstract class BBDataBlock {
 	}
 
 	public void send() {
-		//TODO Batch Inserts
-		
-		switch (BBSettings.dataDest) {
-		case MYSQL:
-			sendSql(false);
-			break;
-		case MYSQL_AND_FLAT:
-			sendSql(false);
-			sendFlatFile();
-			break;
-		case SQLITE:
-			sendSql(true);
-			break;
-		case SQLITE_AND_FLAT:
-			sendSql(true);
-			sendFlatFile();
-			break;
-		}
-	}
-
-	private void sendFlatFile() {
-		File dir = new File(BigBrother.directory + File.separator + "logs");
-		if(!dir.exists()) dir.mkdir();
-		File file = new File(BigBrother.directory + File.separator + "logs", fixName(player) + ".log");
-		StringBuilder builder = new StringBuilder(System.currentTimeMillis() + "");
-		builder.append(" - ");
-		builder.append(getAction(action));
-		builder.append(" ");
-		builder.append(world);
-		builder.append("@(");
-		builder.append(x);
-		builder.append(",");
-		builder.append(y);
-		builder.append(",");
-		builder.append(z);
-		builder.append(") info: ");
-		builder.append(data);
-		BufferedWriter bwriter = null;
-		FileWriter fwriter = null;
-		try {
-			fwriter = new FileWriter(file, true);
-			bwriter = new BufferedWriter(fwriter);
-			bwriter.write(builder.toString());
-			bwriter.newLine();
-			bwriter.flush();
-		} catch (IOException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception (" + action + ")");
-		} finally {
-			try {
-				if (bwriter != null) {
-					bwriter.flush();
-					bwriter.close();
-				} if (fwriter != null)
-					fwriter.close();
-			} catch (IOException e) {
-				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception (on close) (" + action + ")");
-			}
-		}
-	}
-
-	private String getAction(int action) {
-		switch(action) {
-		case(BLOCK_BROKEN):
-			return "brokeBlock";
-		case(BLOCK_PLACED):
-			return "placedBlock";
-		case(DESTROY_SIGN_TEXT):
-			return "destroySignText";
-		case(TELEPORT):
-			return "teleport";
-		case(DELTA_CHEST):
-			return "deltaChest";
-		case(COMMAND):
-			return "command";
-		case(CHAT):
-			return "chat";
-		case(DISCONNECT):
-			return "disconnect";
-		case(LOGIN):
-			return "login";
-		case(DOOR_OPEN):
-			return "door";
-		case(BUTTON_PRESS):
-			return "button";
-		case(LEVER_SWITCH):
-			return "lever";
-	    case(CREATE_SIGN_TEXT):
-	        return "createSignText";
-		default:
-			return "";
-		}
-	}
-
-	private void sendSql(boolean sqlite) {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			if (sqlite) {
-				Class.forName("org.sqlite.JDBC");  
-	            conn = DriverManager.getConnection(BBSettings.liteDb);
-			} else {
-				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-				System.out.println("test");
-			}
-			ps = conn.prepareStatement("INSERT INTO " + BBDATA_NAME + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
-			ps.setLong(1, System.currentTimeMillis()/1000); //Seconds instead of milliseconds
-			ps.setString(2, player);
-			ps.setInt(3, action);
-			ps.setInt(4, world);
-			ps.setInt(5, x);
-			ps.setInt(6, y);
-			ps.setInt(7, z);
-			ps.setInt(8, type);
-			ps.setString(9, data);
-			ps.executeUpdate();
-		} catch (SQLException ex) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (" + action + ")", ex);
-		} catch (ClassNotFoundException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (cnf)"  + ((sqlite)?"sqlite":"mysql"));
-		} finally {
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (rs != null) {
-					rs.close();
-				}
-				if (conn != null)
-					conn.close();
-			} catch (SQLException ex) {
-				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (on close)  (" + action + ")");
-			}
-		}
+	    DataBlockSender.offer(this);
 	}
 
 	public static void initialize() {
@@ -244,7 +112,6 @@ public abstract class BBDataBlock {
 			sqlite = true;
 			break;
 		}
-		
 
 		if (!bbdataTableExists(sqlite)) {
 			BigBrother.log.info("[BBROTHER]: Generating bbdata table");
@@ -318,13 +185,6 @@ public abstract class BBDataBlock {
 				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the table (on close)");
 			}
 		}
-	}
-	
-	public static String fixName(String player) {
-		return player.replace(".", "").replace(":", "").replace("<", "")
-				.replace(">", "").replace("*", "").replace("\\", "")
-				.replace("/", "").replace("?", "").replace("\"", "")
-				.replace("|", "");
 	}
 	
 	public abstract void rollback(Server server);
