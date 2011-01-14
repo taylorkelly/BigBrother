@@ -27,6 +27,7 @@ public class Rollback {
 
     private LinkedList<BBDataBlock> listBlocks;
     private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
+    private static String undoRollback = null;
 
     public Rollback(Server server) {
         this.rollbackAll = false;
@@ -83,26 +84,28 @@ public class Rollback {
                 for (Player player : recievers) {
                     player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
                     String players = (rollbackAll) ? "All Players" : getSimpleString(this.players);
-                    player.sendMessage(Color.BLUE + "Player(s): " + Color.WHITE + players);
+                    player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + players);
                     if (blockTypes.size() > 0) {
-                        player.sendMessage(Color.BLUE + "Block Type(s): " + Color.WHITE + getSimpleString(this.blockTypes));
+                        player.sendMessage(ChatColor.BLUE + "Block Type(s): " + ChatColor.WHITE + getSimpleString(this.blockTypes));
                     }
                     if (time != 0) {
                         Calendar cal = Calendar.getInstance();
                         String DATE_FORMAT = "kk:mm:ss 'on' MMM d";
                         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
                         cal.setTimeInMillis(time*1000);
-                        player.sendMessage(Color.BLUE + "Since: " + Color.WHITE + sdf.format(cal.getTime()));
+                        player.sendMessage(ChatColor.BLUE + "Since: " + ChatColor.WHITE + sdf.format(cal.getTime()));
                     }
 
                 }
                 try {
+                    ps.close();
                     rollbackBlocks();
                     ps = conn.prepareStatement(RollbackPreparedStatement.update(this));
                     ps.execute();
                     for (Player player : recievers) {
                         player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
                     }
+                    undoRollback = RollbackPreparedStatement.undoStatement(this);
                 } catch (SQLException ex) {
                     BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception", ex);
                 }
@@ -161,7 +164,7 @@ public class Rollback {
         while (listBlocks.size() > 0) {
             BBDataBlock dataBlock = listBlocks.removeFirst();
             if (dataBlock != null) {
-                lastRollback.addLast(dataBlock);
+                lastRollback.addFirst(dataBlock);
                 dataBlock.rollback(server);
             }
         }
@@ -181,11 +184,57 @@ public class Rollback {
             return 0;
     }
 
-    public static void undo(Server server) {
+    public static void undo(Server server, Player player) {
+        int i = 0;
         while (lastRollback.size() > 0) {
             BBDataBlock dataBlock = lastRollback.removeFirst();
             if (dataBlock != null) {
                 dataBlock.redo(server);
+                i++;
+            }
+        }
+        if(undoRollback != null) {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            ResultSet set = null;
+            boolean sqlite = false;
+            switch (BBSettings.dataDest) {
+            case MYSQL:
+            case MYSQL_AND_FLAT:
+                sqlite = false;
+                break;
+            case SQLITE:
+            case SQLITE_AND_FLAT:
+                sqlite = true;
+                break;
+            }
+            try {
+                if (sqlite) {
+                    Class.forName("org.sqlite.JDBC");
+                    conn = DriverManager.getConnection(BBSettings.liteDb);
+                } else {
+                    Class.forName("com.mysql.jdbc.Driver");
+                    conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
+                }
+                ps = conn.prepareStatement(undoRollback);
+                ps.execute();
+                undoRollback = null;
+                player.sendMessage(ChatColor.AQUA + "Successfully undid a rollback of " + i + " edits");
+            } catch (SQLException ex) {
+                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback undo SQL Exception", ex);
+            } catch (ClassNotFoundException e) {
+                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback Undo (Class not found)" + ((sqlite) ? "sqlite" : "mysql"));
+            } finally {
+                try {
+                    if (set != null)
+                        set.close();
+                    if (ps != null)
+                        ps.close();
+                    if (conn != null)
+                        conn.close();
+                } catch (SQLException ex) {
+                    BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback undo (on close)");
+                }
             }
         }
     }

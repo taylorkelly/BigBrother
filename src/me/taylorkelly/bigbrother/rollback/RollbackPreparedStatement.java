@@ -106,5 +106,32 @@ public class RollbackPreparedStatement {
         return statement.toString();
     }
 
+    public static String undoStatement(Rollback rollback) {
+        StringBuilder statement = new StringBuilder("UPDATE ");
+        statement.append(BBDataBlock.BBDATA_NAME);
+        statement.append(" SET rbacked = '0'");
+        statement.append(" WHERE ");
+        statement.append(getActionString());
+        if (!rollback.rollbackAll) {
+            statement.append(" AND ");
+            statement.append(getPlayerString(rollback.players));
+        }
+        if (rollback.blockTypes.size() > 0) {
+            statement.append(" AND ");
+            statement.append(getBlockString(rollback.blockTypes));
+        }
+        if (rollback.time != 0) {
+            statement.append(" AND ");
+            statement.append("date > ");
+            statement.append("'");
+            statement.append(rollback.time);
+            statement.append("'");
+        }
+        
+        statement.append(" AND rbacked = '1'");
+        statement.append(";");
+        return statement.toString();
+    }
+
 
 }

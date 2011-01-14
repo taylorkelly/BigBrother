@@ -43,25 +43,32 @@ public class DataBlockSender {
         Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
         sending.drainTo(collection);
 
+        boolean worked = false;
         switch (BBSettings.dataDest) {
         case MYSQL:
-            sendBlocksMySQL(false, collection);
+            worked = sendBlocksMySQL(false, collection);
             break;
         case MYSQL_AND_FLAT:
-            sendBlocksMySQL(false, collection);
+            worked = sendBlocksMySQL(false, collection);
             sendBlocksFlatFile(collection);
             break;
         case SQLITE:
-            sendBlocksMySQL(true, collection);
+            worked = sendBlocksMySQL(true, collection);
             break;
         case SQLITE_AND_FLAT:
-            sendBlocksMySQL(true, collection);
+            worked = sendBlocksMySQL(true, collection);
             sendBlocksFlatFile(collection);
             break;
         }
+        
+        if(!worked) {
+            sending.addAll(collection);
+            BigBrother.log.log(Level.INFO, "[BBROTHER]: SQL send failed. Keeping data for later send.");
+
+        }
     }
 
-    private static void sendBlocksMySQL(boolean sqlite, Collection<BBDataBlock> collection) {
+    private static boolean sendBlocksMySQL(boolean sqlite, Collection<BBDataBlock> collection) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -89,10 +96,13 @@ public class DataBlockSender {
                 ps.addBatch();
             }
             ps.executeBatch();
+            return true;
         } catch (SQLException ex) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception", ex);
+            return false;
         } catch (ClassNotFoundException e) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (cnf)" + ((sqlite) ? " using sqlite" : " using mysql"));
+            return false;
         } finally {
             try {
                 if (ps != null) {

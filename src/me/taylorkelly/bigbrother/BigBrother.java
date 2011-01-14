@@ -15,13 +15,12 @@ import org.bukkit.plugin.java.*;
 public class BigBrother extends JavaPlugin {
     private BBPlayerListener playerListener;
     private BBBlockListener blockListener;
-    private DataBlockSender sender;
     private Watcher watcher;
 
     public static Logger log;
-    public final static String name = "BigBrother";
-    public final static String version = "1.1";
-    public final static String premessage = Color.AQUA + "[BBROTHER]: " + Color.WHITE;
+    public final String name = this.getDescription().getName();
+    public final String version = this.getDescription().getVersion();
+    public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
     public final static String directory = "BigBrother";
 
     public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
@@ -61,6 +60,8 @@ public class BigBrother extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Normal, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.Normal, this);
+
         // getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICK,
         // playerListener, Priority.Normal, this);
     }

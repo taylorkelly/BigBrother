@@ -42,7 +42,7 @@ public class BBPlayerListener extends PlayerListener {
                         player.sendMessage(BigBrother.premessage + "No longer watching " + playerName + status);
                     }
                 } else {
-                    player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb watch <player>");
+                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb watch <player>");
                 }
                 event.setCancelled(true);
             } else if (split[1].equalsIgnoreCase("watched")) {
@@ -69,8 +69,8 @@ public class BBPlayerListener extends PlayerListener {
                     interpreter.interpret();
                 } else {
                     // TODO Better help
-                    player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb rollback <player>");
-                    player.sendMessage(" or " + Color.RED + "/bb rollback <player> <player1> <player2> ...");
+                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb rollback <player>");
+                    player.sendMessage(" or " + ChatColor.RED + "/bb rollback <player> <player1> <player2> ...");
                 }
                 event.setCancelled(true);
             } else if (split[1].equalsIgnoreCase("undo")) {
@@ -78,13 +78,13 @@ public class BBPlayerListener extends PlayerListener {
                     if (Rollback.canUndo()) {
                         int size = Rollback.undoSize();
                         player.sendMessage(BigBrother.premessage + "Undo-ing last rollback of " + size + " blocks");
-                        Rollback.undo(plugin.getServer());
+                        Rollback.undo(plugin.getServer(), player);
                         player.sendMessage(BigBrother.premessage + "Undo successful");
                     } else {
                         player.sendMessage(BigBrother.premessage + "No rollback to undo");
                     }
                 } else {
-                    player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb undo");
+                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb undo");
                 }
                 event.setCancelled(true);
             } else if (split[1].equalsIgnoreCase("here")) {
@@ -117,10 +117,10 @@ public class BBPlayerListener extends PlayerListener {
                     }
                     finder.find((findee == null) ? split[2] : findee.getName());
                 } else {
-                    player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb here");
-                    player.sendMessage("or " + Color.RED + "/bb here <radius>");
-                    player.sendMessage("or " + Color.RED + "/bb here <name>");
-                    player.sendMessage("or " + Color.RED + "/bb here <name> <radius>");
+                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb here");
+                    player.sendMessage("or " + ChatColor.RED + "/bb here <radius>");
+                    player.sendMessage("or " + ChatColor.RED + "/bb here <name>");
+                    player.sendMessage("or " + ChatColor.RED + "/bb here <name> <radius>");
                 }
                 event.setCancelled(true);
             } else if (split[1].equalsIgnoreCase("find")) {
@@ -161,10 +161,10 @@ public class BBPlayerListener extends PlayerListener {
                     }
                     finder.find((findee == null) ? split[5] : findee.getName());
                 } else {
-                    player.sendMessage(BigBrother.premessage + "usage is " + Color.RED + "/bb find <x> <y> <z>");
-                    player.sendMessage("or " + Color.RED + "/bb find <x> <y> <z> <radius>");
-                    player.sendMessage("or " + Color.RED + "/bb find <x> <y> <z> <name>");
-                    player.sendMessage("or " + Color.RED + "/bb find <x> <y> <z> <name> <radius>");
+                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb find <x> <y> <z>");
+                    player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <radius>");
+                    player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <name>");
+                    player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <name> <radius>");
                 }
                 event.setCancelled(true);
             }
@@ -220,39 +220,42 @@ public class BBPlayerListener extends PlayerListener {
             int z;
             int type;
             PlacedBlock dataBlock;
-            switch(event.getMaterial()) {
-            case LavaBucket:
+            switch (event.getMaterial()) {
+            case LAVA_BUCKET:
                 x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
                 y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
                 z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                type = Material.Lava.getID();
+                type = Material.LAVA.getID();
                 dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
                 dataBlock.send();
                 break;
-            case WaterBucket:
+            case WATER_BUCKET:
                 x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
                 y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
                 z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                type = Material.Water.getID();
+                type = Material.WATER.getID();
                 dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
                 dataBlock.send();
                 break;
-            case Bucket:
+            case BUCKET:
                 BrokenBlock dataBlock2;
-                switch(event.getBlockClicked().getType()) {
-                case StationaryLava:
+
+                switch (event.getBlockClicked().getType()) {
+                case STATIONARY_LAVA:
+                case LAVA:
                     x = event.getBlockClicked().getX();
                     y = event.getBlockClicked().getY();
                     z = event.getBlockClicked().getZ();
-                    type = Material.Lava.getID();
+                    type = Material.LAVA.getID();
                     dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
                     dataBlock2.send();
                     break;
-                case StationaryWater:
+                case STATIONARY_WATER:
+                case WATER:
                     x = event.getBlockClicked().getX();
                     y = event.getBlockClicked().getY();
                     z = event.getBlockClicked().getZ();
-                    type = Material.Water.getID();
+                    type = Material.WATER.getID();
                     dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
                     dataBlock2.send();
                 }

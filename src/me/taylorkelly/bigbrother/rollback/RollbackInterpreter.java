@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.bukkit.Color;
+import org.bukkit.ChatColor;
 import org.bukkit.Player;
 import org.bukkit.Server;
 
@@ -52,14 +52,14 @@ public class RollbackInterpreter {
                 try {
                     blockTypes.add(Integer.parseInt(actId));
                 } catch (Exception e) {
-                    player.sendMessage(Color.RED + "Ignoring invalid block id: " + actId);
+                    player.sendMessage(ChatColor.RED + "Ignoring invalid block id: " + actId);
                 }
             }
         } else {
             try {
                 blockTypes.add(Integer.parseInt(id));
             } catch (Exception e) {
-                player.sendMessage(Color.RED + "Ignoring invalid block id: " + id);
+                player.sendMessage(ChatColor.RED + "Ignoring invalid block id: " + id);
             }
         }
     }
@@ -77,35 +77,35 @@ public class RollbackInterpreter {
                 currIndex++;
             }
             if (currIndex - 1 == lastIndex) {
-                player.sendMessage(Color.RED + "Ignoring time quantifier with no time value: " + strTime.substring(currIndex - 1, currIndex));
+                player.sendMessage(ChatColor.RED + "Ignoring time quantifier with no time value: " + strTime.substring(currIndex - 1, currIndex));
                 return;
             } else {
                 if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("d")) {
                     if (days != 0) {
-                        player.sendMessage(Color.RED + "Two day keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        player.sendMessage(ChatColor.RED + "Two day keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
                     } else {
                         days = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
                     }
                 } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("h")) {
                     if (hours != 0) {
-                        player.sendMessage(Color.RED + "Two hour keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        player.sendMessage(ChatColor.RED + "Two hour keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
                     } else {
                         hours = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
                     }
                 } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("m")) {
                     if (minutes != 0) {
-                        player.sendMessage(Color.RED + "Two minute keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        player.sendMessage(ChatColor.RED + "Two minute keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
                     } else {
                         minutes = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
                     }
                 } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("s")) {
                     if (seconds != 0) {
-                        player.sendMessage(Color.RED + "Two second keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        player.sendMessage(ChatColor.RED + "Two second keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
                     } else {
                         seconds = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
                     }
                 } else {
-                    player.sendMessage(Color.RED + "Ignoring time quantifier with invalid key: " + strTime.substring(currIndex - 1, currIndex));
+                    player.sendMessage(ChatColor.RED + "Ignoring time quantifier with invalid key: " + strTime.substring(currIndex - 1, currIndex));
                     return;
                 }
             }
@@ -114,7 +114,7 @@ public class RollbackInterpreter {
         }
 
         if(days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
-            player.sendMessage(Color.RED + "No change in time was set.");
+            player.sendMessage(ChatColor.RED + "No change in time was set.");
         } else {
             dateSearch = Calendar.getInstance();
             dateSearch.add(Calendar.DAY_OF_MONTH, -days);
@@ -131,8 +131,8 @@ public class RollbackInterpreter {
             rollback.rollbackAll();
         } else {
             if(playerList.size() == 0) {
-                player.sendMessage(Color.RED + "No players marked for rollback. Cancelling rollback.");
-                player.sendMessage(Color.RED + "Use * for all players");
+                player.sendMessage(ChatColor.RED + "No players marked for rollback. Cancelling rollback.");
+                player.sendMessage(ChatColor.RED + "Use * for all players");
                 return;
             }
             rollback.addPlayers(playerList);
