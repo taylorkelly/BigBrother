@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.logging.*;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.DataBlockSender;
+import me.taylorkelly.bigbrother.fixes.Fix;
+import me.taylorkelly.bigbrother.fixes.Fix13;
 
 import org.bukkit.*;
 import org.bukkit.event.Event;
@@ -29,6 +31,7 @@ public class BigBrother extends JavaPlugin {
 
     public void onDisable() {
         DataBlockSender.disable();
+        System.out.println("test");
     }
 
     public void onEnable() {
@@ -47,6 +50,8 @@ public class BigBrother extends JavaPlugin {
         watcher = BBSettings.getWatcher(getServer());
         BBDataBlock.initialize();
         DataBlockSender.initialize();
+        Fix fix = new Fix13();
+        fix.apply();
         log.info(name + " " + version + " initialized");
     }
 

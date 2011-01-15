@@ -42,6 +42,7 @@ public class BBSettings {
 	public static String mysqlUser = "root";
 	public static String mysqlPass = "root";
 	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
+	public static int sendDelay;
 
 	private static ArrayList<String> watchList;
 	private static ArrayList<String> seenList;
@@ -79,6 +80,7 @@ public class BBSettings {
 		mysqlUser = pf.getString("mysqlUser", "root", "Username for MySQL db (if applicable)");
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL db (if applicable)");
 		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "DB for MySQL (if applicable)");
+	    sendDelay = pf.getInt("sendDelay", 4, "Delay to batch send updates to database (4-5 recommended)");
 		pf.save();
 
 		if (mysql) {

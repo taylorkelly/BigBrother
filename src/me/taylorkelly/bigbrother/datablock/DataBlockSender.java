@@ -29,7 +29,7 @@ public class DataBlockSender {
 
     public static void initialize() {
         sendTimer = new Timer();
-        sendTimer.schedule(new SendingTask(), 2 * 1000, 2 * 1000);
+        sendTimer.schedule(new SendingTask(), BBSettings.sendDelay * 1000, BBSettings.sendDelay * 1000);
     }
 
     public static void offer(BBDataBlock dataBlock) {
@@ -79,7 +79,6 @@ public class DataBlockSender {
             } else {
                 Class.forName("com.mysql.jdbc.Driver");
                 conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-                System.out.println("test");
             }
             ps = conn.prepareStatement("INSERT INTO " + BBDataBlock.BBDATA_NAME
                     + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
