@@ -1,6 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 public class Chat extends BBDataBlock {
 	public Chat(Player player, String message) {

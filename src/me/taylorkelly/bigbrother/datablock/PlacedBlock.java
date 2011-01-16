@@ -3,14 +3,16 @@ package me.taylorkelly.bigbrother.datablock;
 import java.util.ArrayList;
 
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.entity.Player;
 
 public class PlacedBlock extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
 
     public PlacedBlock(Player player, Block block) {
         // TODO Better World support
-        super(player.getName(), BLOCK_PLACED, 0, block.getX(), block.getY(), block.getZ(), block.getTypeID(), block.getData() + "");
+        super(player.getName(), BLOCK_PLACED, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
         bystanders = new ArrayList<BBDataBlock>();
         // TODO snow check once it gets fixed
     }
@@ -39,7 +41,7 @@ public class PlacedBlock extends BBDataBlock {
             ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
         }
 
-        worldy.getBlockAt(x, y, z).setTypeID(0);
+        worldy.getBlockAt(x, y, z).setTypeId(0);
     }
 
     public void redo(Server server) {
@@ -49,7 +51,7 @@ public class PlacedBlock extends BBDataBlock {
         }
 
         byte blockData = Byte.parseByte(data);
-        worldy.getBlockAt(x, y, z).setTypeID(type);
+        worldy.getBlockAt(x, y, z).setTypeId(type);
         worldy.getBlockAt(x, y, z).setData(blockData);
     }
 

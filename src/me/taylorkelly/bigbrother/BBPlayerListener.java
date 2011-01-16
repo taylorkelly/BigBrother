@@ -7,6 +7,8 @@ import me.taylorkelly.bigbrother.rollback.Rollback;
 import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
 
 import org.bukkit.*;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.*;
 
 public class BBPlayerListener extends PlayerListener {
@@ -20,7 +22,7 @@ public class BBPlayerListener extends PlayerListener {
         String[] split = event.getMessage().split(" ");
         Player player = event.getPlayer();
         // TODO permissions!
-        if (split[0].equalsIgnoreCase("/bb")) {
+        if (split[0].equalsIgnoreCase("/bb") && ((CraftPlayer)player).isOp()) {
             if (split.length == 1 || split[1].equalsIgnoreCase("help") && split.length == 2) {
                 player.sendMessage(BigBrother.premessage + "Hello.");
                 // TODO HELP
@@ -225,7 +227,7 @@ public class BBPlayerListener extends PlayerListener {
                 x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
                 y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
                 z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                type = Material.LAVA.getID();
+                type = Material.LAVA.getId();
                 dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
                 dataBlock.send();
                 break;
@@ -233,7 +235,7 @@ public class BBPlayerListener extends PlayerListener {
                 x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
                 y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
                 z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                type = Material.WATER.getID();
+                type = Material.WATER.getId();
                 dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
                 dataBlock.send();
                 break;
@@ -246,7 +248,7 @@ public class BBPlayerListener extends PlayerListener {
                     x = event.getBlockClicked().getX();
                     y = event.getBlockClicked().getY();
                     z = event.getBlockClicked().getZ();
-                    type = Material.LAVA.getID();
+                    type = Material.LAVA.getId();
                     dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
                     dataBlock2.send();
                     break;
@@ -255,7 +257,7 @@ public class BBPlayerListener extends PlayerListener {
                     x = event.getBlockClicked().getX();
                     y = event.getBlockClicked().getY();
                     z = event.getBlockClicked().getZ();
-                    type = Material.WATER.getID();
+                    type = Material.WATER.getId();
                     dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
                     dataBlock2.send();
                 }

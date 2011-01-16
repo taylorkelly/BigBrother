@@ -16,6 +16,7 @@ import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 public class Rollback {
     Server server;

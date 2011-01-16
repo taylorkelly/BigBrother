@@ -1,6 +1,6 @@
 package me.taylorkelly.bigbrother.datablock;
 
-import org.bukkit.Block;
+import org.bukkit.block.Block;
 import org.bukkit.Server;
 
 public class ButtonPress extends BBDataBlock {

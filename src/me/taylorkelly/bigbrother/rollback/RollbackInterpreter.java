@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Player;
+import org.bukkit.entity.Player;
 import org.bukkit.Server;
 
 public class RollbackInterpreter {

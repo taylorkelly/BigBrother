@@ -6,10 +6,13 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.DataBlockSender;
 import me.taylorkelly.bigbrother.fixes.Fix;
 import me.taylorkelly.bigbrother.fixes.Fix13;
+import me.taylorkelly.bigbrother.fixes.Fix14;
 
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.*;
@@ -24,14 +27,13 @@ public class BigBrother extends JavaPlugin {
     public final String version = this.getDescription().getVersion();
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
     public final static String directory = "BigBrother";
-
-    public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File plugin, ClassLoader cLoader) {
-        super(pluginLoader, instance, desc, plugin, cLoader);
+    
+    public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
+        super(pluginLoader, instance, desc, folder, plugin, cLoader);
     }
 
     public void onDisable() {
         DataBlockSender.disable();
-        System.out.println("test");
     }
 
     public void onEnable() {
@@ -52,6 +54,8 @@ public class BigBrother extends JavaPlugin {
         DataBlockSender.initialize();
         Fix fix = new Fix13();
         fix.apply();
+        Fix fix2 = new Fix14();
+        fix2.apply();
         log.info(name + " " + version + " initialized");
     }
 

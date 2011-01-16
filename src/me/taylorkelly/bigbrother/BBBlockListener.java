@@ -1,6 +1,11 @@
 package me.taylorkelly.bigbrother;
 
 import me.taylorkelly.bigbrother.datablock.*;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockDamageLevel;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
 import org.bukkit.*;
 
@@ -11,7 +16,7 @@ public class BBBlockListener extends BlockListener {
         this.plugin = plugin;
     }
 
-    public void onBlockDamaged(BlockDamagedEvent event) {
+    public void onBlockDamage(BlockDamageEvent event) {
         if (event.getDamageLevel() == BlockDamageLevel.BROKEN && !event.isCancelled()) {
             Player player = event.getPlayer();
             if (BBSettings.blockBreak && plugin.watching(player)) {
@@ -22,7 +27,7 @@ public class BBBlockListener extends BlockListener {
         }
     }
 
-    public void onBlockPlaced(BlockPlacedEvent event) {
+    public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (BBSettings.blockPlace && plugin.watching(player)) {
             Block block = event.getBlockPlaced();
@@ -31,9 +36,8 @@ public class BBBlockListener extends BlockListener {
         }
     }
     
-    public void onBlockInteracted(BlockInteractEvent event) {
+    public void onBlockInteract(BlockInteractEvent event) {
         Block block = event.getBlock();
-        System.out.println(block.getType());
         LivingEntity entity = event.getEntity();
         if(entity instanceof Player) {
             Player player = (Player)entity;

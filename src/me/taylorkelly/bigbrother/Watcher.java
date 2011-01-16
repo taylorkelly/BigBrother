@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 public class Watcher {
 	private ArrayList<String> watchList;

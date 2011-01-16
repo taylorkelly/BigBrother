@@ -1,6 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 public class Disconnect extends BBDataBlock {
 	public Disconnect(Player player) {

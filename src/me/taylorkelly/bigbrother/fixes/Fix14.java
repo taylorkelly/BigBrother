@@ -10,20 +10,20 @@ import java.util.logging.Logger;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 
-public class Fix13 extends Fix {
-    protected int version = 1;
+public class Fix14 extends Fix {
+    protected int version = 2;
     public static final String[] UPDATE_SQLITE = {
             "CREATE TEMPORARY TABLE bbdata_backup(id, date, player, action, world, x, y, z, type, data, rbacked);",
             "INSERT INTO bbdata_backup SELECT id, date, player, action, world, x, y, z, type, data, rbacked FROM bbdata;",
             "DROP TABLE bbdata;",
-            "CREATE TABLE `bbdata` (`id` INTEGER PRIMARY KEY,`date` INT UNSIGNED NOT NULL DEFAULT '0',`player` varchar(32) NOT NULL DEFAULT 'Player',`action` tinyint NOT NULL DEFAULT '0',`world` tinyint NOT NULL DEFAULT '0',`x` int NOT NULL DEFAULT '0',`y` tinyint NOT NULL DEFAULT '0',`z` int NOT NULL DEFAULT '0',`type` smallint NOT NULL DEFAULT '0',`data` varchar(150) NOT NULL DEFAULT '',`rbacked` boolean NOT NULL DEFAULT '0');",
+            "CREATE TABLE `bbdata` (`id` INTEGER PRIMARY KEY,`date` INT UNSIGNED NOT NULL DEFAULT '0',`player` varchar(32) NOT NULL DEFAULT 'Player',`action` tinyint NOT NULL DEFAULT '0',`world` tinyint NOT NULL DEFAULT '0',`x` int NOT NULL DEFAULT '0',`y` tinyint UNSIGNED NOT NULL DEFAULT '0',`z` int NOT NULL DEFAULT '0',`type` smallint NOT NULL DEFAULT '0',`data` varchar(150) NOT NULL DEFAULT '',`rbacked` boolean NOT NULL DEFAULT '0');",
             "INSERT INTO bbdata SELECT id, date, player, action, world, x, y, z, type, data, rbacked FROM bbdata_backup;", "DROP TABLE bbdata_backup;" };
-    public static final String UPDATE_MYSQL = "ALTER TABLE bbdata MODIFY type smallint";
+    public static final String UPDATE_MYSQL = "ALTER TABLE bbdata MODIFY y tinyint UNSIGNED";
 
     public void apply() {
         if (needsUpdate(version)) {
             Logger log = Logger.getLogger("Minecraft");
-            log.info("[BBROTHER] Updating table for 1.3");
+            log.info("[BBROTHER] Updating table for 1.4");
             boolean sqlite = false;
             switch (BBSettings.dataDest) {
             case MYSQL:
@@ -66,10 +66,10 @@ public class Fix13 extends Fix {
             conn.commit();
             return true;
         } catch (SQLException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.3 Fail " + ((sqlite) ? " sqlite" : " mysql"), e);
+            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.4 Fail " + ((sqlite) ? " sqlite" : " mysql"), e);
             return false;
         } catch (ClassNotFoundException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.3 Fail (cnf)" + ((sqlite) ? " sqlite" : " mysql"));
+            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.4 Fail (cnf)" + ((sqlite) ? " sqlite" : " mysql"));
             return false;
         } finally {
             try {
@@ -78,7 +78,7 @@ public class Fix13 extends Fix {
                 if (st != null)
                     st.close();
             } catch (SQLException e) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.3 Fail (on close)");
+                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.4 Fail (on close)");
             }
         }
     }
