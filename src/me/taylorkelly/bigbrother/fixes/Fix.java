@@ -12,7 +12,11 @@ import me.taylorkelly.bigbrother.BigBrother;
 
 public abstract class Fix {
     protected int currVersion = -1;
+    protected File dataFolder;
 
+    public Fix(File dataFolder) {
+        this.dataFolder = dataFolder;
+    }
     public abstract void apply();
 
     public boolean needsUpdate(int version) {
@@ -25,7 +29,7 @@ public abstract class Fix {
     }
 
     private int getCurrVersion() {
-        File file = new File(BigBrother.directory, "VERSION");
+        File file = new File(dataFolder, "VERSION");
         if (!file.exists()) {
             return 0;
         } else {
@@ -46,7 +50,7 @@ public abstract class Fix {
     }
 
     protected void updateVersion(int version) {
-        File file = new File(BigBrother.directory, "VERSION");
+        File file = new File(dataFolder, "VERSION");
         BufferedWriter bwriter = null;
         FileWriter fwriter = null;
         try {

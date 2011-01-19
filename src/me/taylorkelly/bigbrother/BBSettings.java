@@ -38,7 +38,8 @@ public class BBSettings {
 
 	public static boolean autoWatch;
 	public static int defaultSearchRadius;
-	public static DataDest dataDest;
+	public static boolean mysql;
+	public static boolean flatLog;
 	public static String mysqlUser = "root";
 	public static String mysqlPass = "root";
 	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
@@ -47,18 +48,22 @@ public class BBSettings {
 	private static ArrayList<String> watchList;
 	private static ArrayList<String> seenList;
 
-	public static String liteDb = "jdbc:sqlite:" + BigBrother.directory + File.separator + "bigbrother.db";
+	public static String liteDb;
 
-	public static void initialize() {
+	public static void initialize(File dataFolder) {
+	    System.out.println(dataFolder.getPath());
+	    
+	    liteDb = "jdbc:sqlite:" + dataFolder.getPath() + "bigbrother.db";
 		watchList = new ArrayList<String>();
 		seenList = new ArrayList<String>();
 
-		loadPropertiesFiles();
-		loadLists();
+		loadPropertiesFiles(dataFolder);
+		loadLists(dataFolder);
 	}
 
-	private static void loadPropertiesFiles() {
-		PropertiesFile pf = new PropertiesFile(new File(BigBrother.directory, "watching.properties"));
+	private static void loadPropertiesFiles(File dataFolder) {
+	    //Use Configuration once it's finished.
+		PropertiesFile pf = new PropertiesFile(new File(dataFolder, "watching.properties"));
 		blockBreak = pf.getBoolean("blockBreak", true, "Watch when players break blocks");
 		blockPlace = pf.getBoolean("blockPlace", true, "Watch when players place blocks");
 		teleport = pf.getBoolean("teleport", true, "Watch when players teleport around");
@@ -72,34 +77,20 @@ public class BBSettings {
 		leverSwitch = pf.getBoolean("leverSwitch", false, "Watch for when player switches levers");
 		pf.save();
 
-		pf = new PropertiesFile(new File(BigBrother.directory, "BigBrother.properties"));
+		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
 		defaultSearchRadius = pf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind");
-		boolean mysql = pf.getBoolean("MySQL", true, "If true, uses MySQL. If false, uses Sqlite");
-		boolean flatlog = pf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)");
+		mysql = pf.getBoolean("MySQL", true, "If true, uses MySQL. If false, uses Sqlite");
+		flatLog = pf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)");
 		mysqlUser = pf.getString("mysqlUser", "root", "Username for MySQL db (if applicable)");
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL db (if applicable)");
 		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "DB for MySQL (if applicable)");
 	    sendDelay = pf.getInt("sendDelay", 4, "Delay to batch send updates to database (4-5 recommended)");
 		pf.save();
-
-		if (mysql) {
-			if (flatlog) {
-				dataDest = DataDest.MYSQL_AND_FLAT;
-			} else {
-				dataDest = DataDest.MYSQL;
-			}
-		} else {
-			if (flatlog) {
-				dataDest = DataDest.SQLITE_AND_FLAT;
-			} else {
-				dataDest = DataDest.SQLITE;
-			}
-		}
 	}
 
-	private static void loadLists() {
-		File file = new File(BigBrother.directory, "WatchedPlayers.txt");
+	private static void loadLists(File dataFolder) {
+		File file = new File(dataFolder, "WatchedPlayers.txt");
 		try {
 			if (!file.exists())
 				file.createNewFile();
@@ -116,7 +107,7 @@ public class BBSettings {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName() + "");
 		}
 		
-		file = new File(BigBrother.directory, "SeenPlayers.txt");
+		file = new File(dataFolder, "SeenPlayers.txt");
 		try {
 			if (!file.exists())
 				file.createNewFile();
@@ -135,7 +126,7 @@ public class BBSettings {
 
 	}
 
-	public static Watcher getWatcher(Server server) {
-		return new Watcher(watchList, seenList, server);
+	public static Watcher getWatcher(Server server, File dataFolder) {
+		return new Watcher(watchList, seenList, server, dataFolder);
 	}
 }

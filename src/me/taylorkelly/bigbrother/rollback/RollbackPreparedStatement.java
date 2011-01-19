@@ -27,7 +27,37 @@ public class RollbackPreparedStatement {
             statement.append(rollback.time);
             statement.append("'");
         }
-        
+        if (rollback.radius != 0) {
+            statement.append(" AND ");
+            statement.append("x < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockX() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("x > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockX() - rollback.radius);
+            statement.append("'");
+            statement.append("y < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockY() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("y > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockY() - rollback.radius);
+            statement.append("'");
+            statement.append("z < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockZ() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("z > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockZ() - rollback.radius);
+            statement.append("'");
+        }
+
         statement.append(" AND rbacked = '0'");
         statement.append(" ORDER BY id DESC");
         statement.append(";");
@@ -100,7 +130,7 @@ public class RollbackPreparedStatement {
             statement.append(rollback.time);
             statement.append("'");
         }
-        
+
         statement.append(" AND rbacked = '0'");
         statement.append(";");
         return statement.toString();
@@ -127,11 +157,10 @@ public class RollbackPreparedStatement {
             statement.append(rollback.time);
             statement.append("'");
         }
-        
+
         statement.append(" AND rbacked = '1'");
         statement.append(";");
         return statement.toString();
     }
-
 
 }

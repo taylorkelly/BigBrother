@@ -1,4 +1,4 @@
-package me.taylorkelly.bigbrother.datablock;
+package datasource;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +18,7 @@ import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 public class DataBlockSender {
     public static LinkedBlockingQueue<BBDataBlock> sending = new LinkedBlockingQueue<BBDataBlock>();
@@ -27,38 +28,25 @@ public class DataBlockSender {
         if(sendTimer != null) sendTimer.cancel();
     }
 
-    public static void initialize() {
+    public static void initialize(File dataFolder) {
         sendTimer = new Timer();
-        sendTimer.schedule(new SendingTask(), BBSettings.sendDelay * 1000, BBSettings.sendDelay * 1000);
+        sendTimer.schedule(new SendingTask(dataFolder), BBSettings.sendDelay * 1000, BBSettings.sendDelay * 1000);
     }
 
     public static void offer(BBDataBlock dataBlock) {
         sending.add(dataBlock);
     }
 
-    private static void sendBlocks() {
+    private static void sendBlocks(File dataFolder) {
         if (sending.size() == 0)
             return;
 
         Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
         sending.drainTo(collection);
 
-        boolean worked = false;
-        switch (BBSettings.dataDest) {
-        case MYSQL:
-            worked = sendBlocksMySQL(false, collection);
-            break;
-        case MYSQL_AND_FLAT:
-            worked = sendBlocksMySQL(false, collection);
-            sendBlocksFlatFile(collection);
-            break;
-        case SQLITE:
-            worked = sendBlocksMySQL(true, collection);
-            break;
-        case SQLITE_AND_FLAT:
-            worked = sendBlocksMySQL(true, collection);
-            sendBlocksFlatFile(collection);
-            break;
+        boolean worked = sendBlocksMySQL(!BBSettings.mysql, collection);
+        if(BBSettings.flatLog) {
+            sendBlocksFlatFile(dataFolder, collection);
         }
         
         if(!worked) {
@@ -118,15 +106,15 @@ public class DataBlockSender {
         }
     }
 
-    private static void sendBlocksFlatFile(Collection<BBDataBlock> collection) {
-        File dir = new File(BigBrother.directory + File.separator + "logs");
+    private static void sendBlocksFlatFile(File dataFolder, Collection<BBDataBlock> collection) {
+        File dir = new File(dataFolder, "logs");
         if (!dir.exists())
             dir.mkdir();
         BufferedWriter bwriter = null;
         FileWriter fwriter = null;
         try {
             for (BBDataBlock block : collection) {
-                File file = new File(BigBrother.directory + File.separator + "logs", fixName(block.player) + ".log");
+                File file = new File(dir, fixName(block.player) + ".log");
                 StringBuilder builder = new StringBuilder(System.currentTimeMillis() + "");
                 builder.append(" - ");
                 builder.append(getAction(block.action));
@@ -205,8 +193,12 @@ public class DataBlockSender {
     }
 
     private static class SendingTask extends TimerTask {
+        private File dataFolder;
+        public SendingTask(File dataFolder) {
+            this.dataFolder = dataFolder;
+        }
         public void run() {
-            sendBlocks();
+            sendBlocks(dataFolder);
         }
     }
 }

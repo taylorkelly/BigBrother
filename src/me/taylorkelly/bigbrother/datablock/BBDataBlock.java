@@ -6,6 +6,8 @@ import java.util.logging.Level;
 
 import org.bukkit.Server;
 
+import datasource.DataBlockSender;
+
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 
@@ -25,15 +27,15 @@ public abstract class BBDataBlock {
             + "PRIMARY KEY (`id`)," + "INDEX(`world`)," + "INDEX(`x`)," + "INDEX(`y`)," + "INDEX(`z`)," + "INDEX(`player`)," + "INDEX(`action`),"
             + "INDEX(`date`)," + "INDEX(`type`)," + "INDEX(`rbacked`)" + ") ENGINE=InnoDB;";
 
-    protected String player;
-    protected int action;
-    protected int x;
-    protected int y;
-    protected int z;
-    protected int world;
-    protected int type;
-    protected String data;
-    protected long date;
+    public String player;
+    public int action;
+    public int x;
+    public int y;
+    public int z;
+    public int world;
+    public int type;
+    public String data;
+    public long date;
 
     public static final int BLOCK_BROKEN = 0;
     public static final int BLOCK_PLACED = 1;
@@ -48,6 +50,8 @@ public abstract class BBDataBlock {
     public static final int BUTTON_PRESS = 10;
     public static final int LEVER_SWITCH = 11;
     public static final int CREATE_SIGN_TEXT = 12;
+    public static final int LEAF_DECAY = 13;
+    public static final int FLINT_AND_STEEL = 14;
 
     public BBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
         this.date = System.currentTimeMillis() / 1000;
@@ -66,21 +70,9 @@ public abstract class BBDataBlock {
     }
 
     public static void initialize() {
-        boolean sqlite = false;
-        switch (BBSettings.dataDest) {
-        case MYSQL:
-        case MYSQL_AND_FLAT:
-            sqlite = false;
-            break;
-        case SQLITE:
-        case SQLITE_AND_FLAT:
-            sqlite = true;
-            break;
-        }
-
-        if (!bbdataTableExists(sqlite)) {
+        if (!bbdataTableExists(!BBSettings.mysql)) {
             BigBrother.log.info("[BBROTHER]: Generating bbdata table");
-            createBBDataTable(sqlite);
+            createBBDataTable(!BBSettings.mysql);
         }
     }
 

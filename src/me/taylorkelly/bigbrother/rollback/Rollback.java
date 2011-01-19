@@ -25,6 +25,8 @@ public class Rollback {
     boolean rollbackAll;
     long time;
     ArrayList<Integer> blockTypes;
+    int radius;
+    Location center;
 
     private LinkedList<BBDataBlock> listBlocks;
     private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
@@ -46,16 +48,7 @@ public class Rollback {
     }
 
     public void rollback() {
-        switch (BBSettings.dataDest) {
-        case MYSQL:
-        case MYSQL_AND_FLAT:
-            mysqlRollback(false);
-            break;
-        case SQLITE:
-        case SQLITE_AND_FLAT:
-            mysqlRollback(true);
-            break;
-        }
+        mysqlRollback(!BBSettings.mysql);
     }
 
     private void mysqlRollback(boolean sqlite) {
@@ -93,7 +86,7 @@ public class Rollback {
                         Calendar cal = Calendar.getInstance();
                         String DATE_FORMAT = "kk:mm:ss 'on' MMM d";
                         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-                        cal.setTimeInMillis(time*1000);
+                        cal.setTimeInMillis(time * 1000);
                         player.sendMessage(ChatColor.BLUE + "Since: " + ChatColor.WHITE + sdf.format(cal.getTime()));
                     }
 
@@ -194,21 +187,11 @@ public class Rollback {
                 i++;
             }
         }
-        if(undoRollback != null) {
+        if (undoRollback != null) {
             Connection conn = null;
             PreparedStatement ps = null;
             ResultSet set = null;
-            boolean sqlite = false;
-            switch (BBSettings.dataDest) {
-            case MYSQL:
-            case MYSQL_AND_FLAT:
-                sqlite = false;
-                break;
-            case SQLITE:
-            case SQLITE_AND_FLAT:
-                sqlite = true;
-                break;
-            }
+            boolean sqlite = !BBSettings.mysql;
             try {
                 if (sqlite) {
                     Class.forName("org.sqlite.JDBC");
@@ -238,5 +221,10 @@ public class Rollback {
                 }
             }
         }
+    }
+
+    public void setRadius(int radius, Location center) {
+        this.radius = radius;
+        this.center = center;
     }
 }

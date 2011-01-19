@@ -1,5 +1,7 @@
-package me.taylorkelly.bigbrother;
+package me.taylorkelly.bigbrother.listeners;
 
+import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.*;
 
 import org.bukkit.block.Block;

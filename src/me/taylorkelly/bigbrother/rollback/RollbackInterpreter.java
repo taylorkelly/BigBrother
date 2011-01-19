@@ -16,6 +16,7 @@ public class RollbackInterpreter {
     private boolean all = false;
     private Server server;
     private Player player;
+    private int radius = 0;
 
     public RollbackInterpreter(Player player, String[] split, Server server) {
         this.player = player;
@@ -30,6 +31,8 @@ public class RollbackInterpreter {
                 parseTime(argument.substring(2));
             } else if (argument.length() > 3 && argument.substring(0, 3).equalsIgnoreCase("id:")) {
                 parseId(argument.substring(3));
+            } else if (argument.length() > 3 && argument.substring(0, 3).equalsIgnoreCase("r:")) {
+                parseRadius(argument.substring(2));
             } else if (argument.equalsIgnoreCase("*")) {
                 all = true;
             } else {
@@ -40,6 +43,19 @@ public class RollbackInterpreter {
                 }
                 playerList.add((findee == null) ? argument : findee.getName());
             }
+        }
+    }
+
+    private void parseRadius(String radius) {
+        try {
+            int radInt = Integer.parseInt(radius);
+            if(radInt <= 0) {
+                player.sendMessage(ChatColor.RED + "Ignoring invalid radius: " + radius);
+            } else {
+                this.radius = radInt;
+            }
+        } catch (Exception e) {
+            player.sendMessage(ChatColor.RED + "Ignoring invalid radius: " + radius);
         }
     }
 
@@ -113,7 +129,7 @@ public class RollbackInterpreter {
             currIndex += 1;
         }
 
-        if(days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+        if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
             player.sendMessage(ChatColor.RED + "No change in time was set.");
         } else {
             dateSearch = Calendar.getInstance();
@@ -127,22 +143,23 @@ public class RollbackInterpreter {
     public void interpret() {
         Rollback rollback = new Rollback(server);
         rollback.addReciever(player);
-        if(all) {
+        if (all) {
             rollback.rollbackAll();
         } else {
-            if(playerList.size() == 0) {
+            if (playerList.size() == 0) {
                 player.sendMessage(ChatColor.RED + "No players marked for rollback. Cancelling rollback.");
                 player.sendMessage(ChatColor.RED + "Use * for all players");
                 return;
             }
             rollback.addPlayers(playerList);
         }
-        if(dateSearch != null) {
-            rollback.setTime(dateSearch.getTimeInMillis()/1000);
-        } 
-        if(blockTypes.size() != 0) {
+        if (dateSearch != null) {
+            rollback.setTime(dateSearch.getTimeInMillis() / 1000);
+        }
+        if (blockTypes.size() != 0) {
             rollback.addTypes(blockTypes);
         }
+        rollback.setRadius(radius, player.getLocation());
         rollback.rollback();
     }
 

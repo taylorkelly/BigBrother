@@ -11,11 +11,13 @@ public class Watcher {
 	private ArrayList<String> watchList;
 	private ArrayList<String> seenList;
 	private Server server;
+	private File dataFolder;
 
-	public Watcher(ArrayList<String> watchList, ArrayList<String> seenList, Server server) {
+	public Watcher(ArrayList<String> watchList, ArrayList<String> seenList, Server server, File dataFolder) {
 		this.watchList = watchList;
 		this.seenList = seenList;
 		this.server = server;
+		this.dataFolder = dataFolder;
 	}
 
 	public boolean watching(Player player) {
@@ -90,7 +92,7 @@ public class Watcher {
 	}
 
 	private void store(String fileName, ArrayList<String> playerList) {
-		File file = new File(BigBrother.directory, fileName);
+		File file = new File(dataFolder, fileName);
 		BufferedWriter bwriter = null;
 		FileWriter fwriter = null;
 		try {

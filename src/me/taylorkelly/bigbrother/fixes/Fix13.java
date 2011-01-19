@@ -1,5 +1,6 @@
 package me.taylorkelly.bigbrother.fixes;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,6 +12,10 @@ import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 
 public class Fix13 extends Fix {
+    public Fix13(File dataFolder) {
+        super(dataFolder);
+    }
+
     protected int version = 1;
     public static final String[] UPDATE_SQLITE = {
             "CREATE TEMPORARY TABLE bbdata_backup(id, date, player, action, world, x, y, z, type, data, rbacked);",
@@ -24,17 +29,7 @@ public class Fix13 extends Fix {
         if (needsUpdate(version)) {
             Logger log = Logger.getLogger("Minecraft");
             log.info("[BBROTHER] Updating table for 1.3");
-            boolean sqlite = false;
-            switch (BBSettings.dataDest) {
-            case MYSQL:
-            case MYSQL_AND_FLAT:
-                sqlite = false;
-                break;
-            case SQLITE:
-            case SQLITE_AND_FLAT:
-                sqlite = true;
-                break;
-            }
+            boolean sqlite = !BBSettings.mysql;
 
             if (updateTable(sqlite)) {
                 updateVersion(version);
