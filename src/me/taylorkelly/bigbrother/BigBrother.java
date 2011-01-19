@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.List;
 import java.util.logging.*;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.fixes.Fix;
 import me.taylorkelly.bigbrother.fixes.Fix13;
@@ -51,6 +52,7 @@ public class BigBrother extends JavaPlugin {
 
     public void onDisable() {
         DataBlockSender.disable();
+        ConnectionManager.freeConnection();
     }
 
     public void onEnable() {
@@ -99,12 +101,10 @@ public class BigBrother extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.LEAVES_DECAY, blockListener, Priority.Monitor, this);
         
         getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Monitor, this);
 
-
-        // getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICK,
-        // playerListener, Priority.Monitor, this);
     }
 
     public boolean watching(Player player) {

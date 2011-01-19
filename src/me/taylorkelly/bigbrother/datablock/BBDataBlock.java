@@ -53,7 +53,11 @@ public abstract class BBDataBlock {
     public static final int CREATE_SIGN_TEXT = 12;
     public static final int LEAF_DECAY = 13;
     public static final int FLINT_AND_STEEL = 14;
+    public static final int TNT_EXPLOSION = 15;
+    public static final int CREEPER_EXPLOSION = 16;
+    public static final int MISC_EXPLOSION = 17;
 
+    
     public BBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
         this.date = System.currentTimeMillis() / 1000;
         this.player = player;

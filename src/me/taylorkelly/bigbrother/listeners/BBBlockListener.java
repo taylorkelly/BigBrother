@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.listeners;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.*;
+import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockDamageLevel;
@@ -69,4 +70,13 @@ public class BBBlockListener extends BlockListener {
             }
         }
     }
+    
+    public void onLeavesDecay(LeavesDecayEvent event) { 
+        if (BBSettings.blockBreak && !event.isCancelled()) {
+            //TODO try to find a player that did it.
+            BBDataBlock dataBlock = LeafDecay.create(event.getBlock());
+            dataBlock.send();
+        }
+    }
+    
 }

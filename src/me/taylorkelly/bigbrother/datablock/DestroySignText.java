@@ -12,8 +12,12 @@ import org.bukkit.entity.Player;
 
 public class DestroySignText extends BBDataBlock {
     public DestroySignText(Player player, Sign sign) {
+        this(player.getName(), sign);
+    }
+
+    public DestroySignText(String name, Sign sign) {
         // TODO Better World support
-        super(player.getName(), DESTROY_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
+        super(name, DESTROY_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
     private static String getText(Sign sign) {

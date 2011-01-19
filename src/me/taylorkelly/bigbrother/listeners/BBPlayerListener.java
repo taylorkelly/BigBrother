@@ -48,7 +48,7 @@ public class BBPlayerListener extends PlayerListener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        if (BBSettings.teleport && plugin.watching(event.getPlayer()) && distance(from, to) > 5) {
+        if (BBSettings.teleport && plugin.watching(event.getPlayer()) && distance(from, to) > 5 && !event.isCancelled()) {
             Teleport dataBlock = new Teleport(event.getPlayer(), event.getTo());
             dataBlock.send();
         }

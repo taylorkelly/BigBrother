@@ -1,28 +1,25 @@
-package me.taylorkelly.bigbrother.datablock;
+package me.taylorkelly.bigbrother.datablock.explosions;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import org.bukkit.*;
+import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datablock.BrokenBlock;
+import me.taylorkelly.bigbrother.datablock.DestroySignText;
+
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
-public class BrokenBlock extends BBDataBlock {
+public abstract class Explosion extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
-
-    public BrokenBlock(Player player, Block block) {
-        // TODO Better World support
-        super(player.getName(), BLOCK_BROKEN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
-        bystanders = new ArrayList<BBDataBlock>();
-        torchCheck(player, block);
-        surroundingSignChecks(player, block);
-        signCheck(player, block);
-        checkGnomesLivingOnTop(player, block);
-    }
-
-    public BrokenBlock(Player player, int x, int y, int z, int type, int data) {
-        super(player.getName(), BLOCK_BROKEN, 0, x, y, z, type, data + "");
+    
+    public Explosion(String player, int dataBlockType, int world, int x, int y, int z, int type, String data) {
+        super(player, dataBlockType, world, x, y, z, type, data);
         bystanders = new ArrayList<BBDataBlock>();
     }
     
@@ -53,15 +50,7 @@ public class BrokenBlock extends BBDataBlock {
         worldy.getBlockAt(x, y, z).setTypeId(0);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
-        return new BrokenBlock(player, world, x, y, z, type, data);
-    }
-
-    private BrokenBlock(String player, int world, int x, int y, int z, int type, String data) {
-        super(player, BLOCK_BROKEN, world, x, y, z, type, data);
-    }
-
-    private void torchCheck(Player player, Block block) {
+    protected void torchCheck(Player player, Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
         torchTypes.add(50);
         torchTypes.add(75);
@@ -94,7 +83,7 @@ public class BrokenBlock extends BBDataBlock {
         }
     }
 
-    private void surroundingSignChecks(Player player, Block block) {
+    protected void surroundingSignChecks(Player player, Block block) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -121,14 +110,14 @@ public class BrokenBlock extends BBDataBlock {
         }
     }
 
-    private void signCheck(Player player, Block block) {
+    protected void signCheck(Player player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             bystanders.add(new DestroySignText(player, sign));
         }
     }
 
-    private void checkGnomesLivingOnTop(Player player, Block block) {
+    protected void checkGnomesLivingOnTop(Player player, Block block) {
         ArrayList<Integer> gnomes = new ArrayList<Integer>();
         gnomes.add(6); // Sapling
         gnomes.add(37); // Yellow Flower
@@ -156,5 +145,4 @@ public class BrokenBlock extends BBDataBlock {
             bystanders.add(new BrokenBlock(player, mrGnome));
         }
     }
-
 }
