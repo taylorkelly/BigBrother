@@ -105,6 +105,14 @@ public class RollbackPreparedStatement {
         ret.append(BBDataBlock.CREATE_SIGN_TEXT);
         ret.append("','");
         ret.append(BBDataBlock.DESTROY_SIGN_TEXT);
+        ret.append("','");
+        ret.append(BBDataBlock.LEAF_DECAY);
+        ret.append("','");
+        ret.append(BBDataBlock.TNT_EXPLOSION);
+        ret.append("','");
+        ret.append(BBDataBlock.CREEPER_EXPLOSION);
+        ret.append("','");
+        ret.append(BBDataBlock.MISC_EXPLOSION);
         ret.append("')");
         return ret;
     }
