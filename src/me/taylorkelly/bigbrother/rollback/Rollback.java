@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -56,17 +57,10 @@ public class Rollback {
         PreparedStatement ps = null;
         ResultSet set = null;
         try {
-            if (sqlite) {
-                Class.forName("org.sqlite.JDBC");
-                conn = DriverManager.getConnection(BBSettings.liteDb);
-            } else {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-            }
-
+            conn = ConnectionManager.getConnection();
             ps = conn.prepareStatement(RollbackPreparedStatement.create(this));
-
             set = ps.executeQuery();
+            conn.commit();
 
             int size = 0;
             while (set.next()) {
@@ -96,6 +90,8 @@ public class Rollback {
                     rollbackBlocks();
                     ps = conn.prepareStatement(RollbackPreparedStatement.update(this));
                     ps.execute();
+                    conn.commit();
+                    
                     for (Player player : recievers) {
                         player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
                     }
@@ -110,8 +106,6 @@ public class Rollback {
             }
         } catch (SQLException ex) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception", ex);
-        } catch (ClassNotFoundException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback SQL Exception (cnf)" + ((sqlite) ? "sqlite" : "mysql"));
         } finally {
 
             try {
@@ -119,8 +113,6 @@ public class Rollback {
                     set.close();
                 if (ps != null)
                     ps.close();
-                if (conn != null)
-                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception (on close)");
             }
@@ -193,29 +185,20 @@ public class Rollback {
             ResultSet set = null;
             boolean sqlite = !BBSettings.mysql;
             try {
-                if (sqlite) {
-                    Class.forName("org.sqlite.JDBC");
-                    conn = DriverManager.getConnection(BBSettings.liteDb);
-                } else {
-                    Class.forName("com.mysql.jdbc.Driver");
-                    conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-                }
+                conn = ConnectionManager.getConnection();
                 ps = conn.prepareStatement(undoRollback);
                 ps.execute();
+                conn.commit();
                 undoRollback = null;
                 player.sendMessage(ChatColor.AQUA + "Successfully undid a rollback of " + i + " edits");
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback undo SQL Exception", ex);
-            } catch (ClassNotFoundException e) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback Undo (Class not found)" + ((sqlite) ? "sqlite" : "mysql"));
             } finally {
                 try {
                     if (set != null)
                         set.close();
                     if (ps != null)
                         ps.close();
-                    if (conn != null)
-                        conn.close();
                 } catch (SQLException ex) {
                     BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback undo (on close)");
                 }

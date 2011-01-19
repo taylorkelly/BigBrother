@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 public class Fix13 extends Fix {
     public Fix13(File dataFolder) {
@@ -41,15 +42,7 @@ public class Fix13 extends Fix {
         Connection conn = null;
         Statement st = null;
         try {
-            if (sqlite) {
-                Class.forName("org.sqlite.JDBC");
-                conn = DriverManager.getConnection(BBSettings.liteDb);
-                conn.setAutoCommit(false);
-            } else {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-                conn.setAutoCommit(false);
-            }
+            conn = ConnectionManager.getConnection();
             st = conn.createStatement();
             if (sqlite) {
                 for (int i = 0; i < UPDATE_SQLITE.length; i++) {
@@ -63,13 +56,8 @@ public class Fix13 extends Fix {
         } catch (SQLException e) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.3 Fail " + ((sqlite) ? " sqlite" : " mysql"), e);
             return false;
-        } catch (ClassNotFoundException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.3 Fail (cnf)" + ((sqlite) ? " sqlite" : " mysql"));
-            return false;
         } finally {
             try {
-                if (conn != null)
-                    conn.close();
                 if (st != null)
                     st.close();
             } catch (SQLException e) {

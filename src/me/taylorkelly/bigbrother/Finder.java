@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -50,13 +51,7 @@ public class Finder {
 
         HashMap<String, Integer> modifications = new HashMap<String, Integer>();
         try {
-            if (sqlite) {
-                Class.forName("org.sqlite.JDBC");
-                conn = DriverManager.getConnection(BBSettings.liteDb);
-            } else {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-            }
+            conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
             String actionString = "action = '" + BBDataBlock.BLOCK_BROKEN + "' or action = '" + BBDataBlock.BLOCK_PLACED + "'";
@@ -70,6 +65,7 @@ public class Finder {
             ps.setInt(5, location.getBlockZ() + radius);
             ps.setInt(6, location.getBlockZ() - radius);
             rs = ps.executeQuery();
+            conn.commit();
 
             int size = 0;
             while (rs.next()) {
@@ -99,16 +95,12 @@ public class Finder {
             }
         } catch (SQLException ex) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
-        } catch (ClassNotFoundException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (cnf)" + ((sqlite) ? "sqlite" : "mysql"));
         } finally {
             try {
                 if (rs != null)
                     rs.close();
                 if (ps != null)
                     ps.close();
-                if (conn != null)
-                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
             }
@@ -124,13 +116,7 @@ public class Finder {
         HashMap<Integer, Integer> destructions = new HashMap<Integer, Integer>();
 
         try {
-            if (sqlite) {
-                Class.forName("org.sqlite.JDBC");
-                conn = DriverManager.getConnection(BBSettings.liteDb);
-            } else {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-            }
+            conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
             String actionString = "action = " + BBDataBlock.BLOCK_BROKEN + " or action = " + BBDataBlock.BLOCK_PLACED;
@@ -145,6 +131,7 @@ public class Finder {
             ps.setInt(6, location.getBlockZ() - radius);
             ps.setString(7, playerName);
             rs = ps.executeQuery();
+            conn.commit();
 
             int size = 0;
             while (rs.next()) {
@@ -213,16 +200,12 @@ public class Finder {
             }
         } catch (SQLException ex) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
-        } catch (ClassNotFoundException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (cnf)" + ((sqlite) ? "sqlite" : "mysql"));
         } finally {
             try {
                 if (rs != null)
                     rs.close();
                 if (ps != null)
                     ps.close();
-                if (conn != null)
-                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
             }

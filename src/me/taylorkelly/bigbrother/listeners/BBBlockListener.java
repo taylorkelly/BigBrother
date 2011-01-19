@@ -19,6 +19,11 @@ public class BBBlockListener extends BlockListener {
     }
 
     public void onBlockDamage(BlockDamageEvent event) {
+        if (event.getDamageLevel() == BlockDamageLevel.STARTED && !event.isCancelled()) {
+            if (event.getBlock().getType() == Material.TNT) {
+                TNTLogger.log(event.getPlayer(), event.getBlock());
+            }
+        }
         if (event.getDamageLevel() == BlockDamageLevel.BROKEN && !event.isCancelled()) {
             Player player = event.getPlayer();
             if (BBSettings.blockBreak && plugin.watching(player)) {
@@ -31,29 +36,37 @@ public class BBBlockListener extends BlockListener {
 
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (BBSettings.blockPlace && plugin.watching(player)) {
+        if (BBSettings.blockPlace && plugin.watching(player) && !event.isCancelled()) {
             Block block = event.getBlockPlaced();
             PlacedBlock dataBlock = new PlacedBlock(player, block);
             dataBlock.send();
         }
     }
-    
+
     public void onBlockInteract(BlockInteractEvent event) {
         Block block = event.getBlock();
         LivingEntity entity = event.getEntity();
-        if(entity instanceof Player) {
-            Player player = (Player)entity;
-        switch(block.getType()) {
-        case WOODEN_DOOR:
-            DoorOpen doorDataBlock = new DoorOpen(player.getName(), block);
-            doorDataBlock.send();
-        case LEVER:
-            LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block);
-            leverDataBlock.send();
-        case STONE_BUTTON:
-            ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block);
-            buttonDataBlock.send();
-        }
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            if (plugin.watching(player) && !event.isCancelled()) {
+                switch (block.getType()) {
+                case WOODEN_DOOR:
+                    if (BBSettings.doorOpen) {
+                        DoorOpen doorDataBlock = new DoorOpen(player.getName(), block);
+                        doorDataBlock.send();
+                    }
+                case LEVER:
+                    if (BBSettings.leverSwitch) {
+                        LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block);
+                        leverDataBlock.send();
+                    }
+                case STONE_BUTTON:
+                    if (BBSettings.buttonPress) {
+                        ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block);
+                        buttonDataBlock.send();
+                    }
+                }
+            }
         }
     }
 }

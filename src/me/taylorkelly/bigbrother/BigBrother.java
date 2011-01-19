@@ -4,10 +4,12 @@ import java.io.*;
 import java.util.List;
 import java.util.logging.*;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.fixes.Fix;
 import me.taylorkelly.bigbrother.fixes.Fix13;
 import me.taylorkelly.bigbrother.fixes.Fix14;
 import me.taylorkelly.bigbrother.listeners.BBBlockListener;
+import me.taylorkelly.bigbrother.listeners.BBEntityListener;
 import me.taylorkelly.bigbrother.listeners.BBPlayerListener;
 import me.taylorkelly.bigbrother.rollback.Rollback;
 import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
@@ -24,11 +26,11 @@ import org.bukkit.plugin.java.*;
 
 import com.griefcraft.util.Updater;
 
-import datasource.DataBlockSender;
 
 public class BigBrother extends JavaPlugin {
     private BBPlayerListener playerListener;
     private BBBlockListener blockListener;
+    private BBEntityListener entityListener;
     private Watcher watcher;
 
     public static Logger log;
@@ -41,6 +43,10 @@ public class BigBrother extends JavaPlugin {
     public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
         super(pluginLoader, instance, desc, folder, plugin, cLoader);
         updater = new Updater();
+        playerListener = new BBPlayerListener(this);
+        blockListener = new BBBlockListener(this);
+        entityListener = new BBEntityListener(this);
+
     }
 
     public void onDisable() {
@@ -63,8 +69,6 @@ public class BigBrother extends JavaPlugin {
             getDataFolder().mkdirs();
         }
 
-        playerListener = new BBPlayerListener(this);
-        blockListener = new BBBlockListener(this);
         registerEvents();
         BBSettings.initialize(getDataFolder());
         watcher = BBSettings.getWatcher(getServer(), getDataFolder());
@@ -89,12 +93,15 @@ public class BigBrother extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_ITEM, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_CHAT, playerListener, Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
+
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.Monitor, this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Monitor, this);
-        getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.Monitor, this);
+        
+        getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Monitor, this);
+
 
         // getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICK,
         // playerListener, Priority.Monitor, this);

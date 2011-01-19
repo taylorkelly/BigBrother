@@ -50,9 +50,7 @@ public class BBSettings {
 
 	public static String liteDb;
 
-	public static void initialize(File dataFolder) {
-	    System.out.println(dataFolder.getPath());
-	    
+	public static void initialize(File dataFolder) {	    
 	    liteDb = "jdbc:sqlite:" + dataFolder.getPath() + "bigbrother.db";
 		watchList = new ArrayList<String>();
 		seenList = new ArrayList<String>();
