@@ -54,9 +54,9 @@ public class Finder {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION;
-            ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataBlock.BBDATA_NAME + " WHERE (" + actionString
-                    + ") AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
+            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "')";
+            ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
+                    + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
 
             ps.setInt(1, location.getBlockX() + radius);
             ps.setInt(2, location.getBlockX() - radius);
@@ -119,9 +119,9 @@ public class Finder {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION;
-            ps = conn.prepareStatement("SELECT action, type from " + BBDataBlock.BBDATA_NAME + " where (" + actionString
-                    + ") and rbacked = 0 and x < ? and x > ? and y < ? and y > ?  and z < ? and z > ? and player = ? order by date desc");
+            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "')";
+            ps = conn.prepareStatement("SELECT action, type FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
+                    + " AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ?  AND z < ? AND z > ? AND player = ? order by date desc");
 
             ps.setInt(1, location.getBlockX() + radius);
             ps.setInt(2, location.getBlockX() - radius);

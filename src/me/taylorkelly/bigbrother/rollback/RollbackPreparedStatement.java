@@ -38,6 +38,7 @@ public class RollbackPreparedStatement {
             statement.append("'");
             statement.append(rollback.center.getBlockX() - rollback.radius);
             statement.append("'");
+            statement.append(" AND ");
             statement.append("y < ");
             statement.append("'");
             statement.append(rollback.center.getBlockY() + rollback.radius);
@@ -47,6 +48,7 @@ public class RollbackPreparedStatement {
             statement.append("'");
             statement.append(rollback.center.getBlockY() - rollback.radius);
             statement.append("'");
+            statement.append(" AND ");
             statement.append("z < ");
             statement.append("'");
             statement.append(rollback.center.getBlockZ() + rollback.radius);
@@ -138,6 +140,38 @@ public class RollbackPreparedStatement {
             statement.append(rollback.time);
             statement.append("'");
         }
+        if (rollback.radius != 0) {
+            statement.append(" AND ");
+            statement.append("x < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockX() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("x > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockX() - rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("y < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockY() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("y > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockY() - rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("z < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockZ() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("z > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockZ() - rollback.radius);
+            statement.append("'");
+        }
 
         statement.append(" AND rbacked = '0'");
         statement.append(";");
@@ -163,6 +197,38 @@ public class RollbackPreparedStatement {
             statement.append("date > ");
             statement.append("'");
             statement.append(rollback.time);
+            statement.append("'");
+        }
+        if (rollback.radius != 0) {
+            statement.append(" AND ");
+            statement.append("x < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockX() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("x > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockX() - rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("y < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockY() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("y > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockY() - rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("z < ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockZ() + rollback.radius);
+            statement.append("'");
+            statement.append(" AND ");
+            statement.append("z > ");
+            statement.append("'");
+            statement.append(rollback.center.getBlockZ() - rollback.radius);
             statement.append("'");
         }
 
