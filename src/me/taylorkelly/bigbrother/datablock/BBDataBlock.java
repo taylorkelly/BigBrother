@@ -8,6 +8,9 @@ import org.bukkit.Server;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.datablock.explosions.CreeperExplosion;
+import me.taylorkelly.bigbrother.datablock.explosions.MiscExplosion;
+import me.taylorkelly.bigbrother.datablock.explosions.TNTExplosion;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 

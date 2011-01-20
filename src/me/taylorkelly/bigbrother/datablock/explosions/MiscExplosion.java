@@ -10,12 +10,31 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 public class MiscExplosion extends Explosion {
 
-    public MiscExplosion(Location location, List<Block> blockList) {
-        // TODO Auto-generated constructor stub
+    public MiscExplosion(String player, Block block) {
+        super(MISC_EXPLOSION, player, block);
+    }
+    
+    public MiscExplosion(Block block) {
+        super(MISC_EXPLOSION, ENVIRONMENT, block);
     }
 
-    public static BBDataBlock create(Location location, List<Block> blockList) {
-        // TODO Auto-generated method stub
-        return null;
+    protected Explosion newInstance(String player, Block block) {
+        return new MiscExplosion(player, block);
     }
+    
+    public static void create(Location location, List<Block> blockList) {
+        for(Block block: blockList) {
+            BBDataBlock dataBlock = new MiscExplosion(ENVIRONMENT, block);
+            dataBlock.send();
+        }
+    }
+    
+    private MiscExplosion(String player, int world, int x, int y, int z, int type, String data) {
+        super(player, MISC_EXPLOSION, world, x, y, z, type, data);
+    }
+
+    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+        return new MiscExplosion(player, world, x, y, z, type, data);
+    }
+
 }

@@ -14,14 +14,12 @@ public class TNTLogger {
         // TODO Auto-generated method stub
     }
 
-    public static BBDataBlock createTNTDataBlock(Location location, List<Block> blockList) {
+    public static void createTNTDataBlock(Location location, List<Block> blockList) {
         // TODO Auto-generated method stub
-        return null;
     }
 
-    public static BBDataBlock createTNTDataBlock(List<Block> blockList) {
-        // TODO Auto-generated method stub
-        return null;
+    public static void createTNTDataBlock(List<Block> blockList) {
+        TNTExplosion.create(blockList);
     }
 
 }

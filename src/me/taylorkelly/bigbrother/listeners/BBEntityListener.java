@@ -2,7 +2,6 @@ package me.taylorkelly.bigbrother.listeners;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
-import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.explosions.CreeperExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.MiscExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
@@ -23,17 +22,11 @@ public class BBEntityListener extends EntityListener {
         // Need a fix to get location.
         if (!event.isCancelled() && BBSettings.blockBreak) {
             if (event.getEntity() == null) {
-                System.out.println("TNT exploded");
-                BBDataBlock dataBlock = TNTLogger.createTNTDataBlock(event.blockList());
-                dataBlock.send();
+                TNTLogger.createTNTDataBlock(event.blockList());
             } else if (event.getEntity() instanceof CraftLivingEntity) {
-                System.out.println("Creeper exploded");
-                BBDataBlock dataBlock = CreeperExplosion.create(event.getEntity().getLocation(), event.blockList());
-                dataBlock.send();
+                CreeperExplosion.create(event.getEntity().getLocation(), event.blockList());
             } else {
-                System.out.println("Misc. explosion");
-                BBDataBlock dataBlock = MiscExplosion.create(event.getEntity().getLocation(), event.blockList());
-                dataBlock.send();
+                MiscExplosion.create(event.getEntity().getLocation(), event.blockList());
             }
         }
     }

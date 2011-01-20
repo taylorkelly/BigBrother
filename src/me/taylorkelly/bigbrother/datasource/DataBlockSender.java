@@ -43,7 +43,7 @@ public class DataBlockSender {
         Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
         sending.drainTo(collection);
 
-        boolean worked = sendBlocksMySQL(!BBSettings.mysql, collection);
+        boolean worked = sendBlocksMySQL(collection);
         if(BBSettings.flatLog) {
             sendBlocksFlatFile(dataFolder, collection);
         }
@@ -55,7 +55,7 @@ public class DataBlockSender {
         }
     }
 
-    private static boolean sendBlocksMySQL(boolean sqlite, Collection<BBDataBlock> collection) {
+    private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -77,6 +77,7 @@ public class DataBlockSender {
             }
             ps.executeBatch();
             conn.commit();
+            System.out.println("sending blocks to " + conn.toString());
             return true;
         } catch (SQLException ex) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception", ex);
