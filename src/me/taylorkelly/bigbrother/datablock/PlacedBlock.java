@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
@@ -14,6 +15,7 @@ public class PlacedBlock extends BBDataBlock {
         // TODO Better World support
         super(player.getName(), BLOCK_PLACED, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
         bystanders = new ArrayList<BBDataBlock>();
+        signCheck(player, block);
         // TODO snow check once it gets fixed
     }
     
@@ -33,7 +35,12 @@ public class PlacedBlock extends BBDataBlock {
         super(player, BLOCK_PLACED, world, x, y, z, type, data);
     }
 
-
+    private void signCheck(Player player, Block block) {
+        if (block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            bystanders.add(new CreateSignText(player, sign));
+        }
+    }
 
     public void rollback(Server server) {
         World worldy = server.getWorlds()[world];

@@ -5,6 +5,7 @@ import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.*;
 
 import org.bukkit.*;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.*;
 
@@ -85,9 +86,28 @@ public class BBPlayerListener extends PlayerListener {
                 dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
                 dataBlock.send();
                 break;
+            case SIGN:
+                x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
+                y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
+                z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
+                switch (event.getBlockFace()) {
+                case UP:
+                    type = Material.SIGN_POST.getId();
+                    break;
+                case NORTH:
+                case SOUTH:
+                case EAST:
+                case WEST:
+                    type = Material.WALL_SIGN.getId();
+                    break;
+                default:
+                    type = Material.SIGN.getId();
+                }
+                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
+                dataBlock.send();
+                break;
             case BUCKET:
                 BrokenBlock dataBlock2;
-
                 switch (event.getBlockClicked().getType()) {
                 case STATIONARY_LAVA:
                 case LAVA:
