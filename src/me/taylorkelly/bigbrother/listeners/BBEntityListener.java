@@ -24,7 +24,7 @@ public class BBEntityListener extends EntityListener {
         if (!event.isCancelled() && BBSettings.blockBreak) {
             if (event.getEntity() == null) {
                 System.out.println("TNT exploded");
-                BBDataBlock dataBlock = TNTLogger.createTNTDataBlock(event.getEntity().getLocation(), event.blockList());
+                BBDataBlock dataBlock = TNTLogger.createTNTDataBlock(event.blockList());
                 dataBlock.send();
             } else if (event.getEntity() instanceof CraftLivingEntity) {
                 System.out.println("Creeper exploded");

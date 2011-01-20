@@ -18,8 +18,8 @@ import org.bukkit.entity.Player;
 public abstract class Explosion extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
     
-    public Explosion(String player, int dataBlockType, int world, int x, int y, int z, int type, String data) {
-        super(player, dataBlockType, world, x, y, z, type, data);
+    public Explosion(String name, int dataBlockType, int world, int x, int y, int z, int type, String data) {
+        super(name, dataBlockType, world, x, y, z, type, data);
         bystanders = new ArrayList<BBDataBlock>();
     }
     

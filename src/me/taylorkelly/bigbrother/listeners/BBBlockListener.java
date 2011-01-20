@@ -10,6 +10,7 @@ import org.bukkit.block.BlockDamageLevel;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
+import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.*;
 
 public class BBBlockListener extends BlockListener {
@@ -66,17 +67,30 @@ public class BBBlockListener extends BlockListener {
                         ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block);
                         buttonDataBlock.send();
                     }
+                case CHEST:
+                    if (BBSettings.chestChanges) {
+                        BBDataBlock chestDataBlock = new ChestOpen(player, block);
+                        chestDataBlock.send();
+                    }
                 }
             }
+
         }
     }
-    
-    public void onLeavesDecay(LeavesDecayEvent event) { 
+
+    public void onLeavesDecay(LeavesDecayEvent event) {
         if (BBSettings.blockBreak && !event.isCancelled()) {
-            //TODO try to find a player that did it.
+            // TODO try to find a player that did it.
             BBDataBlock dataBlock = LeafDecay.create(event.getBlock());
             dataBlock.send();
         }
     }
-    
+
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        if (BBSettings.fire && event.getCause() == IgniteCause.FLINT_AND_STEEL && !event.isCancelled()) {
+            BBDataBlock dataBlock = new FlintAndSteel(event.getPlayer(), event.getBlock());
+            dataBlock.send();
+        }
+    }
+
 }

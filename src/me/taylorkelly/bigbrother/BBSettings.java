@@ -35,7 +35,9 @@ public class BBSettings {
 	public static boolean doorOpen;
 	public static boolean buttonPress;
 	public static boolean leverSwitch;
+    public static boolean fire;
 
+    
 	public static boolean autoWatch;
 	public static int defaultSearchRadius;
 	public static boolean mysql;
@@ -73,6 +75,7 @@ public class BBSettings {
 		doorOpen = pf.getBoolean("doorOpen", false, "Watch for when player opens doors");
 		buttonPress = pf.getBoolean("buttonPress", false, "Watch for when player pushes buttons");
 		leverSwitch = pf.getBoolean("leverSwitch", false, "Watch for when player switches levers");
+	    fire = pf.getBoolean("fireLogging", true, "Watch for when players start fires");
 		pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));

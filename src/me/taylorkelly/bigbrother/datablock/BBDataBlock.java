@@ -56,6 +56,8 @@ public abstract class BBDataBlock {
     public static final int TNT_EXPLOSION = 15;
     public static final int CREEPER_EXPLOSION = 16;
     public static final int MISC_EXPLOSION = 17;
+    public static final int OPEN_CHEST = 18;
+
 
     
     public BBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
@@ -165,6 +167,18 @@ public abstract class BBDataBlock {
             return LeverSwitch.getBBDataBlock(player, world, x, y, z, type, data);
         case (CREATE_SIGN_TEXT):
             return CreateSignText.getBBDataBlock(player, world, x, y, z, type, data);
+        case (LEAF_DECAY):
+            return LeafDecay.getBBDataBlock(player, world, x, y, z, type, data);
+        case (FLINT_AND_STEEL):
+            return FlintAndSteel.getBBDataBlock(player, world, x, y, z, type, data);
+        case (TNT_EXPLOSION):
+            return TNTExplosion.getBBDataBlock(player, world, x, y, z, type, data);
+        case (CREEPER_EXPLOSION):
+            return CreeperExplosion.getBBDataBlock(player, world, x, y, z, type, data);
+        case (MISC_EXPLOSION):
+            return MiscExplosion.getBBDataBlock(player, world, x, y, z, type, data);
+        case (OPEN_CHEST):
+            return ChestOpen.getBBDataBlock(player, world, x, y, z, type, data);
         default:
             return null;
         }
