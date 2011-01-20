@@ -77,7 +77,6 @@ public class DataBlockSender {
             }
             ps.executeBatch();
             conn.commit();
-            System.out.println("sending blocks to " + conn.toString());
             return true;
         } catch (SQLException ex) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception", ex);

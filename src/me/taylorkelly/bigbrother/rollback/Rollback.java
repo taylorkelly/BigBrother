@@ -83,6 +83,9 @@ public class Rollback {
                         cal.setTimeInMillis(time * 1000);
                         player.sendMessage(ChatColor.BLUE + "Since: " + ChatColor.WHITE + sdf.format(cal.getTime()));
                     }
+                    if (radius != 0) {
+                        player.sendMessage(ChatColor.BLUE + "Within: " + ChatColor.WHITE + radius + " blocks");
+                    }
 
                 }
                 try {

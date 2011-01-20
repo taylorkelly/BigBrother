@@ -31,7 +31,7 @@ public class RollbackInterpreter {
                 parseTime(argument.substring(2));
             } else if (argument.length() > 3 && argument.substring(0, 3).equalsIgnoreCase("id:")) {
                 parseId(argument.substring(3));
-            } else if (argument.length() > 3 && argument.substring(0, 3).equalsIgnoreCase("r:")) {
+            } else if (argument.length() > 2 && argument.substring(0, 2).equalsIgnoreCase("r:")) {
                 parseRadius(argument.substring(2));
             } else if (argument.equalsIgnoreCase("*")) {
                 all = true;
