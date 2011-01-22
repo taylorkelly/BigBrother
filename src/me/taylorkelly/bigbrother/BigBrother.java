@@ -6,6 +6,7 @@ import java.util.logging.*;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
+import me.taylorkelly.bigbrother.finder.Finder;
 import me.taylorkelly.bigbrother.fixes.Fix;
 import me.taylorkelly.bigbrother.fixes.Fix13;
 import me.taylorkelly.bigbrother.fixes.Fix14;
@@ -141,17 +142,14 @@ public class BigBrother extends JavaPlugin {
 
         // TODO permissions
         if (commandName.equals("bb") && player.isOp()) {
-            if (split.length == 1 || split[1].equalsIgnoreCase("help") && split.length == 2) {
-                player.sendMessage(BigBrother.premessage + "Hello.");
-                // TODO HELP
-            } else if (split[1].equalsIgnoreCase("watch")) {
-                if (split.length == 3) {
-                    List<Player> targets = getServer().matchPlayer(split[2]);
+            if (split[0].equalsIgnoreCase("watch")) {
+                if (split.length == 2) {
+                    List<Player> targets = getServer().matchPlayer(split[1]);
                     Player watchee = null;
                     if (targets.size() == 1) {
                         watchee = targets.get(0);
                     }
-                    String playerName = (watchee == null) ? split[2] : watchee.getName();
+                    String playerName = (watchee == null) ? split[1] : watchee.getName();
 
                     if (toggleWatch(playerName)) {
                         String status = (watchee == null) ? " (offline)" : " (online)";
@@ -163,7 +161,7 @@ public class BigBrother extends JavaPlugin {
                 } else {
                     player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb watch <player>");
                 }
-            } else if (split[1].equalsIgnoreCase("watched")) {
+            } else if (split[0].equalsIgnoreCase("watched")) {
                 String watchedPlayers = getWatchedPlayers();
                 if (watchedPlayers.equals("")) {
                     player.sendMessage(BigBrother.premessage + "Not currently watching anyone.");
@@ -171,7 +169,7 @@ public class BigBrother extends JavaPlugin {
                     player.sendMessage(BigBrother.premessage + "Now watching:");
                     player.sendMessage(watchedPlayers);
                 }
-            } else if (split[1].equalsIgnoreCase("unwatched")) {
+            } else if (split[0].equalsIgnoreCase("unwatched")) {
                 String unwatchedPlayers = getUnwatchedPlayers();
                 if (unwatchedPlayers.equals("")) {
                     player.sendMessage(BigBrother.premessage + "Everyone on is being watched.");
@@ -179,17 +177,16 @@ public class BigBrother extends JavaPlugin {
                     player.sendMessage(BigBrother.premessage + "Not currently watching:");
                     player.sendMessage(unwatchedPlayers);
                 }
-            } else if (split[1].equalsIgnoreCase("rollback")) {
-                if (split.length > 2) {
+            } else if (split[0].equalsIgnoreCase("rollback")) {
+                if (split.length > 1) {
                     RollbackInterpreter interpreter = new RollbackInterpreter(player, split, getServer());
                     interpreter.interpret();
                 } else {
                     // TODO Better help
-                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb rollback <player>");
-                    player.sendMessage(" or " + ChatColor.RED + "/bb rollback <player> <player1> <player2> ...");
+                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb rollback <arg1> <arg2>");
                 }
-            } else if (split[1].equalsIgnoreCase("undo")) {
-                if (split.length == 2) {
+            } else if (split[0].equalsIgnoreCase("undo")) {
+                if (split.length == 1) {
                     if (Rollback.canUndo()) {
                         int size = Rollback.undoSize();
                         player.sendMessage(BigBrother.premessage + "Undo-ing last rollback of " + size + " blocks");
@@ -201,85 +198,85 @@ public class BigBrother extends JavaPlugin {
                 } else {
                     player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb undo");
                 }
-            } else if (split[1].equalsIgnoreCase("here")) {
-                if (split.length == 2) {
+            } else if (split[0].equalsIgnoreCase("here")) {
+                if (split.length == 1) {
                     Finder finder = new Finder(player.getLocation());
                     finder.addReciever(player);
                     finder.find();
+                } else if (isNumber(split[1]) && split.length == 2) {
+                    Finder finder = new Finder(player.getLocation());
+                    finder.setRadius(Double.parseDouble(split[1]));
+                    finder.addReciever(player);
+                    finder.find();
+                } else if (split.length == 2) {
+                    Finder finder = new Finder(player.getLocation());
+                    finder.addReciever(player);
+                    List<Player> targets = getServer().matchPlayer(split[1]);
+                    Player findee = null;
+                    if (targets.size() == 1) {
+                        findee = targets.get(0);
+                    }
+                    finder.find((findee == null) ? split[1] : findee.getName());
                 } else if (isNumber(split[2]) && split.length == 3) {
                     Finder finder = new Finder(player.getLocation());
                     finder.setRadius(Double.parseDouble(split[2]));
                     finder.addReciever(player);
-                    finder.find();
-                } else if (split.length == 3) {
-                    Finder finder = new Finder(player.getLocation());
-                    finder.addReciever(player);
-                    List<Player> targets = getServer().matchPlayer(split[2]);
+                    List<Player> targets = getServer().matchPlayer(split[1]);
                     Player findee = null;
                     if (targets.size() == 1) {
                         findee = targets.get(0);
                     }
-                    finder.find((findee == null) ? split[2] : findee.getName());
-                } else if (isNumber(split[3]) && split.length == 4) {
-                    Finder finder = new Finder(player.getLocation());
-                    finder.setRadius(Double.parseDouble(split[3]));
-                    finder.addReciever(player);
-                    List<Player> targets = getServer().matchPlayer(split[2]);
-                    Player findee = null;
-                    if (targets.size() == 1) {
-                        findee = targets.get(0);
-                    }
-                    finder.find((findee == null) ? split[2] : findee.getName());
+                    finder.find((findee == null) ? split[1] : findee.getName());
                 } else {
                     player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb here");
                     player.sendMessage("or " + ChatColor.RED + "/bb here <radius>");
                     player.sendMessage("or " + ChatColor.RED + "/bb here <name>");
                     player.sendMessage("or " + ChatColor.RED + "/bb here <name> <radius>");
                 }
-            } else if (split[1].equalsIgnoreCase("find")) {
-                if (split.length == 5 && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4])) {
+            } else if (split[0].equalsIgnoreCase("find")) {
+                if (split.length == 4 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3])) {
                     World currentWorld = player.getWorld();
-                    Location loc = new Location(currentWorld, Double.parseDouble(split[2]), Double.parseDouble(split[3]), Double.parseDouble(split[4]));
+                    Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
                     Finder finder = new Finder(loc);
                     finder.addReciever(player);
                     finder.find();
-                } else if (split.length == 6 && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4]) && isNumber(split[5])) {
+                } else if (split.length == 5 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4])) {
                     World currentWorld = player.getWorld();
-                    Location loc = new Location(currentWorld, Double.parseDouble(split[2]), Double.parseDouble(split[3]), Double.parseDouble(split[4]));
+                    Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
+                    Finder finder = new Finder(loc);
+                    finder.setRadius(Double.parseDouble(split[4]));
+                    finder.addReciever(player);
+                    finder.find();
+                } else if (split.length == 5 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3])) {
+                    World currentWorld = player.getWorld();
+                    Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
+                    Finder finder = new Finder(loc);
+                    finder.addReciever(player);
+                    List<Player> targets = getServer().matchPlayer(split[4]);
+                    Player findee = null;
+                    if (targets.size() == 1) {
+                        findee = targets.get(0);
+                    }
+                    finder.find((findee == null) ? split[4] : findee.getName());
+                } else if (split.length == 6 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[5])) {
+                    World currentWorld = player.getWorld();
+                    Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
                     Finder finder = new Finder(loc);
                     finder.setRadius(Double.parseDouble(split[5]));
                     finder.addReciever(player);
-                    finder.find();
-                } else if (split.length == 6 && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4])) {
-                    World currentWorld = player.getWorld();
-                    Location loc = new Location(currentWorld, Double.parseDouble(split[2]), Double.parseDouble(split[3]), Double.parseDouble(split[4]));
-                    Finder finder = new Finder(loc);
-                    finder.addReciever(player);
-                    List<Player> targets = getServer().matchPlayer(split[5]);
+                    List<Player> targets = getServer().matchPlayer(split[4]);
                     Player findee = null;
                     if (targets.size() == 1) {
                         findee = targets.get(0);
                     }
-                    finder.find((findee == null) ? split[5] : findee.getName());
-                } else if (split.length == 7 && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4]) && isNumber(split[6])) {
-                    World currentWorld = player.getWorld();
-                    Location loc = new Location(currentWorld, Double.parseDouble(split[2]), Double.parseDouble(split[3]), Double.parseDouble(split[4]));
-                    Finder finder = new Finder(loc);
-                    finder.setRadius(Double.parseDouble(split[6]));
-                    finder.addReciever(player);
-                    List<Player> targets = getServer().matchPlayer(split[5]);
-                    Player findee = null;
-                    if (targets.size() == 1) {
-                        findee = targets.get(0);
-                    }
-                    finder.find((findee == null) ? split[5] : findee.getName());
+                    finder.find((findee == null) ? split[4] : findee.getName());
                 } else {
                     player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb find <x> <y> <z>");
                     player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <radius>");
                     player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <name>");
                     player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <name> <radius>");
                 }
-            } else if (split[1].equalsIgnoreCase("help")) {
+            } else if (split[0].equalsIgnoreCase("help")) {
                 player.sendMessage(BigBrother.premessage + "help!");
             } else {
                 return false;

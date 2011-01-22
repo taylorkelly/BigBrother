@@ -23,7 +23,7 @@ public class RollbackInterpreter {
         this.server = server;
         playerList = new ArrayList<String>();
         blockTypes = new ArrayList<Integer>();
-        for (int i = 2; i < split.length; i++) {
+        for (int i = 1; i < split.length; i++) {
             String argument = split[i].trim();
             if (argument.equals("") || argument.equals(" "))
                 continue;

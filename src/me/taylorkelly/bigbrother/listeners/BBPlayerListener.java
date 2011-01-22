@@ -90,20 +90,31 @@ public class BBPlayerListener extends PlayerListener {
                 x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
                 y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
                 z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
+                int data = 0;
                 switch (event.getBlockFace()) {
                 case UP:
                     type = Material.SIGN_POST.getId();
                     break;
                 case NORTH:
+                    data = 4;
+                    type = Material.WALL_SIGN.getId();
+                    break;
                 case SOUTH:
+                    data = 5;
+                    type = Material.WALL_SIGN.getId();
+                    break;
                 case EAST:
+                    data = 2;
+                    type = Material.WALL_SIGN.getId();
+                    break;
                 case WEST:
+                    data = 3;
                     type = Material.WALL_SIGN.getId();
                     break;
                 default:
                     type = Material.SIGN.getId();
                 }
-                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
+                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, data);
                 dataBlock.send();
                 break;
             case BUCKET:
