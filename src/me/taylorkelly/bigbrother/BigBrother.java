@@ -1,8 +1,10 @@
 package me.taylorkelly.bigbrother;
 
 import java.io.*;
+import java.sql.Connection;
 import java.util.List;
 import java.util.logging.*;
+
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
@@ -67,6 +69,13 @@ public class BigBrother extends JavaPlugin {
             updater.update();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        
+        Connection conn = ConnectionManager.getConnection();
+        if (conn == null) {
+            log.log(Level.SEVERE, "[BBROTHER] Could not establish SQL connection. Disabling BigBrother");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         if (new File("BigBrother").exists()) {
