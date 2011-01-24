@@ -148,6 +148,9 @@ public class BigBrother extends JavaPlugin {
 
         // TODO permissions
         if (commandName.equals("bb") && BBPermissions.isAdmin(player)) {
+            if(split.length == 0) {
+                return false;
+            }
             if (split[0].equalsIgnoreCase("watch")) {
                 if (split.length == 2) {
                     List<Player> targets = getServer().matchPlayer(split[1]);

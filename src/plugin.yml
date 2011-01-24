@@ -1,7 +1,7 @@
 name: BigBrother
-version: 1.4
+version: 1.4.1
 main: me.taylorkelly.bigbrother.BigBrother
 commands:
   bb:
     description: All of the BigBrother commands
-    usage: /bb help - Displays the help for BigBrother
+    usage: Tsk. Tsk. Wrong command, buddy.
