@@ -7,6 +7,7 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.finder.Finder;
+import me.taylorkelly.bigbrother.finder.Sticker;
 import me.taylorkelly.bigbrother.fixes.Fix;
 import me.taylorkelly.bigbrother.fixes.Fix13;
 import me.taylorkelly.bigbrother.fixes.Fix14;
@@ -17,6 +18,7 @@ import me.taylorkelly.bigbrother.rollback.Rollback;
 import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
 
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -28,12 +30,12 @@ import org.bukkit.plugin.java.*;
 
 import com.griefcraft.util.Updater;
 
-
 public class BigBrother extends JavaPlugin {
     private BBPlayerListener playerListener;
     private BBBlockListener blockListener;
     private BBEntityListener entityListener;
     private Watcher watcher;
+    private Sticker sticker;
 
     public static Logger log;
     public final String name = this.getDescription().getName();
@@ -48,6 +50,7 @@ public class BigBrother extends JavaPlugin {
         playerListener = new BBPlayerListener(this);
         blockListener = new BBBlockListener(this);
         entityListener = new BBEntityListener(this);
+        sticker = new Sticker(getServer());
 
     }
 
@@ -73,6 +76,7 @@ public class BigBrother extends JavaPlugin {
         }
 
         registerEvents();
+        BBPermissions.initialize(getServer());
         BBSettings.initialize(getDataFolder());
         watcher = BBSettings.getWatcher(getServer(), getDataFolder());
         BBDataBlock.initialize();
@@ -103,8 +107,10 @@ public class BigBrother extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.LEAVES_DECAY, blockListener, Priority.Monitor, this);
-        
+
         getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Monitor, this);
+
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICKED, blockListener, Priority.Normal, this);
 
     }
 
@@ -141,7 +147,7 @@ public class BigBrother extends JavaPlugin {
         String commandName = command.getName().toLowerCase();
 
         // TODO permissions
-        if (commandName.equals("bb") && player.isOp()) {
+        if (commandName.equals("bb") && BBPermissions.isAdmin(player)) {
             if (split[0].equalsIgnoreCase("watch")) {
                 if (split.length == 2) {
                     List<Player> targets = getServer().matchPlayer(split[1]);
@@ -197,6 +203,18 @@ public class BigBrother extends JavaPlugin {
                     }
                 } else {
                     player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb undo");
+                }
+            } else if (split[0].equalsIgnoreCase("stick")) {
+                if (split.length == 1) {
+                    sticker.setMode(player, 1);
+                    player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
+                } else if (split.length == 2 && isInteger(split[1])) {
+                    sticker.setMode(player, Integer.parseInt(split[1]));
+                    if (Integer.parseInt(split[1]) > 0) {
+                        player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
+                    }
+                } else {
+                    player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb stick (#)");
                 }
             } else if (split[0].equalsIgnoreCase("here")) {
                 if (split.length == 1) {
@@ -285,7 +303,7 @@ public class BigBrother extends JavaPlugin {
         }
         return false;
     }
-    
+
     public static boolean isInteger(String string) {
         try {
             Integer.parseInt(string);
@@ -302,5 +320,13 @@ public class BigBrother extends JavaPlugin {
             return false;
         }
         return true;
+    }
+
+    public boolean hasStick(Player player) {
+        return sticker.hasStick(player);
+    }
+
+    public void stick(Player player, Block block) {
+        sticker.blockInfo(player, block);
     }
 }

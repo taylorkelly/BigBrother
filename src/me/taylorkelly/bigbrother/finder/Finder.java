@@ -116,6 +116,7 @@ public class Finder {
 
         HashMap<Integer, Integer> creations = new HashMap<Integer, Integer>();
         HashMap<Integer, Integer> destructions = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> explosions = new HashMap<Integer, Integer>();
 
         try {
             conn = ConnectionManager.getConnection();
@@ -143,9 +144,6 @@ public class Finder {
                 switch (action) {
                 case (BBDataBlock.BLOCK_BROKEN):
                 case (BBDataBlock.LEAF_DECAY):
-                case (BBDataBlock.TNT_EXPLOSION):
-                case (BBDataBlock.CREEPER_EXPLOSION):
-                case (BBDataBlock.MISC_EXPLOSION):
                     if (destructions.containsKey(type)) {
                         destructions.put(type, destructions.get(type) + 1);
                         size++;
@@ -160,6 +158,17 @@ public class Finder {
                         size++;
                     } else {
                         creations.put(type, 1);
+                        size++;
+                    }
+                    break;
+                case (BBDataBlock.TNT_EXPLOSION):
+                case (BBDataBlock.CREEPER_EXPLOSION):
+                case (BBDataBlock.MISC_EXPLOSION):
+                    if (explosions.containsKey(type)) {
+                        explosions.put(type, explosions.get(type) + 1);
+                        size++;
+                    } else {
+                        explosions.put(type, 1);
                         size++;
                     }
                     break;
@@ -191,12 +200,26 @@ public class Finder {
                 }
                 if (brokenList.toString().contains(","))
                     brokenList.delete(brokenList.lastIndexOf(","), brokenList.length());
+                StringBuilder explodeList = new StringBuilder();
+                // brokenList.append(Color.RED);
+                explodeList.append("Exploded Blocks: ");
+                // brokenList.append(Color.WHITE);
+                for (Entry<Integer, Integer> entry : explosions.entrySet()) {
+                    explodeList.append(Material.getMaterial(entry.getKey()));
+                    explodeList.append(" (");
+                    explodeList.append(entry.getValue());
+                    explodeList.append("), ");
+                }
+                if (explodeList.toString().contains(","))
+                    explodeList.delete(explodeList.lastIndexOf(","), explodeList.length());
                 for (Player player : players) {
                     player.sendMessage(BigBrother.premessage + playerName + " has made " + size + " modifications");
                     if (creations.entrySet().size() > 0)
                         player.sendMessage(creationList.toString());
                     if (destructions.entrySet().size() > 0)
                         player.sendMessage(brokenList.toString());
+                    if (explosions.entrySet().size() > 0)
+                        player.sendMessage(explodeList.toString());
                 }
             } else {
                 for (Player player : players) {

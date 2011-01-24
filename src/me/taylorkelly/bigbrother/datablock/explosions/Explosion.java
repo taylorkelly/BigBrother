@@ -4,32 +4,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datablock.DeltaChest;
 import me.taylorkelly.bigbrother.datablock.DestroySignText;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class Explosion extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
-    
+
     public Explosion(int dataBlockType, String name, Block block) {
         super(name, dataBlockType, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(name, block);
         surroundingSignChecks(name, block);
         signCheck(name, block);
+        chestCheck(name, block);
         checkGnomesLivingOnTop(name, block);
     }
-    
+
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
         }
         super.send();
+    }
+
+    private void chestCheck(String player, Block block) {
+        if (block.getState() instanceof Chest) {
+            Chest chest = (Chest) block.getState();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < chest.getInventory().getSize(); i++) {
+                ItemStack stack = chest.getInventory().getItem(i);
+                if (stack != null && stack.getAmount() != 0) {
+                    builder.append(stack.getTypeId());
+                    if (stack.getData() != null && stack.getData().getData() != 0) {
+                        builder.append(":");
+                        builder.append(stack.getData().getData());
+                    }
+                    builder.append(",");
+                    builder.append("-" + stack.getAmount());
+                }
+                if (i + 1 < chest.getInventory().getSize())
+                    builder.append(";");
+            }
+            bystanders.add(new DeltaChest(player, chest, builder.toString()));
+        }
     }
 
     public void rollback(Server server) {
@@ -149,7 +176,7 @@ public abstract class Explosion extends BBDataBlock {
     }
 
     protected abstract Explosion newInstance(String player, Block block);
-    
+
     protected Explosion(String player, int dataType, int world, int x, int y, int z, int type, String data) {
         super(player, dataType, world, x, y, z, type, data);
     }

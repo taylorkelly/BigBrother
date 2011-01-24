@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 public class BrokenBlock extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
@@ -18,14 +22,37 @@ public class BrokenBlock extends BBDataBlock {
         torchCheck(player, block);
         surroundingSignChecks(player, block);
         signCheck(player, block);
+        chestCheck(player.getName(), block);
         checkGnomesLivingOnTop(player, block);
+    }
+    
+    private void chestCheck(String player, Block block) {
+        if (block.getState() instanceof Chest) {
+            Chest chest = (Chest) block.getState();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < chest.getInventory().getSize(); i++) {
+                ItemStack stack = chest.getInventory().getItem(i);
+                if (stack != null && stack.getAmount() != 0) {
+                    builder.append(stack.getTypeId());
+                    if (stack.getData() != null && stack.getData().getData() != 0) {
+                        builder.append(":");
+                        builder.append(stack.getData().getData());
+                    }
+                    builder.append(",");
+                    builder.append("-" + stack.getAmount());
+                }
+                if (i + 1 < chest.getInventory().getSize())
+                    builder.append(";");
+            }
+            bystanders.add(new DeltaChest(player, chest, builder.toString()));
+        }
     }
 
     public BrokenBlock(Player player, int x, int y, int z, int type, int data) {
         super(player.getName(), BLOCK_BROKEN, 0, x, y, z, type, data + "");
         bystanders = new ArrayList<BBDataBlock>();
     }
-    
+
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();

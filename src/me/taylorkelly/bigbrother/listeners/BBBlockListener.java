@@ -1,5 +1,6 @@
 package me.taylorkelly.bigbrother.listeners;
 
+import me.taylorkelly.bigbrother.BBPermissions;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.*;
@@ -92,5 +93,11 @@ public class BBBlockListener extends BlockListener {
             dataBlock.send();
         }
     }
-
+    
+    public void onBlockRightClick(BlockRightClickEvent event) {
+        Player player = event.getPlayer();
+        if (BBPermissions.isAdmin(player) && plugin.hasStick(player) && event.getItemInHand().getType() == Material.STICK) {
+            plugin.stick(player, event.getBlock());
+        }
+    }
 }

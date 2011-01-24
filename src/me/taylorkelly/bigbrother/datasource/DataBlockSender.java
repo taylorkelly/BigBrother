@@ -69,6 +69,8 @@ public class DataBlockSender {
                 ps.setInt(3, block.action);
                 ps.setInt(4, block.world);
                 ps.setInt(5, block.x);
+                if(block.y < 0) block.y = 0;
+                if(block.y > 127) block.y = 127;
                 ps.setInt(6, block.y);
                 ps.setInt(7, block.z);
                 ps.setInt(8, block.type);
@@ -143,18 +145,18 @@ public class DataBlockSender {
         }
     }
 
-    private static String getAction(int action) {
+    public static String getAction(int action) {
         switch (action) {
         case (BBDataBlock.BLOCK_BROKEN):
-            return "brokeBlock";
+            return "broke block";
         case (BBDataBlock.BLOCK_PLACED):
-            return "placedBlock";
+            return "placed block";
         case (BBDataBlock.DESTROY_SIGN_TEXT):
-            return "destroySignText";
+            return "destroyed sign text";
         case (BBDataBlock.TELEPORT):
             return "teleport";
         case (BBDataBlock.DELTA_CHEST):
-            return "deltaChest";
+            return "changed chest";
         case (BBDataBlock.COMMAND):
             return "command";
         case (BBDataBlock.CHAT):
@@ -170,12 +172,24 @@ public class DataBlockSender {
         case (BBDataBlock.LEVER_SWITCH):
             return "lever";
         case (BBDataBlock.CREATE_SIGN_TEXT):
-            return "createSignText";
+            return "created sign text";
+        case (BBDataBlock.LEAF_DECAY):
+            return "decayed leafe";
+        case (BBDataBlock.FLINT_AND_STEEL):
+            return "flint'd";
+        case (BBDataBlock.TNT_EXPLOSION):
+            return "TNT-exploded";
+        case (BBDataBlock.CREEPER_EXPLOSION):
+            return "Creeper-exploded";
+        case (BBDataBlock.MISC_EXPLOSION):
+            return "Misc-exploded";
+        case (BBDataBlock.OPEN_CHEST):
+            return "opened chest";
         default:
-            return "";
+            return "" + action;
         }
     }
-
+    
     public static String fixName(String player) {
         return player.replace(".", "").replace(":", "").replace("<", "").replace(">", "").replace("*", "").replace("\\", "").replace("/", "").replace("?", "")
                 .replace("\"", "").replace("|", "");
