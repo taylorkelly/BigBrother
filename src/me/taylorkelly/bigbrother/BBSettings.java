@@ -12,20 +12,6 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import org.bukkit.Server;
 
 public class BBSettings {
-
-	public static final int BLOCK_BROKEN = 0;
-	public static final int BLOCK_PLACED = 1;
-	public static final int SIGN_TEXT = 2;
-	public static final int TELEPORT = 3;
-	public static final int DELTA_CHEST = 4;
-	public static final int COMMAND = 5;
-	public static final int CHAT = 6;
-	public static final int DISCONNECT = 7;
-	public static final int LOGIN = 8;
-	public static final int DOOR_OPEN = 9;
-	public static final int BUTTON_PRESS = 10;
-	public static final int LEVER_SWITCH = 10;
-
 	public static boolean blockBreak;
 	public static boolean blockPlace;
 	public static boolean teleport;
@@ -37,7 +23,11 @@ public class BBSettings {
 	public static boolean doorOpen;
 	public static boolean buttonPress;
 	public static boolean leverSwitch;
-    public static boolean fire;
+    public static boolean leafDrops;
+	public static boolean fire;
+    public static boolean tntExplosions;
+    public static boolean creeperExplosions;
+    public static boolean miscExplosions;
 
     
 	public static boolean autoWatch;
@@ -78,7 +68,11 @@ public class BBSettings {
 		buttonPress = pf.getBoolean("buttonPress", false, "Watch for when player pushes buttons");
 		leverSwitch = pf.getBoolean("leverSwitch", false, "Watch for when player switches levers");
 	    fire = pf.getBoolean("fireLogging", true, "Watch for when players start fires");
-		pf.save();
+	    leafDrops = pf.getBoolean("leafDrops", true, "Watch for when leaves drop");
+        tntExplosions = pf.getBoolean("tntExplosions", true, "Watch for when TNT explodes");
+        creeperExplosions = pf.getBoolean("creeperExplosions", true, "Watch for when Creepers explodes");
+        miscExplosions = pf.getBoolean("miscExplosions", true, "Watch for miscellaneous explosions");
+	    pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");

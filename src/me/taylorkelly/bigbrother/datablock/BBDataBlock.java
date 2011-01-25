@@ -104,6 +104,8 @@ public abstract class BBDataBlock {
             try {
                 if (rs != null)
                     rs.close();
+                if (conn != null) 
+                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception (on closing)");
             }
@@ -128,6 +130,8 @@ public abstract class BBDataBlock {
             try {
                 if (st != null)
                     st.close();
+                if (conn != null) 
+                    conn.close();
             } catch (SQLException e) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the table (on close)");
             }

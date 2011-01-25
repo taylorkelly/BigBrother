@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother;
 
 import java.io.*;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.*;
 
@@ -58,7 +59,6 @@ public class BigBrother extends JavaPlugin {
 
     public void onDisable() {
         DataBlockSender.disable();
-        ConnectionManager.freeConnection();
     }
 
     public void onEnable() {
@@ -71,12 +71,6 @@ public class BigBrother extends JavaPlugin {
             e.printStackTrace();
         }
         
-        Connection conn = ConnectionManager.getConnection();
-        if (conn == null) {
-            log.log(Level.SEVERE, "[BBROTHER] Could not establish SQL connection. Disabling BigBrother");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
 
         if (new File("BigBrother").exists()) {
             updateSettings(getDataFolder());
@@ -84,9 +78,25 @@ public class BigBrother extends JavaPlugin {
             getDataFolder().mkdirs();
         }
 
+        
+        BBSettings.initialize(getDataFolder());
+
+        Connection conn = ConnectionManager.createConnection();
+        if (conn == null) {
+            log.log(Level.SEVERE, "[BBROTHER] Could not establish SQL connection. Disabling BigBrother");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        } else {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+
         registerEvents();
         BBPermissions.initialize(getServer());
-        BBSettings.initialize(getDataFolder());
         watcher = BBSettings.getWatcher(getServer(), getDataFolder());
         BBDataBlock.initialize();
         DataBlockSender.initialize(getDataFolder());

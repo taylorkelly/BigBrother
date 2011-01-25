@@ -53,9 +53,9 @@ public class Rollback {
     }
 
     private void mysqlRollback(boolean sqlite) {
-        Connection conn = null;
         PreparedStatement ps = null;
         ResultSet set = null;
+        Connection conn = null;
         try {
             conn = ConnectionManager.getConnection();
             ps = conn.prepareStatement(RollbackPreparedStatement.create(this));
@@ -110,12 +110,13 @@ public class Rollback {
         } catch (SQLException ex) {
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception", ex);
         } finally {
-
             try {
                 if (set != null)
                     set.close();
                 if (ps != null)
                     ps.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception (on close)");
             }

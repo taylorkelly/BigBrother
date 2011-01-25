@@ -21,12 +21,12 @@ public class BlockHistory {
 
     public static ArrayList<BBDataBlock> hist(Block block) {
         PreparedStatement ps = null;
-        ResultSet rs = null;
-
+        ResultSet rs = null;    
+        Connection conn = null;
         ArrayList<BBDataBlock> blockList = new ArrayList<BBDataBlock>();
 
         try {
-            Connection conn = ConnectionManager.getConnection();
+            conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
             ps = conn.prepareStatement("SELECT * FROM " + BBDataBlock.BBDATA_NAME + " WHERE rbacked = 0 AND x = ? AND y = ?  AND z = ? ORDER BY id ASC");
@@ -50,6 +50,8 @@ public class BlockHistory {
                     rs.close();
                 if (ps != null)
                     ps.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
             }

@@ -24,7 +24,8 @@ public class DataBlockSender {
     private static Timer sendTimer;
 
     public static void disable() {
-        if(sendTimer != null) sendTimer.cancel();
+        if (sendTimer != null)
+            sendTimer.cancel();
     }
 
     public static void initialize(File dataFolder) {
@@ -44,11 +45,11 @@ public class DataBlockSender {
         sending.drainTo(collection);
 
         boolean worked = sendBlocksMySQL(collection);
-        if(BBSettings.flatLog) {
+        if (BBSettings.flatLog) {
             sendBlocksFlatFile(dataFolder, collection);
         }
-        
-        if(!worked) {
+
+        if (!worked) {
             sending.addAll(collection);
             BigBrother.log.log(Level.INFO, "[BBROTHER]: SQL send failed. Keeping data for later send.");
 
@@ -69,12 +70,18 @@ public class DataBlockSender {
                 ps.setInt(3, block.action);
                 ps.setInt(4, block.world);
                 ps.setInt(5, block.x);
-                if(block.y < 0) block.y = 0;
-                if(block.y > 127) block.y = 127;
+                if (block.y < 0)
+                    block.y = 0;
+                if (block.y > 127)
+                    block.y = 127;
                 ps.setInt(6, block.y);
                 ps.setInt(7, block.z);
                 ps.setInt(8, block.type);
-                ps.setString(9, block.data);
+                if (block.data.length() > 150) {
+                    ps.setString(9, block.data.substring(0, 150));
+                } else {
+                    ps.setString(9, block.data);
+                }
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -91,6 +98,8 @@ public class DataBlockSender {
                 if (rs != null) {
                     rs.close();
                 }
+                if (conn != null)
+                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (on close)");
             }
@@ -189,7 +198,7 @@ public class DataBlockSender {
             return "" + action;
         }
     }
-    
+
     public static String fixName(String player) {
         return player.replace(".", "").replace(":", "").replace("<", "").replace(">", "").replace("*", "").replace("\\", "").replace("/", "").replace("?", "")
                 .replace("\"", "").replace("|", "");
@@ -197,9 +206,11 @@ public class DataBlockSender {
 
     private static class SendingTask extends TimerTask {
         private File dataFolder;
+
         public SendingTask(File dataFolder) {
             this.dataFolder = dataFolder;
         }
+
         public void run() {
             sendBlocks(dataFolder);
         }

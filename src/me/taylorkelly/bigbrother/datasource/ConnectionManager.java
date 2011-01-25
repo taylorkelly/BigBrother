@@ -3,30 +3,35 @@ package me.taylorkelly.bigbrother.datasource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBSettings;
 
 public class ConnectionManager {
 
-    private static Connection connection;
-
-    public static synchronized Connection getConnection() {
-        if (connection == null) {
-            connection = createConnection();
+    public static Connection getConnection() {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:jdc:jdcpool");
+            conn.setAutoCommit(false);
+            return conn;
+        } catch (SQLException e) {
+            Logger.getLogger("Minecraft").log(Level.SEVERE, "[BBROTHER] Error getting connection", e);
+            e.printStackTrace();
+            return null;
         }
-        return connection;
     }
 
-    private static Connection createConnection() {
+    public static Connection createConnection() {
         try {
             if (BBSettings.mysql) {
-                Class.forName("com.mysql.jdbc.Driver");
-                Connection ret = DriverManager.getConnection(BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
+                new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
+                Connection ret = DriverManager.getConnection("jdbc:jdc:jdcpool");
                 ret.setAutoCommit(false);
                 return ret;
             } else {
-                Class.forName("org.sqlite.JDBC");
-                Connection ret =  DriverManager.getConnection(BBSettings.liteDb);
+                new JDCConnectionDriver("org.sqlite.JDBC", BBSettings.liteDb, BBSettings.mysqlUser, BBSettings.mysqlPass);
+                Connection ret = DriverManager.getConnection("jdbc:jdc:jdcpool");
                 ret.setAutoCommit(false);
                 return ret;
             }
@@ -36,17 +41,12 @@ public class ConnectionManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-    
-    public static synchronized void freeConnection() {
-        if(connection != null) {
-            try {
-                connection.close();
-                connection = null;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

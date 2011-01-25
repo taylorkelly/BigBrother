@@ -47,10 +47,9 @@ public class Finder {
 
     // TODO use IN(1,2,3)
     private void mysqlFind(boolean sqlite) {
-        Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-
+        Connection conn = null;
         HashMap<String, Integer> modifications = new HashMap<String, Integer>();
         try {
             conn = ConnectionManager.getConnection();
@@ -103,6 +102,8 @@ public class Finder {
                     rs.close();
                 if (ps != null)
                     ps.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
             }
@@ -110,14 +111,14 @@ public class Finder {
     }
 
     private void mysqlFind(boolean sqlite, String playerName) {
-        Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         HashMap<Integer, Integer> creations = new HashMap<Integer, Integer>();
         HashMap<Integer, Integer> destructions = new HashMap<Integer, Integer>();
         HashMap<Integer, Integer> explosions = new HashMap<Integer, Integer>();
-
+        Connection conn = null;
+        
         try {
             conn = ConnectionManager.getConnection();
 
@@ -235,6 +236,8 @@ public class Finder {
                     rs.close();
                 if (ps != null)
                     ps.close();
+                if (conn != null)
+                    conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
             }

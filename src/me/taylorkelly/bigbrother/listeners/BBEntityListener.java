@@ -20,14 +20,17 @@ public class BBEntityListener extends EntityListener {
     public void onEntityExplode(EntityExplodeEvent event) {
         // Err... why is this null when it's a TNT?
         // Need a fix to get location.
-        if (!event.isCancelled() && BBSettings.blockBreak) {
-            if (event.getEntity() == null) {
+        if (event.getEntity() == null) {
+            if (BBSettings.tntExplosions) {
                 TNTLogger.createTNTDataBlock(event.blockList());
-            } else if (event.getEntity() instanceof CraftLivingEntity) {
-                CreeperExplosion.create(event.getEntity().getLocation(), event.blockList());
-            } else {
-                MiscExplosion.create(event.getEntity().getLocation(), event.blockList());
             }
+        } else if (event.getEntity() instanceof CraftLivingEntity) {
+            if (BBSettings.creeperExplosions) {
+                CreeperExplosion.create(event.getEntity().getLocation(), event.blockList());
+            }
+        } else if (BBSettings.miscExplosions) {
+            MiscExplosion.create(event.getEntity().getLocation(), event.blockList());
         }
+
     }
 }
