@@ -52,38 +52,33 @@ public class BBBlockListener extends BlockListener {
         if (entity instanceof Player) {
             Player player = (Player) entity;
             if (plugin.watching(player) && !event.isCancelled()) {
-                if (!(BBPermissions.isAdmin(player) && plugin.hasStick(player) && player.getItemInHand().getType() == Material.STICK)) {
-                    switch (block.getType()) {
-                    case WOODEN_DOOR:
-                        if (BBSettings.doorOpen) {
-                            DoorOpen doorDataBlock = new DoorOpen(player.getName(), block);
-                            doorDataBlock.send();
-                        }
-                        break;
-                    case LEVER:
-                        if (BBSettings.leverSwitch) {
-                            LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block);
-                            leverDataBlock.send();
-                        }
-                        break;
-                    case STONE_BUTTON:
-                        if (BBSettings.buttonPress) {
-                            ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block);
-                            buttonDataBlock.send();
-                        }
-                        break;
-                    case CHEST:
-                        if (BBSettings.chestChanges) {
-                            BBDataBlock chestDataBlock = new ChestOpen(player, block);
-                            chestDataBlock.send();
-                        }
-                        break;
+                switch (block.getType()) {
+                case WOODEN_DOOR:
+                    if (BBSettings.doorOpen) {
+                        DoorOpen doorDataBlock = new DoorOpen(player.getName(), block);
+                        doorDataBlock.send();
                     }
-                } else {
-                    event.setCancelled(true);
+                    break;
+                case LEVER:
+                    if (BBSettings.leverSwitch) {
+                        LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block);
+                        leverDataBlock.send();
+                    }
+                    break;
+                case STONE_BUTTON:
+                    if (BBSettings.buttonPress) {
+                        ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block);
+                        buttonDataBlock.send();
+                    }
+                    break;
+                case CHEST:
+                    if (BBSettings.chestChanges) {
+                        BBDataBlock chestDataBlock = new ChestOpen(player, block);
+                        chestDataBlock.send();
+                    }
+                    break;
                 }
             }
-
         }
     }
 
@@ -102,10 +97,10 @@ public class BBBlockListener extends BlockListener {
         }
     }
 
-    public void onBlockRightClick(BlockRightClickEvent event) {
-        Player player = event.getPlayer();
-        if (BBPermissions.isAdmin(player) && plugin.hasStick(player) && event.getItemInHand().getType() == Material.STICK) {
-            plugin.stick(player, event.getBlock());
+    public void onBlockBurn(BlockBurnEvent event) {
+        if (BBSettings.fire && !event.isCancelled()) {
+            BBDataBlock dataBlock = BlockBurn.create(event.getBlock());
+            dataBlock.send();
         }
     }
 }

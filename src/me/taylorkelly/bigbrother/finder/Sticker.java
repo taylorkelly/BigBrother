@@ -19,12 +19,14 @@ public class Sticker {
         playerModes = new HashMap<String, StickMode>();
         modes = new ArrayList<Class<? extends StickMode>>();
         modes.add(HistoryStick.class);
+        modes.add(HistoryLog.class);
     }
 
     public void setMode(Player player, int i) {
-        if(i == 0) {
+        if(i == 0 && playerModes.containsKey(player.getName())) {
             player.sendMessage(BigBrother.premessage + "Turning off SuperStick");
-            playerModes.remove(player.getName());
+            StickMode mode = playerModes.remove(player.getName());
+            mode.disable(player);
             return;
         }
         i--;
@@ -33,7 +35,11 @@ public class Sticker {
             i = 0;
         }
         try {
+            if(playerModes.containsKey(player.getName())) {
+                playerModes.get(player.getName()).disable(player);
+            }
             playerModes.put(player.getName(), modes.get(i).newInstance());
+            playerModes.get(player.getName()).initialize(player);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -51,16 +57,27 @@ public class Sticker {
 
     public boolean hasStick(Player player) {
         return playerModes.containsKey(player.getName());
+        /*if(playerModes.containsKey(player.getName())) {
+            return playerModes.get(player.getName()).usesStick();
+        }
+        return false;*/
     }
 
-    public void blockInfo(Player player, Block block) {
+    private void blockInfo(Player player, Block block) {
         if(playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             ArrayList<String> info = mode.getInfoOnBlock(block);
             for(String msg : info) {
                 player.sendMessage(msg);
             }
-            
+        }
+    }
+
+    public void stick(Player player, Block block) {
+        blockInfo(player, block);
+        if(playerModes.containsKey(player.getName())) {
+            StickMode mode = playerModes.get(player.getName());
+            mode.update(player);
         }
     }
 

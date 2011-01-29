@@ -60,7 +60,7 @@ public abstract class BBDataBlock {
     public static final int CREEPER_EXPLOSION = 16;
     public static final int MISC_EXPLOSION = 17;
     public static final int OPEN_CHEST = 18;
-
+    public static final int BLOCK_BURN = 19;
 
     
     public BBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
@@ -93,7 +93,6 @@ public abstract class BBDataBlock {
             conn = ConnectionManager.getConnection();
             DatabaseMetaData dbm = conn.getMetaData();
             rs = dbm.getTables(null, null, BBDATA_NAME, null);
-            conn.commit();
             if (!rs.next())
                 return false;
             return true;
@@ -186,6 +185,8 @@ public abstract class BBDataBlock {
             return MiscExplosion.getBBDataBlock(player, world, x, y, z, type, data);
         case (OPEN_CHEST):
             return ChestOpen.getBBDataBlock(player, world, x, y, z, type, data);
+        case (BLOCK_BURN):
+            return BlockBurn.getBBDataBlock(player, world, x, y, z, type, data);
         default:
             return null;
         }

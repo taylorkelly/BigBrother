@@ -115,6 +115,8 @@ public class RollbackPreparedStatement {
         ret.append(BBDataBlock.CREEPER_EXPLOSION);
         ret.append("','");
         ret.append(BBDataBlock.MISC_EXPLOSION);
+        ret.append("','");
+        ret.append(BBDataBlock.BLOCK_BURN);
         ret.append("')");
         return ret;
     }

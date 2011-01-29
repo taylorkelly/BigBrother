@@ -20,10 +20,10 @@ public class BBPermissions {
             Logger log = Logger.getLogger("Minecraft");
             permissionsPlugin = ((Permissions)test);
             permissionsEnabled = true;
-            log.log(Level.INFO, "[MYHOME] Permissions enabled.");
+            log.log(Level.INFO, "[BBROTHER] Permissions enabled.");
         } else {
             Logger log = Logger.getLogger("Minecraft");
-            log.log(Level.SEVERE, "[MYHOME] Permissions isn't loaded, there are no restrictions.");
+            log.log(Level.SEVERE, "[BBROTHER] Permissions isn't loaded, there are no restrictions.");
         }
     }
 

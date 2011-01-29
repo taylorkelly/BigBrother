@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
@@ -94,7 +95,7 @@ public class Rollback {
                     ps = conn.prepareStatement(RollbackPreparedStatement.update(this));
                     ps.execute();
                     conn.commit();
-                    
+
                     for (Player player : recievers) {
                         player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
                     }

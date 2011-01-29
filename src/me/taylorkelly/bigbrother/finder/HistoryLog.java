@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 
-public class HistoryStick extends StickMode {
+public class HistoryLog extends StickMode {
     private ItemStack oldItem;
     private int slot;
     
@@ -23,7 +23,7 @@ public class HistoryStick extends StickMode {
         if(oldItem != null && oldItem.getAmount() > 0) {
             player.sendMessage(ChatColor.AQUA + "Saving your " + oldItem.getType() + ".");
         }
-        player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
+        player.getInventory().setItem(slot, new ItemStack(Material.LOG, 1));
     }
     
     public void disable(Player player) {
@@ -32,7 +32,8 @@ public class HistoryStick extends StickMode {
             player.getInventory().setItem(slot, oldItem);
         }
     }
-
+    
+    @Override
     public ArrayList<String> getInfoOnBlock(Block block) {
         ArrayList<BBDataBlock> history = BlockHistory.hist(block);
 
@@ -63,15 +64,15 @@ public class HistoryStick extends StickMode {
     }
 
     public String getDescription() {
-        return "History Stick";
+        return "History Log";
     }
-    
+
     public boolean usesStick() {
-        return true;
+        return false;
     }
 
     public void update(Player player) {
-        player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
+        player.getInventory().setItem(slot, new ItemStack(Material.LOG, 1));
     }
 
 }

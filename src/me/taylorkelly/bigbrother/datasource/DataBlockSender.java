@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
@@ -52,7 +53,19 @@ public class DataBlockSender {
         if (!worked) {
             sending.addAll(collection);
             BigBrother.log.log(Level.INFO, "[BBROTHER]: SQL send failed. Keeping data for later send.");
-
+        } else {
+            try {
+                Thread.sleep(500);
+                Runtime rt = Runtime.getRuntime();
+                double mem = rt.freeMemory();
+                rt.runFinalization();
+                rt.gc();
+                mem = rt.freeMemory() - mem;
+                mem /= 1024 * 1024;
+                //Logger.getLogger("Minecraft").info("Freed " + mem + " MB.");
+            } catch (InterruptedException ex) {
+                return;
+            }
         }
     }
 
@@ -194,6 +207,8 @@ public class DataBlockSender {
             return "Misc-exploded";
         case (BBDataBlock.OPEN_CHEST):
             return "opened chest";
+        case (BBDataBlock.BLOCK_BURN):
+            return "burned block";
         default:
             return "" + action;
         }

@@ -37,6 +37,8 @@ public class BigBrother extends JavaPlugin {
     private BBPlayerListener playerListener;
     private BBBlockListener blockListener;
     private BBEntityListener entityListener;
+    private StickListener stickListener;
+
     private Watcher watcher;
     private Sticker sticker;
 
@@ -53,6 +55,7 @@ public class BigBrother extends JavaPlugin {
         playerListener = new BBPlayerListener(this);
         blockListener = new BBBlockListener(this);
         entityListener = new BBEntityListener(this);
+        stickListener = new StickListener(this);
         sticker = new Sticker(getServer());
 
     }
@@ -126,11 +129,13 @@ public class BigBrother extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.LEAVES_DECAY, blockListener, Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.Monitor, this);
 
         getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Monitor, this);
 
-        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICKED, blockListener, Priority.Normal, this);
-
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_RIGHTCLICKED, stickListener, Priority.Low, this);
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACED, stickListener, Priority.Low, this);
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_INTERACT, stickListener, Priority.Low, this);
     }
 
     public boolean watching(Player player) {
@@ -230,10 +235,12 @@ public class BigBrother extends JavaPlugin {
                 if (split.length == 1) {
                     sticker.setMode(player, 1);
                     player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
+                    player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
                 } else if (split.length == 2 && isInteger(split[1])) {
                     sticker.setMode(player, Integer.parseInt(split[1]));
                     if (Integer.parseInt(split[1]) > 0) {
                         player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
+                        player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
                     }
                 } else {
                     player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb stick (#)");
@@ -349,6 +356,6 @@ public class BigBrother extends JavaPlugin {
     }
 
     public void stick(Player player, Block block) {
-        sticker.blockInfo(player, block);
+        sticker.stick(player, block);
     }
 }

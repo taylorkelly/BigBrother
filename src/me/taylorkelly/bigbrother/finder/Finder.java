@@ -55,7 +55,7 @@ public class Finder {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "')";
+            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "', '" + BBDataBlock.BLOCK_BURN + "')";
             ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
                     + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
 
@@ -117,13 +117,15 @@ public class Finder {
         HashMap<Integer, Integer> creations = new HashMap<Integer, Integer>();
         HashMap<Integer, Integer> destructions = new HashMap<Integer, Integer>();
         HashMap<Integer, Integer> explosions = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> burns = new HashMap<Integer, Integer>();
+
         Connection conn = null;
         
         try {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "')";
+            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "', '" + BBDataBlock.BLOCK_BURN + "')";
             ps = conn.prepareStatement("SELECT action, type FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
                     + " AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ?  AND z < ? AND z > ? AND player = ? order by date desc");
 
@@ -172,6 +174,14 @@ public class Finder {
                         explosions.put(type, 1);
                         size++;
                     }
+                case (BBDataBlock.BLOCK_BURN):
+                    if (burns.containsKey(type)) {
+                        burns.put(type, burns.get(type) + 1);
+                        size++;
+                    } else {
+                        burns.put(type, 1);
+                        size++;
+                    }
                     break;
                 }
 
@@ -213,6 +223,19 @@ public class Finder {
                 }
                 if (explodeList.toString().contains(","))
                     explodeList.delete(explodeList.lastIndexOf(","), explodeList.length());
+                
+                StringBuilder burnList = new StringBuilder();
+                // brokenList.append(Color.RED);
+                burnList.append("Burned Blocks: ");
+                // brokenList.append(Color.WHITE);
+                for (Entry<Integer, Integer> entry : burns.entrySet()) {
+                    burnList.append(Material.getMaterial(entry.getKey()));
+                    burnList.append(" (");
+                    burnList.append(entry.getValue());
+                    burnList.append("), ");
+                }
+                if (burnList.toString().contains(","))
+                    burnList.delete(burnList.lastIndexOf(","), burnList.length());
                 for (Player player : players) {
                     player.sendMessage(BigBrother.premessage + playerName + " has made " + size + " modifications");
                     if (creations.entrySet().size() > 0)
@@ -221,6 +244,8 @@ public class Finder {
                         player.sendMessage(brokenList.toString());
                     if (explosions.entrySet().size() > 0)
                         player.sendMessage(explodeList.toString());
+                    if (burns.entrySet().size() > 0)
+                        player.sendMessage(burnList.toString());
                 }
             } else {
                 for (Player player : players) {
