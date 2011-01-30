@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock.explosions;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.DeltaChest;
 import me.taylorkelly.bigbrother.datablock.DestroySignText;
@@ -60,14 +61,16 @@ public abstract class Explosion extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds()[world];
-        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
-        }
+        if (type != 51 || BBSettings.restoreFire) {
+            World worldy = server.getWorlds()[world];
+            if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+                ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+            }
 
-        byte blockData = Byte.parseByte(data);
-        worldy.getBlockAt(x, y, z).setTypeId(type);
-        worldy.getBlockAt(x, y, z).setData(blockData);
+            byte blockData = Byte.parseByte(data);
+            worldy.getBlockAt(x, y, z).setTypeId(type);
+            worldy.getBlockAt(x, y, z).setData(blockData);
+        }
     }
 
     public void redo(Server server) {

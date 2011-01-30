@@ -79,6 +79,21 @@ public class PropertiesFile {
 			return defaultValue;
 		}
 	}
+	
+	   public long getLong(String key, Long defaultValue, String defaultComment) {
+	        if (map.containsKey(key)) {
+	            try {
+	                return Long.parseLong(map.get(key).value);
+	            } catch (Exception e) {
+	                BigBrother.log.log(Level.WARNING, "[BBROTHER]: Trying to get Long from " + key + ": " + map.get(key).value);
+	                return 0;
+	            }
+	        } else {
+	            map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+	            modified = true;
+	            return defaultValue;
+	        }
+	    }
 
 	public double getDouble(String key, Double defaultValue, String defaultComment) {
 		if (map.containsKey(key)) {

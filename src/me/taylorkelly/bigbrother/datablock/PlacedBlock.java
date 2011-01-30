@@ -2,6 +2,8 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBSettings;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -18,7 +20,7 @@ public class PlacedBlock extends BBDataBlock {
         signCheck(player, block);
         // TODO snow check once it gets fixed
     }
-    
+
     public PlacedBlock(Player player, int x, int y, int z, int type, int data) {
         super(player.getName(), BLOCK_PLACED, 0, x, y, z, type, data + "");
         bystanders = new ArrayList<BBDataBlock>();
@@ -52,14 +54,16 @@ public class PlacedBlock extends BBDataBlock {
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds()[world];
-        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
-        }
+        if (type != 51 || BBSettings.restoreFire) {
+            World worldy = server.getWorlds()[world];
+            if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+                ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+            }
 
-        byte blockData = Byte.parseByte(data);
-        worldy.getBlockAt(x, y, z).setTypeId(type);
-        worldy.getBlockAt(x, y, z).setData(blockData);
+            byte blockData = Byte.parseByte(data);
+            worldy.getBlockAt(x, y, z).setTypeId(type);
+            worldy.getBlockAt(x, y, z).setData(blockData);
+        }
     }
 
     public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {

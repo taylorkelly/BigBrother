@@ -2,6 +2,8 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBSettings;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -25,7 +27,7 @@ public class BrokenBlock extends BBDataBlock {
         chestCheck(player.getName(), block);
         checkGnomesLivingOnTop(player, block);
     }
-    
+
     private void chestCheck(String player, Block block) {
         if (block.getState() instanceof Chest) {
             Chest chest = (Chest) block.getState();
@@ -61,14 +63,16 @@ public class BrokenBlock extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds()[world];
-        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
-        }
+        if (type != 51 || BBSettings.restoreFire) {
+            World worldy = server.getWorlds()[world];
+            if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+                ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+            }
 
-        byte blockData = Byte.parseByte(data);
-        worldy.getBlockAt(x, y, z).setTypeId(type);
-        worldy.getBlockAt(x, y, z).setData(blockData);
+            byte blockData = Byte.parseByte(data);
+            worldy.getBlockAt(x, y, z).setTypeId(type);
+            worldy.getBlockAt(x, y, z).setData(blockData);
+        }
     }
 
     public void redo(Server server) {

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.griefcraft.util;
+package me.taylorkelly.bigbrother.griefcraft.util;
 
 import java.io.File;
 import java.io.FileOutputStream;

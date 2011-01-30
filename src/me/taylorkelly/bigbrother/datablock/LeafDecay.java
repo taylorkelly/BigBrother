@@ -2,6 +2,8 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBSettings;
+
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -9,7 +11,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
-public class LeafDecay extends BBDataBlock{
+public class LeafDecay extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
 
     public LeafDecay(Player player, Block block) {
@@ -21,6 +23,7 @@ public class LeafDecay extends BBDataBlock{
         signCheck(player, block);
         checkGnomesLivingOnTop(player, block);
     }
+
     public LeafDecay(Block block) {
         // TODO Better World support
         super(ENVIRONMENT, LEAF_DECAY, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
@@ -35,12 +38,12 @@ public class LeafDecay extends BBDataBlock{
         super(player.getName(), LEAF_DECAY, 0, x, y, z, type, data + "");
         bystanders = new ArrayList<BBDataBlock>();
     }
-    
+
     public static BBDataBlock create(Block block) {
-        //TODO Player handling
+        // TODO Player handling
         return new LeafDecay(block);
     }
-    
+
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
@@ -49,14 +52,16 @@ public class LeafDecay extends BBDataBlock{
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds()[world];
-        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
-        }
+        if (type != 51 || BBSettings.restoreFire) {
+            World worldy = server.getWorlds()[world];
+            if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
+                ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+            }
 
-        byte blockData = Byte.parseByte(data);
-        worldy.getBlockAt(x, y, z).setTypeId(type);
-        worldy.getBlockAt(x, y, z).setData(blockData);
+            byte blockData = Byte.parseByte(data);
+            worldy.getBlockAt(x, y, z).setTypeId(type);
+            worldy.getBlockAt(x, y, z).setData(blockData);
+        }
     }
 
     public void redo(Server server) {
@@ -171,7 +176,7 @@ public class LeafDecay extends BBDataBlock{
             bystanders.add(new BrokenBlock(player, mrGnome));
         }
     }
-    
+
     private void torchCheck(Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
         torchTypes.add(50);

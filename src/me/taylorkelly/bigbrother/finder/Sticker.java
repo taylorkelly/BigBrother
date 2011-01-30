@@ -8,6 +8,7 @@ import me.taylorkelly.bigbrother.BigBrother;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class Sticker {
     private Server server;
@@ -55,12 +56,11 @@ public class Sticker {
         }
     }
 
-    public boolean hasStick(Player player) {
-        return playerModes.containsKey(player.getName());
-        /*if(playerModes.containsKey(player.getName())) {
-            return playerModes.get(player.getName()).usesStick();
+    public boolean hasStick(Player player, ItemStack itemStack) {
+        if(playerModes.containsKey(player.getName())) {
+            return playerModes.get(player.getName()).usesStick(itemStack);
         }
-        return false;*/
+        return false;
     }
 
     private void blockInfo(Player player, Block block) {

@@ -34,7 +34,8 @@ public class BBPlayerListener extends PlayerListener {
         String[] split = event.getMessage().split(" ");
         MinecraftServer server = ((CraftPlayer) player).getHandle().b;
 
-        if (BBPermissions.isAdmin(player)) {
+        //TODO Take out!
+        if (BBPermissions.rollback(player)) {
             if (split[0].equalsIgnoreCase("/ban-ip")) {
                 if (split.length < 2) {
                     player.sendMessage(ChatColor.RED + "Correct usage is: /ban-ip [player] <reason> (optional) NOTE: this permabans IPs.");

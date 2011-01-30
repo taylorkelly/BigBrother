@@ -32,9 +32,25 @@ public class BBPermissions {
         return permissionsPlugin.Security.permission(player, string);
     }
 
-    public static boolean isAdmin(Player player) {
+    public static boolean info(Player player) {
         if (permissionsEnabled) {
-            return permission(player, "bb.admin");
+            return permission(player, "bb.admin.info");
+        } else {
+            return player.isOp();
+        }
+    }
+    
+    public static boolean rollback(Player player) {
+        if (permissionsEnabled) {
+            return permission(player, "bb.admin.rollback");
+        } else {
+            return player.isOp();
+        }
+    }
+    
+    public static boolean watch(Player player) {
+        if (permissionsEnabled) {
+            return permission(player, "bb.admin.watch");
         } else {
             return player.isOp();
         }

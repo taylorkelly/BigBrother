@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
@@ -66,12 +67,16 @@ public class HistoryStick extends StickMode {
         return "History Stick";
     }
     
-    public boolean usesStick() {
-        return true;
-    }
 
     public void update(Player player) {
         player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
+    }
+
+    public boolean usesStick(ItemStack itemStack) {
+        if(itemStack.getTypeId() == BBSettings.stickItem) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother;
 
+import java.util.ArrayList;
+
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.ButtonPress;
 import me.taylorkelly.bigbrother.datablock.ChestOpen;
@@ -25,28 +27,30 @@ public class StickListener extends BlockListener {
 
     public void onBlockRightClick(BlockRightClickEvent event) {
         Player player = event.getPlayer();
-        if (BBPermissions.isAdmin(player) && plugin.hasStick(player) && event.getItemInHand().getType() == Material.STICK) {
+        if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand())) {
             plugin.stick(player, event.getBlock());
         }
     }
 
     public void onBlockInteract(BlockInteractEvent event) {
+        ArrayList<Material> nonInteracts = new ArrayList<Material>();
+        nonInteracts.add(Material.WOOD_PLATE);
+        nonInteracts.add(Material.STONE_PLATE);
         Block block = event.getBlock();
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (BBPermissions.isAdmin(player) && plugin.hasStick(player) && player.getItemInHand().getType() == Material.STICK) {
-                System.out.println("sticking");
-                event.setCancelled(true);
+            if (!nonInteracts.contains(block)) {
+                if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand())) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
-    
+
     public void onBlockPlace(BlockPlaceEvent event) {
-        System.out.println("WOAH! " + event.getItemInHand().getType());
         Player player = event.getPlayer();
-        if (BBPermissions.isAdmin(player) && plugin.hasStick(player) && event.getItemInHand().getType() == Material.LOG) {
-            System.out.println("sticking");
+        if (BBPermissions.info(player) && plugin.hasStick(player, event.getItemInHand())) {
             plugin.stick(player, event.getBlockPlaced());
             event.setCancelled(true);
         }

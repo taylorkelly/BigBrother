@@ -29,7 +29,7 @@ public class BBSettings {
     public static boolean creeperExplosions;
     public static boolean miscExplosions;
 
-    
+    public static boolean restoreFire;
 	public static boolean autoWatch;
 	public static int defaultSearchRadius;
 	public static boolean mysql;
@@ -38,6 +38,7 @@ public class BBSettings {
 	public static String mysqlPass = "root";
 	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
 	public static int sendDelay;
+	public static long stickItem;
 
 	private static ArrayList<String> watchList;
 	private static ArrayList<String> seenList;
@@ -75,6 +76,8 @@ public class BBSettings {
 	    pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
+	    stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");
+	    restoreFire = pf.getBoolean("restoreFire", false, "Restore fire when rolling back");
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
 		defaultSearchRadius = pf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind");
 		mysql = pf.getBoolean("MySQL", true, "If true, uses MySQL. If false, uses Sqlite");
