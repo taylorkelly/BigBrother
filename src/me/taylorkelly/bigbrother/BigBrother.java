@@ -63,6 +63,7 @@ public class BigBrother extends JavaPlugin {
 
     public void onDisable() {
         DataBlockSender.disable();
+        BBSettings.onDisable(getDataFolder());
     }
 
     public void onEnable() {
@@ -97,6 +98,7 @@ public class BigBrother extends JavaPlugin {
         }
 
         registerEvents();
+        Stats.initialize();
         BBPermissions.initialize(getServer());
         watcher = BBSettings.getWatcher(getServer(), getDataFolder());
         BBDataBlock.initialize();

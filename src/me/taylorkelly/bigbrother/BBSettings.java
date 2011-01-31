@@ -39,6 +39,7 @@ public class BBSettings {
 	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
 	public static int sendDelay;
 	public static long stickItem;
+    public static double freedMem;
 
 	private static ArrayList<String> watchList;
 	private static ArrayList<String> seenList;
@@ -52,6 +53,12 @@ public class BBSettings {
 
 		loadPropertiesFiles(dataFolder);
 		loadLists(dataFolder);
+	}
+	
+	public static void onDisable(File dataFolder) {
+	    PropertiesFile pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
+	    pf.setDouble("freedMem", Stats.getGlobalMemory(), "The amount of memory freed by BB");
+	    pf.save();
 	}
 
 	private static void loadPropertiesFiles(File dataFolder) {
@@ -76,6 +83,7 @@ public class BBSettings {
 	    pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
+	    freedMem = pf.getDouble("freedMem", 0.0, "The amount of memory freed by BB");
 	    stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");
 	    restoreFire = pf.getBoolean("restoreFire", false, "Restore fire when rolling back");
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");

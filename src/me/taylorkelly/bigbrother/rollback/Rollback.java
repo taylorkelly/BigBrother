@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
@@ -152,13 +153,16 @@ public class Rollback {
 
     private void rollbackBlocks() {
         lastRollback.clear();
+        long size = 0;
         while (listBlocks.size() > 0) {
             BBDataBlock dataBlock = listBlocks.removeFirst();
             if (dataBlock != null) {
                 lastRollback.addFirst(dataBlock);
                 dataBlock.rollback(server);
+                size++;
             }
         }
+        Stats.logRollback(size);
     }
 
     public static boolean canUndo() {
