@@ -81,4 +81,12 @@ public class Sticker {
         }
     }
 
+    public boolean rightClickStick(Player player) {
+        if(playerModes.containsKey(player.getName())) {
+            StickMode mode = playerModes.get(player.getName());
+            return mode.rightClickStick();
+        }
+        return false;
+    }
+
 }

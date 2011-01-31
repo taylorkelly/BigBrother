@@ -19,4 +19,6 @@ public abstract class StickMode {
 
     public abstract void update(Player player);
 
+    public abstract boolean rightClickStick();
+
 }

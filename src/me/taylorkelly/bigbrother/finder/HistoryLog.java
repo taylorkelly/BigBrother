@@ -31,6 +31,8 @@ public class HistoryLog extends StickMode {
         if(oldItem != null && oldItem.getAmount() > 0) {
             player.sendMessage(ChatColor.AQUA + "Here's your " + oldItem.getType() + " back!");
             player.getInventory().setItem(slot, oldItem);
+        } else {
+            player.getInventory().clear(slot);
         }
     }
     
@@ -77,9 +79,13 @@ public class HistoryLog extends StickMode {
     }
 
     public boolean usesStick(ItemStack itemStack) {
-        if(itemStack.getTypeId() == BBSettings.stickItem) {
+        if(itemStack.getType() == Material.LOG) {
             return true;
         }
+        return false;
+    }
+
+    public boolean rightClickStick() {
         return false;
     }
 

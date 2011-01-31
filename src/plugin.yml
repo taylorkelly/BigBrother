@@ -1,5 +1,5 @@
 name: BigBrother
-version: 1.5(pre)
+version: 1.5
 main: me.taylorkelly.bigbrother.BigBrother
 commands:
   bb:

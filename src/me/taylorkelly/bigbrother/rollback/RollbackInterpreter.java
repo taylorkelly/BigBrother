@@ -10,6 +10,7 @@ import org.bukkit.Server;
 
 public class RollbackInterpreter {
 
+    private Rollback rollback;
     private Calendar dateSearch;
     private ArrayList<Integer> blockTypes;
     private ArrayList<String> playerList;
@@ -49,7 +50,7 @@ public class RollbackInterpreter {
     private void parseRadius(String radius) {
         try {
             int radInt = Integer.parseInt(radius);
-            if(radInt <= 0) {
+            if (radInt <= 0) {
                 player.sendMessage(ChatColor.RED + "Ignoring invalid radius: " + radius);
             } else {
                 this.radius = radInt;
@@ -140,8 +141,8 @@ public class RollbackInterpreter {
         }
     }
 
-    public void interpret() {
-        Rollback rollback = new Rollback(server);
+    public Boolean interpret() {
+        rollback = new Rollback(server);
         rollback.addReciever(player);
         if (all) {
             rollback.rollbackAll();
@@ -149,7 +150,7 @@ public class RollbackInterpreter {
             if (playerList.size() == 0) {
                 player.sendMessage(ChatColor.RED + "No players marked for rollback. Cancelling rollback.");
                 player.sendMessage(ChatColor.RED + "Use * for all players");
-                return;
+                return null;
             }
             rollback.addPlayers(playerList);
         }
@@ -160,6 +161,14 @@ public class RollbackInterpreter {
             rollback.addTypes(blockTypes);
         }
         rollback.setRadius(radius, player.getLocation());
+        if (radius == 0 && dateSearch == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public void send() {
         rollback.rollback();
     }
 

@@ -27,7 +27,7 @@ public class StickListener extends BlockListener {
 
     public void onBlockRightClick(BlockRightClickEvent event) {
         Player player = event.getPlayer();
-        if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand())) {
+        if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
             plugin.stick(player, event.getBlock());
         }
     }
@@ -40,8 +40,8 @@ public class StickListener extends BlockListener {
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (!nonInteracts.contains(block)) {
-                if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand())) {
+            if (!nonInteracts.contains(block.getType())) {
+                if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
                     event.setCancelled(true);
                 }
             }

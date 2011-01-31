@@ -22,9 +22,6 @@ public class BBBlockListener extends BlockListener {
     }
 
     public void onBlockDamage(BlockDamageEvent event) {
-        if (event.getDamageLevel() == BlockDamageLevel.BROKEN) {
-            System.out.println(event.getDamageLevel() + "ugh");
-        }
         if (event.getDamageLevel() == BlockDamageLevel.STARTED && !event.isCancelled()) {
             if (event.getBlock().getType() == Material.TNT) {
                 TNTLogger.log(event.getPlayer(), event.getBlock());

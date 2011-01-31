@@ -1,5 +1,6 @@
 package me.taylorkelly.bigbrother;
 
+import java.awt.Color;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ import me.taylorkelly.bigbrother.listeners.BBBlockListener;
 import me.taylorkelly.bigbrother.listeners.BBEntityListener;
 import me.taylorkelly.bigbrother.listeners.BBPlayerListener;
 import me.taylorkelly.bigbrother.rollback.Rollback;
+import me.taylorkelly.bigbrother.rollback.RollbackConfirmation;
 import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
 
 import org.bukkit.*;
@@ -215,10 +217,45 @@ public class BigBrother extends JavaPlugin {
                 } else if (split[0].equalsIgnoreCase("rollback") && BBPermissions.rollback(player)) {
                     if (split.length > 1) {
                         RollbackInterpreter interpreter = new RollbackInterpreter(player, split, getServer());
-                        interpreter.interpret();
+                        Boolean passed = interpreter.interpret();
+                        if(passed != null) {
+                            if(passed) {
+                                interpreter.send();
+                            } else {
+                                player.sendMessage(BigBrother.premessage + ChatColor.RED + "Warning: " + ChatColor.WHITE + "You are rolling back without a time or radius argument.");
+                                player.sendMessage("Use " + ChatColor.RED + "/bb confirm" + ChatColor.WHITE + " to confirm the rollback.");
+                                player.sendMessage("Use " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " to delete it.");
+                                RollbackConfirmation.setRI(player, interpreter);
+                            }
+                        }
                     } else {
                         // TODO Better help
                         player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb rollback <arg1> <arg2>");
+                    }
+                } else if (split[0].equalsIgnoreCase("confirm") && BBPermissions.rollback(player)) {
+                    if (split.length == 1) {
+                        if(RollbackConfirmation.hasRI(player)) {
+                            RollbackInterpreter interpret = RollbackConfirmation.getRI(player);
+                            interpret.send();
+                        } else {
+                            player.sendMessage(BigBrother.premessage + "You have no rollback to confirm.");
+                        }
+                    } else {
+                        // TODO Better help
+                        player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb confirm");
+                    }
+
+                } else if (split[0].equalsIgnoreCase("delete") && BBPermissions.rollback(player)) {
+                    if (split.length == 1) {
+                        if(RollbackConfirmation.hasRI(player)) {
+                            RollbackConfirmation.deleteRI(player);
+                            player.sendMessage(BigBrother.premessage + "You have deleted your rollback.");
+                        } else {
+                            player.sendMessage(BigBrother.premessage + "You have no rollback to delete.");
+                        }
+                    } else {
+                        // TODO Better help
+                        player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb delete");
                     }
                 } else if (split[0].equalsIgnoreCase("undo") && BBPermissions.rollback(player)) {
                     if (split.length == 1) {
@@ -361,5 +398,9 @@ public class BigBrother extends JavaPlugin {
 
     public void stick(Player player, Block block) {
         sticker.stick(player, block);
+    }
+
+    public boolean rightClickStick(Player player) {
+        return sticker.rightClickStick(player);
     }
 }

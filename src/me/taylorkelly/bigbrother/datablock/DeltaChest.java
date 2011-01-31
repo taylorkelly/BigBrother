@@ -66,7 +66,7 @@ public class DeltaChest extends BBDataBlock {
                         Logger.getLogger("Minecraft").info("[BBROTHER] Chest restore conflict. Different types.");
                     } else {
                         amount = stack.getAmount() + amount;
-                        int damage = stack.getDamage();
+                        int damage = stack.getDurability();
                         if(amount < 0) {
                             inv.clear(i);
                         } else {
@@ -122,7 +122,7 @@ public class DeltaChest extends BBDataBlock {
                         Logger.getLogger("Minecraft").info("[BBROTHER] Chest restore conflict. Different types.");
                     } else {
                         amount = stack.getAmount() + amount;
-                        int damage = stack.getDamage();
+                        int damage = stack.getDurability();
                         if(amount < 0) {
                             inv.clear(i);
                         } else {
