@@ -1,8 +1,13 @@
 package me.taylorkelly.bigbrother;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.logging.Level;
 
 public class PropertiesFile {
@@ -22,10 +27,10 @@ public class PropertiesFile {
                 String line = scan.nextLine();
                 if (!line.contains("="))
                     continue;
-                int equals = line.indexOf("=");
+                int equals = line.indexOf('=');
                 int commentIndex = line.length();
                 if (line.contains("#")) {
-                    commentIndex = line.indexOf("#");
+                    commentIndex = line.indexOf('#');
                 }
 
                 String key = line.substring(0, equals).trim();
