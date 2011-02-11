@@ -166,7 +166,7 @@ public class PropertiesFile {
 
     }
 
-    private class PropertiesEntry {
+    private static class PropertiesEntry {
         public String value;
         public String comment;
 
