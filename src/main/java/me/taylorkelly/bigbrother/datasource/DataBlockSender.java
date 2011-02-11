@@ -14,7 +14,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
@@ -56,18 +55,6 @@ public class DataBlockSender {
             BigBrother.log.log(Level.INFO, "[BBROTHER]: SQL send failed. Keeping data for later send.");
         } else {
             Stats.logBlocks(collection.size());
-            try {
-                Thread.sleep(400);
-                Runtime rt = Runtime.getRuntime();
-                double mem = rt.freeMemory();
-                rt.runFinalization();
-                rt.gc();
-                mem = rt.freeMemory() - mem;
-                mem /= 1024 * 1024;
-                Stats.logMemory(mem);
-            } catch (InterruptedException ex) {
-                return;
-            }
         }
     }
 
