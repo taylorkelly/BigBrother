@@ -1,11 +1,11 @@
 package me.taylorkelly.bigbrother;
 
-import java.awt.Color;
-import java.io.*;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -23,7 +23,10 @@ import me.taylorkelly.bigbrother.rollback.Rollback;
 import me.taylorkelly.bigbrother.rollback.RollbackConfirmation;
 import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
 
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,10 +34,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.java.*;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class BigBrother extends JavaPlugin {
     private BBPlayerListener playerListener;
@@ -45,7 +47,7 @@ public class BigBrother extends JavaPlugin {
     private Watcher watcher;
     private Sticker sticker;
 
-    public static Logger log;
+    public static Logger log = Logger.getLogger("Minecraft");
     public final String name = this.getDescription().getName();
     public final String version = this.getDescription().getVersion();
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
@@ -69,8 +71,6 @@ public class BigBrother extends JavaPlugin {
     }
 
     public void onEnable() {
-        log = Logger.getLogger("Minecraft");
-
         try {
             updater.check();
             updater.update();
