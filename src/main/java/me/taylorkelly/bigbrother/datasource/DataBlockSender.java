@@ -31,7 +31,7 @@ public class DataBlockSender {
 
     public static void initialize(File dataFolder) {
         sendTimer = new Timer();
-        sendTimer.schedule(new SendingTask(dataFolder), BBSettings.sendDelay * 1000, BBSettings.sendDelay * 1000);
+        sendTimer.schedule(new SendingTask(dataFolder), BBSettings.sendDelay * 1000L, BBSettings.sendDelay * 1000L);
     }
 
     public static void offer(BBDataBlock dataBlock) {
