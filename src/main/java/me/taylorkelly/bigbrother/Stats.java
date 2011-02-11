@@ -21,20 +21,20 @@ public class Stats {
     private static long sessionRollback;
     private static long globalEdits;
     private static long sessionEdits;
-    
+
     public static void initialize() {
         globalMemory = BBSettings.freedMem;
         globalEdits = loadNumEdits();
         globalRollback = loadNumRollback();
     }
-    
+
     public static double getGlobalMemory() {
         return globalMemory;
     }
-    
+
     private static long loadNumRollback() {
         PreparedStatement ps = null;
-        ResultSet rs = null;    
+        ResultSet rs = null;
         Connection conn = null;
         try {
             conn = ConnectionManager.getConnection();
@@ -65,7 +65,7 @@ public class Stats {
 
     private static long loadNumEdits() {
         PreparedStatement ps = null;
-        ResultSet rs = null;    
+        ResultSet rs = null;
         Connection conn = null;
         try {
             conn = ConnectionManager.getConnection();
@@ -94,15 +94,12 @@ public class Stats {
     }
 
     public static void report(Player player) {
-        DecimalFormat fmt = new DecimalFormat("0.00");
         player.sendMessage(BigBrother.premessage + ChatColor.AQUA + "Global Stats:");
         player.sendMessage("- " + ChatColor.YELLOW + globalEdits + ChatColor.WHITE + " edits logged");
         player.sendMessage("- " + ChatColor.YELLOW + globalRollback + ChatColor.WHITE + " edits rollback'd");
-        player.sendMessage("- " + ChatColor.YELLOW + fmt.format(globalMemory) + ChatColor.WHITE + "mb Memory Freed");
         player.sendMessage(ChatColor.AQUA + "Session Stats:");
         player.sendMessage("- " + ChatColor.YELLOW + sessionEdits + ChatColor.WHITE + " edits logged");
         player.sendMessage("- " + ChatColor.YELLOW + sessionRollback + ChatColor.WHITE + " edits rollback'd");
-        player.sendMessage("- " + ChatColor.YELLOW + fmt.format(sessionMemory) + ChatColor.WHITE + "mb Memory Freed");
 
     }
 
