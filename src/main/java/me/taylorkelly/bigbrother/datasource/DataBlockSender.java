@@ -117,7 +117,7 @@ public class DataBlockSender {
         try {
             for (BBDataBlock block : collection) {
                 File file = new File(dir, fixName(block.player) + ".log");
-                StringBuilder builder = new StringBuilder(System.currentTimeMillis() + "");
+                StringBuilder builder = new StringBuilder(Long.toString(System.currentTimeMillis()));
                 builder.append(" - ");
                 builder.append(getAction(block.action));
                 builder.append(" ");
