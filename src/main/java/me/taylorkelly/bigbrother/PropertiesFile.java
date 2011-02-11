@@ -64,7 +64,7 @@ public class PropertiesFile {
         if (map.containsKey(key)) {
             return map.get(key).value;
         } else {
-            map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
+            map.put(key, new PropertiesEntry(defaultValue, defaultComment));
             modified = true;
             return defaultValue;
         }
