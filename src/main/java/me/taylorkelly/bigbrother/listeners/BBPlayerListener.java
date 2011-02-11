@@ -1,22 +1,30 @@
 package me.taylorkelly.bigbrother.listeners;
 
-import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BBPermissions;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
-import me.taylorkelly.bigbrother.datablock.*;
+import me.taylorkelly.bigbrother.datablock.BrokenBlock;
+import me.taylorkelly.bigbrother.datablock.Chat;
+import me.taylorkelly.bigbrother.datablock.Command;
+import me.taylorkelly.bigbrother.datablock.Disconnect;
+import me.taylorkelly.bigbrother.datablock.Login;
+import me.taylorkelly.bigbrother.datablock.PlacedBlock;
+import me.taylorkelly.bigbrother.datablock.Teleport;
 import net.minecraft.server.MinecraftServer;
 
-import org.bukkit.*;
-import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerItemEvent;
+import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class BBPlayerListener extends PlayerListener {
     private BigBrother plugin;
@@ -55,7 +63,7 @@ public class BBPlayerListener extends PlayerListener {
                     } else {
                         player2.kickPlayer("Fuck you. -Love SSMP staff");
                     }
-                    plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was IP banned. Enjoy the rest of your day");  
+                    plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was IP banned. Enjoy the rest of your day");
 
                 } else {
                     player.sendMessage(ChatColor.RED + "Can't find user " + split[1] + ".");
@@ -76,7 +84,7 @@ public class BBPlayerListener extends PlayerListener {
                     } else {
                         player2.kickPlayer("Fuck you. -Love SSMP staff");
                     }
-                    plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was banned. Enjoy the rest of your day");  
+                    plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was banned. Enjoy the rest of your day");
                     Logger.getLogger("Minecraft").log(Level.INFO, "Banning " + player2.getName());
                     player.sendMessage(ChatColor.RED + "Banning " + player2.getName());
                 } else {
@@ -110,10 +118,10 @@ public class BBPlayerListener extends PlayerListener {
 
                     if (split.length > 2) {
                         player2.kickPlayer(combine(2, split, " "));
-                        plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was kicked for " + combine(2, split, " "));  
+                        plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was kicked for " + combine(2, split, " "));
                     } else {
                         player2.kickPlayer("Quit testing me bitch! -SSMP Staff");
-                        plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was kicked for being a little bitch");  
+                        plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was kicked for being a little bitch");
                     }
                     Logger.getLogger("Minecraft").log(Level.INFO, "Kicking " + player2.getName());
                     player.sendMessage(ChatColor.RED + "Kicking " + player2.getName());
@@ -245,13 +253,13 @@ public class BBPlayerListener extends PlayerListener {
     }
 
     private static String combine(int start, String[] split, String spacing) {
-        String name = "";
+        StringBuilder name = new StringBuilder();
         for (int i = 2; i < split.length; i++) {
-            name += split[i];
+            name.append(split[i]);
             if (i + 1 < split.length)
-                name += spacing;
+                name.append(spacing);
         }
-        return name;
+        return name.toString();
     }
 
     private double distance(Location from, Location to) {
