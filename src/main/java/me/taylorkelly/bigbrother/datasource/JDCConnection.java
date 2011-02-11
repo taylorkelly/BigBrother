@@ -25,7 +25,7 @@ import java.util.Properties;
  * <b>Copyright:</b>Licensed under the Apache License, Version 2.0.
  * http://www.apache.org/licenses/LICENSE-2.0<br>
  * <b>Company:</b>SIMPL<br>
- * 
+ *
  * @author schneimi
  * @version $Id$<br>
  * @link http://code.google.com/p/simpl09/
@@ -169,7 +169,7 @@ public class JDCConnection implements Connection {
    */
   @Override
   public Blob createBlob() throws SQLException {
-    return createBlob();
+    return conn.createBlob();
   }
 
   /*
