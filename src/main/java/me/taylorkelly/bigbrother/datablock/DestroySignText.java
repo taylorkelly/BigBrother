@@ -39,14 +39,14 @@ public class DestroySignText extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds()[world];
-        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+        World worldy = server.getWorlds().get(world);
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {
             ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
         }
 
         String[] lines = data.split("\u0060");
 
-        
+
         Block block = worldy.getBlockAt(x, y, z);
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
@@ -59,11 +59,11 @@ public class DestroySignText extends BBDataBlock {
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds()[world];
-        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
+        World worldy = server.getWorlds().get(world);
+        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {
             ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
         }
-        
+
         Block block = worldy.getBlockAt(x, y, z);
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
