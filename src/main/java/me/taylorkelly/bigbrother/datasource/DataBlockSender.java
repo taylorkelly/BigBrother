@@ -21,7 +21,7 @@ import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 public class DataBlockSender {
-    public static LinkedBlockingQueue<BBDataBlock> sending = new LinkedBlockingQueue<BBDataBlock>();
+    public static final LinkedBlockingQueue<BBDataBlock> SENDING = new LinkedBlockingQueue<BBDataBlock>();
     private static Timer sendTimer;
 
     public static void disable() {
@@ -35,15 +35,15 @@ public class DataBlockSender {
     }
 
     public static void offer(BBDataBlock dataBlock) {
-        sending.add(dataBlock);
+        SENDING.add(dataBlock);
     }
 
     private static void sendBlocks(File dataFolder) {
-        if (sending.size() == 0)
+        if (SENDING.size() == 0)
             return;
 
         Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
-        sending.drainTo(collection);
+        SENDING.drainTo(collection);
 
         boolean worked = sendBlocksMySQL(collection);
         if (BBSettings.flatLog) {
@@ -51,7 +51,7 @@ public class DataBlockSender {
         }
 
         if (!worked) {
-            sending.addAll(collection);
+            SENDING.addAll(collection);
             BigBrother.log.log(Level.INFO, "[BBROTHER]: SQL send failed. Keeping data for later send.");
         } else {
             Stats.logBlocks(collection.size());
