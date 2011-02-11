@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -46,7 +44,6 @@ public class Stats {
             //System.out.println("rollback: " + num);
             return num;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
             BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
             return 0;
         } finally {
