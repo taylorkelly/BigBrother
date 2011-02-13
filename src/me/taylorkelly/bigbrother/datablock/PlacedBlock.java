@@ -26,6 +26,7 @@ public class PlacedBlock extends BBDataBlock {
         bystanders = new ArrayList<BBDataBlock>();
     }
 
+	@Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
@@ -45,7 +46,7 @@ public class PlacedBlock extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds()[world];
+        World worldy = server.getWorlds().get(world);
         if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
             ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
         }
@@ -55,7 +56,7 @@ public class PlacedBlock extends BBDataBlock {
 
     public void redo(Server server) {
         if (type != 51 || BBSettings.restoreFire) {
-            World worldy = server.getWorlds()[world];
+            World worldy = server.getWorlds().get(world);
             if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
                 ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
             }

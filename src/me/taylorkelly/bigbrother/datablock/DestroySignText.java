@@ -39,7 +39,7 @@ public class DestroySignText extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds()[world];
+        World worldy = server.getWorlds().get(world);
         if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
             ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
         }
@@ -59,7 +59,7 @@ public class DestroySignText extends BBDataBlock {
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds()[world];
+        World worldy = server.getWorlds().get(world);
         if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {  
             ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
         }

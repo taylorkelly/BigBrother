@@ -8,9 +8,7 @@ import me.taylorkelly.bigbrother.BigBrother;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,7 +24,7 @@ public class DeltaChest extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds()[world];
+        World worldy = server.getWorlds().get(world);
         if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
             ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
         }
@@ -82,7 +80,7 @@ public class DeltaChest extends BBDataBlock {
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds()[world];
+        World worldy = server.getWorlds().get(world);
         if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
             ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
         }
