@@ -44,6 +44,7 @@ public class BlockBurn extends BBDataBlock {
         return new BlockBurn(block);
     }
 
+	@Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();

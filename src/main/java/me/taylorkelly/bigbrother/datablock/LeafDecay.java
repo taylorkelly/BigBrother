@@ -44,6 +44,7 @@ public class LeafDecay extends BBDataBlock {
         return new LeafDecay(block);
     }
 
+	@Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();

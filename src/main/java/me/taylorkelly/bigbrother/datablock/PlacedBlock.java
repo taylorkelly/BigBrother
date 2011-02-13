@@ -26,6 +26,7 @@ public class PlacedBlock extends BBDataBlock {
         bystanders = new ArrayList<BBDataBlock>();
     }
 
+	@Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();

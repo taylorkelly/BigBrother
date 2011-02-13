@@ -1,21 +1,18 @@
 package me.taylorkelly.bigbrother.datablock.explosions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.DeltaChest;
 import me.taylorkelly.bigbrother.datablock.DestroySignText;
 
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class Explosion extends BBDataBlock {
@@ -31,6 +28,7 @@ public abstract class Explosion extends BBDataBlock {
         checkGnomesLivingOnTop(name, block);
     }
 
+	@Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
@@ -51,7 +49,7 @@ public abstract class Explosion extends BBDataBlock {
                         builder.append(stack.getData().getData());
                     }
                     builder.append(",");
-                    builder.append("-" + stack.getAmount());
+                    builder.append("-").append(stack.getAmount());
                 }
                 if (i + 1 < chest.getInventory().getSize())
                     builder.append(";");
@@ -82,7 +80,7 @@ public abstract class Explosion extends BBDataBlock {
         worldy.getBlockAt(x, y, z).setTypeId(0);
     }
 
-    protected void torchCheck(String player, Block block) {
+    protected final void torchCheck(String player, Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
         torchTypes.add(50);
         torchTypes.add(75);
@@ -115,7 +113,7 @@ public abstract class Explosion extends BBDataBlock {
         }
     }
 
-    protected void surroundingSignChecks(String player, Block block) {
+    protected final void surroundingSignChecks(String player, Block block) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -142,14 +140,14 @@ public abstract class Explosion extends BBDataBlock {
         }
     }
 
-    protected void signCheck(String player, Block block) {
+    protected final void signCheck(String player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             bystanders.add(new DestroySignText(player, sign));
         }
     }
 
-    protected void checkGnomesLivingOnTop(String player, Block block) {
+    protected final void checkGnomesLivingOnTop(String player, Block block) {
         ArrayList<Integer> gnomes = new ArrayList<Integer>();
         gnomes.add(6); // Sapling
         gnomes.add(37); // Yellow Flower

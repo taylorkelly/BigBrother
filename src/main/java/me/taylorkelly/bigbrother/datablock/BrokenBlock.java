@@ -10,9 +10,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 public class BrokenBlock extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
@@ -41,7 +39,7 @@ public class BrokenBlock extends BBDataBlock {
                         builder.append(stack.getData().getData());
                     }
                     builder.append(",");
-                    builder.append("-" + stack.getAmount());
+                    builder.append("-").append(stack.getAmount());
                 }
                 if (i + 1 < chest.getInventory().getSize())
                     builder.append(";");
@@ -55,6 +53,7 @@ public class BrokenBlock extends BBDataBlock {
         bystanders = new ArrayList<BBDataBlock>();
     }
 
+	@Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
