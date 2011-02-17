@@ -1,9 +1,5 @@
 package me.taylorkelly.bigbrother.listeners;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import me.taylorkelly.bigbrother.BBPermissions;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
@@ -13,12 +9,9 @@ import me.taylorkelly.bigbrother.datablock.Disconnect;
 import me.taylorkelly.bigbrother.datablock.Login;
 import me.taylorkelly.bigbrother.datablock.PlacedBlock;
 import me.taylorkelly.bigbrother.datablock.Teleport;
-import net.minecraft.server.MinecraftServer;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
@@ -39,98 +32,6 @@ public class BBPlayerListener extends PlayerListener {
             Command dataBlock = new Command(player, event.getMessage());
             dataBlock.send();
         }
-        String[] split = event.getMessage().split(" ");
-        MinecraftServer server = ((CraftPlayer) player).getHandle().b;
-
-        //TODO Take out!
-//        if (BBPermissions.rollback(player)) {
-//            if (split[0].equalsIgnoreCase("/ban-ip")) {
-//                if (split.length < 2) {
-//                    player.sendMessage(ChatColor.RED + "Correct usage is: /ban-ip [player] <reason> (optional) NOTE: this permabans IPs.");
-//                    return;
-//                }
-//
-//                Player player2 = plugin.getServer().getPlayer(split[1]);
-//
-//                if (player2 != null) {
-//                    String address = player2.getAddress().getAddress().getHostAddress();
-//                    server.f.c(address);
-//                    player.sendMessage(ChatColor.RED + "Banning " + player2.getName() + " @ " + address);
-//                    Logger.getLogger("Minecraft").log(Level.INFO, "IP Banning " + player2.getName() + " (IP: " + address + ")");
-//
-//                    if (split.length > 2) {
-//                        player2.kickPlayer(combine(2, split, " "));
-//                    } else {
-//                        player2.kickPlayer("Fuck you. -Love SSMP staff");
-//                    }
-//                    plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was IP banned. Enjoy the rest of your day");
-//
-//                } else {
-//                    player.sendMessage(ChatColor.RED + "Can't find user " + split[1] + ".");
-//                }
-//            } else if (split[0].equalsIgnoreCase("/ban")) {
-//                if (split.length < 2) {
-//                    player.sendMessage(ChatColor.RED + "Correct usage is: /ban [player] <reason> (optional)");
-//                    return;
-//                }
-//
-//                Player player2 = plugin.getServer().getPlayer(split[1]);
-//
-//                if (player2 != null) {
-//                    server.f.a(player2.getName());
-//
-//                    if (split.length > 2) {
-//                        player2.kickPlayer(combine(2, split, " "));
-//                    } else {
-//                        player2.kickPlayer("Fuck you. -Love SSMP staff");
-//                    }
-//                    plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was banned. Enjoy the rest of your day");
-//                    Logger.getLogger("Minecraft").log(Level.INFO, "Banning " + player2.getName());
-//                    player.sendMessage(ChatColor.RED + "Banning " + player2.getName());
-//                } else {
-//                    server.f.a(split[1]);
-//                    Logger.getLogger("Minecraft").log(Level.INFO, "Banning " + split[1]);
-//                    player.sendMessage(ChatColor.RED + "Banning " + split[2]);
-//                }
-//            } else if (split[0].equalsIgnoreCase("/unban")) {
-//                if (split.length != 2) {
-//                    player.sendMessage(ChatColor.RED + "Correct usage is: /unban [player]");
-//                    return;
-//                }
-//                server.f.b(split[1]);
-//                player.sendMessage(ChatColor.RED + "Unbanned " + split[1]);
-//            } else if (split[0].equalsIgnoreCase("/unban-ip")) {
-//                if (split.length != 2) {
-//                    player.sendMessage(ChatColor.RED + "Correct usage is: /unban-ip [ip]");
-//                    return;
-//                }
-//                server.f.d(split[1]);
-//                player.sendMessage(ChatColor.RED + "Unbanned " + split[1]);
-//            } else if (split[0].equalsIgnoreCase("/kick")) {
-//                if (split.length < 2) {
-//                    player.sendMessage(ChatColor.RED + "Correct usage is: /kick [player] <reason> (optional)");
-//                    return;
-//                }
-//
-//                Player player2 = plugin.getServer().getPlayer(split[1]);
-//
-//                if (player2 != null) {
-//
-//                    if (split.length > 2) {
-//                        player2.kickPlayer(combine(2, split, " "));
-//                        plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was kicked for " + combine(2, split, " "));
-//                    } else {
-//                        player2.kickPlayer("Quit testing me bitch! -SSMP Staff");
-//                        plugin.getServer().broadcastMessage(ChatColor.RED + player2.getName() + " was kicked for being a little bitch");
-//                    }
-//                    Logger.getLogger("Minecraft").log(Level.INFO, "Kicking " + player2.getName());
-//                    player.sendMessage(ChatColor.RED + "Kicking " + player2.getName());
-//                } else {
-//                    player.sendMessage(ChatColor.RED + "Can't find user " + split[1] + ".");
-//                }
-//            }
-//        }
-
     }
 
     public void onPlayerJoin(PlayerEvent event) {
