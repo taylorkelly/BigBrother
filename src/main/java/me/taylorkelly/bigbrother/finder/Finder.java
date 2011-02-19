@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 import org.bukkit.*;
@@ -55,7 +56,7 @@ public class Finder {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "', '" + BBDataBlock.BLOCK_BURN + "')";
+            String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
             ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
                     + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
 
@@ -120,12 +121,12 @@ public class Finder {
         HashMap<Integer, Integer> burns = new HashMap<Integer, Integer>();
 
         Connection conn = null;
-        
+
         try {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            String actionString = "action IN('" + BBDataBlock.BLOCK_BROKEN + "', '" + BBDataBlock.BLOCK_PLACED + "', '" + BBDataBlock.LEAF_DECAY + "', '" + BBDataBlock.TNT_EXPLOSION + "', '" + BBDataBlock.CREEPER_EXPLOSION + "', '" + BBDataBlock.MISC_EXPLOSION + "', '" + BBDataBlock.BLOCK_BURN + "')";
+            String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
             ps = conn.prepareStatement("SELECT action, type FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
                     + " AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ?  AND z < ? AND z > ? AND player = ? order by date desc");
 
@@ -141,12 +142,12 @@ public class Finder {
 
             int size = 0;
             while (rs.next()) {
-                int action = rs.getInt("action");
+                Action action = Action.values()[rs.getInt("action")];
                 int type = rs.getInt("type");
 
                 switch (action) {
-                case (BBDataBlock.BLOCK_BROKEN):
-                case (BBDataBlock.LEAF_DECAY):
+                case BLOCK_BROKEN:
+                case LEAF_DECAY:
                     if (destructions.containsKey(type)) {
                         destructions.put(type, destructions.get(type) + 1);
                         size++;
@@ -155,7 +156,7 @@ public class Finder {
                         size++;
                     }
                     break;
-                case (BBDataBlock.BLOCK_PLACED):
+                case BLOCK_PLACED:
                     if (creations.containsKey(type)) {
                         creations.put(type, creations.get(type) + 1);
                         size++;
@@ -164,9 +165,9 @@ public class Finder {
                         size++;
                     }
                     break;
-                case (BBDataBlock.TNT_EXPLOSION):
-                case (BBDataBlock.CREEPER_EXPLOSION):
-                case (BBDataBlock.MISC_EXPLOSION):
+                case TNT_EXPLOSION:
+                case CREEPER_EXPLOSION:
+                case MISC_EXPLOSION:
                     if (explosions.containsKey(type)) {
                         explosions.put(type, explosions.get(type) + 1);
                         size++;
@@ -174,7 +175,7 @@ public class Finder {
                         explosions.put(type, 1);
                         size++;
                     }
-                case (BBDataBlock.BLOCK_BURN):
+                case BLOCK_BURN:
                     if (burns.containsKey(type)) {
                         burns.put(type, burns.get(type) + 1);
                         size++;
@@ -223,7 +224,7 @@ public class Finder {
                 }
                 if (explodeList.toString().contains(","))
                     explodeList.delete(explodeList.lastIndexOf(","), explodeList.length());
-                
+
                 StringBuilder burnList = new StringBuilder();
                 // brokenList.append(Color.RED);
                 burnList.append("Burned Blocks: ");

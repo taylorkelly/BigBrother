@@ -1,10 +1,11 @@
 package me.taylorkelly.bigbrother.datablock;
 
-import java.io.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
-
-import org.bukkit.Server;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
@@ -13,6 +14,8 @@ import me.taylorkelly.bigbrother.datablock.explosions.MiscExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTExplosion;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
+
+import org.bukkit.Server;
 
 public abstract class BBDataBlock {
     public final static String BBDATA_NAME = "bbdata";
@@ -32,7 +35,7 @@ public abstract class BBDataBlock {
 
     public final static String ENVIRONMENT = "Environment";
     public String player;
-    public int action;
+    public Action action;
     public int x;
     public int y;
     public int z;
@@ -41,29 +44,31 @@ public abstract class BBDataBlock {
     public String data;
     public long date;
 
-    public static final int BLOCK_BROKEN = 0;
-    public static final int BLOCK_PLACED = 1;
-    public static final int DESTROY_SIGN_TEXT = 2;
-    public static final int TELEPORT = 3;
-    public static final int DELTA_CHEST = 4;
-    public static final int COMMAND = 5;
-    public static final int CHAT = 6;
-    public static final int DISCONNECT = 7;
-    public static final int LOGIN = 8;
-    public static final int DOOR_OPEN = 9;
-    public static final int BUTTON_PRESS = 10;
-    public static final int LEVER_SWITCH = 11;
-    public static final int CREATE_SIGN_TEXT = 12;
-    public static final int LEAF_DECAY = 13;
-    public static final int FLINT_AND_STEEL = 14;
-    public static final int TNT_EXPLOSION = 15;
-    public static final int CREEPER_EXPLOSION = 16;
-    public static final int MISC_EXPLOSION = 17;
-    public static final int OPEN_CHEST = 18;
-    public static final int BLOCK_BURN = 19;
 
-    
-    public BBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
+    public static enum Action {
+        BLOCK_BROKEN,
+        BLOCK_PLACED,
+        DESTROY_SIGN_TEXT,
+        TELEPORT,
+        DELTA_CHEST,
+        COMMAND,
+        CHAT,
+        DISCONNECT,
+        LOGIN,
+        DOOR_OPEN,
+        BUTTON_PRESS,
+        LEVER_SWITCH,
+        CREATE_SIGN_TEXT,
+        LEAF_DECAY,
+        FLINT_AND_STEEL,
+        TNT_EXPLOSION,
+        CREEPER_EXPLOSION,
+        MISC_EXPLOSION,
+        OPEN_CHEST,
+        BLOCK_BURN
+    }
+
+    public BBDataBlock(String player, Action action, int world, int x, int y, int z, int type, String data) {
         this.date = System.currentTimeMillis() / 1000;
         this.player = player;
         this.action = action;
@@ -103,7 +108,7 @@ public abstract class BBDataBlock {
             try {
                 if (rs != null)
                     rs.close();
-                if (conn != null) 
+                if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Table Check SQL Exception (on closing)");
@@ -129,7 +134,7 @@ public abstract class BBDataBlock {
             try {
                 if (st != null)
                     st.close();
-                if (conn != null) 
+                if (conn != null)
                     conn.close();
             } catch (SQLException e) {
                 BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the table (on close)");
@@ -145,47 +150,47 @@ public abstract class BBDataBlock {
         return null;
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int action, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, Action action, int world, int x, int y, int z, int type, String data) {
         switch (action) {
-        case (BLOCK_BROKEN):
+        case BLOCK_BROKEN:
             return BrokenBlock.getBBDataBlock(player, world, x, y, z, type, data);
-        case (BLOCK_PLACED):
+        case BLOCK_PLACED:
             return PlacedBlock.getBBDataBlock(player, world, x, y, z, type, data);
-        case (DESTROY_SIGN_TEXT):
+        case DESTROY_SIGN_TEXT:
             return DestroySignText.getBBDataBlock(player, world, x, y, z, type, data);
-        case (TELEPORT):
+        case TELEPORT:
             return Teleport.getBBDataBlock(player, world, x, y, z, type, data);
-        case (DELTA_CHEST):
+        case DELTA_CHEST:
             return DeltaChest.getBBDataBlock(player, world, x, y, z, type, data);
-        case (COMMAND):
+        case COMMAND:
             return Command.getBBDataBlock(player, world, x, y, z, type, data);
-        case (CHAT):
+        case CHAT:
             return Chat.getBBDataBlock(player, world, x, y, z, type, data);
-        case (DISCONNECT):
+        case DISCONNECT:
             return Disconnect.getBBDataBlock(player, world, x, y, z, type, data);
-        case (LOGIN):
+        case LOGIN:
             return Login.getBBDataBlock(player, world, x, y, z, type, data);
-        case (DOOR_OPEN):
+        case DOOR_OPEN:
             return DoorOpen.getBBDataBlock(player, world, x, y, z, type, data);
-        case (BUTTON_PRESS):
+        case BUTTON_PRESS:
             return ButtonPress.getBBDataBlock(player, world, x, y, z, type, data);
-        case (LEVER_SWITCH):
+        case LEVER_SWITCH:
             return LeverSwitch.getBBDataBlock(player, world, x, y, z, type, data);
-        case (CREATE_SIGN_TEXT):
+        case CREATE_SIGN_TEXT:
             return CreateSignText.getBBDataBlock(player, world, x, y, z, type, data);
-        case (LEAF_DECAY):
+        case LEAF_DECAY:
             return LeafDecay.getBBDataBlock(player, world, x, y, z, type, data);
-        case (FLINT_AND_STEEL):
+        case FLINT_AND_STEEL:
             return FlintAndSteel.getBBDataBlock(player, world, x, y, z, type, data);
-        case (TNT_EXPLOSION):
+        case TNT_EXPLOSION:
             return TNTExplosion.getBBDataBlock(player, world, x, y, z, type, data);
-        case (CREEPER_EXPLOSION):
+        case CREEPER_EXPLOSION:
             return CreeperExplosion.getBBDataBlock(player, world, x, y, z, type, data);
-        case (MISC_EXPLOSION):
+        case MISC_EXPLOSION:
             return MiscExplosion.getBBDataBlock(player, world, x, y, z, type, data);
-        case (OPEN_CHEST):
+        case OPEN_CHEST:
             return ChestOpen.getBBDataBlock(player, world, x, y, z, type, data);
-        case (BLOCK_BURN):
+        case BLOCK_BURN:
             return BlockBurn.getBBDataBlock(player, world, x, y, z, type, data);
         default:
             return null;

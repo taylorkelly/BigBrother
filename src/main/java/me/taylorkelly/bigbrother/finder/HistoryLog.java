@@ -4,20 +4,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Material;
 
 public class HistoryLog extends StickMode {
     private ItemStack oldItem;
     private int slot;
-    
+
     public void initialize(Player player) {
         slot = player.getInventory().getHeldItemSlot();
         oldItem = player.getInventory().getItem(slot);
@@ -26,7 +25,7 @@ public class HistoryLog extends StickMode {
         }
         player.getInventory().setItem(slot, new ItemStack(Material.LOG, 1));
     }
-    
+
     public void disable(Player player) {
         if(oldItem != null && oldItem.getAmount() > 0) {
             player.sendMessage(ChatColor.AQUA + "Here's your " + oldItem.getType() + " back!");
@@ -35,7 +34,7 @@ public class HistoryLog extends StickMode {
             player.getInventory().clear(slot);
         }
     }
-    
+
     @Override
     public ArrayList<String> getInfoOnBlock(Block block) {
         ArrayList<BBDataBlock> history = BlockHistory.hist(block);
@@ -44,7 +43,7 @@ public class HistoryLog extends StickMode {
         if (history.size() == 0) {
             msgs.add(ChatColor.RED + "No edits on this block");
         } else {
-            msgs.add(ChatColor.AQUA.toString() + history.size() + " edits on this block"); 
+            msgs.add(ChatColor.AQUA.toString() + history.size() + " edits on this block");
             for (BBDataBlock dataBlock : history) {
                 Calendar cal = Calendar.getInstance();
                 String DATE_FORMAT = "MMM.d@'" + ChatColor.GRAY + "'kk.mm.ss";

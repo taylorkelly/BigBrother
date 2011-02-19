@@ -16,7 +16,7 @@ public class BlockBurn extends BBDataBlock {
 
     public BlockBurn(Player player, Block block) {
         // TODO Better World support
-        super(player.getName(), BLOCK_BURN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
+        super(player.getName(), Action.BLOCK_BURN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
         surroundingSignChecks(player, block);
@@ -26,7 +26,7 @@ public class BlockBurn extends BBDataBlock {
 
     public BlockBurn(Block block) {
         // TODO Better World support
-        super(ENVIRONMENT, BLOCK_BURN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
+        super(ENVIRONMENT, Action.BLOCK_BURN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(block);
         surroundingSignChecks(block);
@@ -35,7 +35,7 @@ public class BlockBurn extends BBDataBlock {
     }
 
     public BlockBurn(Player player, int x, int y, int z, int type, int data) {
-        super(player.getName(), BLOCK_BURN, 0, x, y, z, type, data + "");
+        super(player.getName(), Action.BLOCK_BURN, 0, x, y, z, type, String.valueOf(data));
         bystanders = new ArrayList<BBDataBlock>();
     }
 
@@ -79,7 +79,7 @@ public class BlockBurn extends BBDataBlock {
     }
 
     private BlockBurn(String player, int world, int x, int y, int z, int type, String data) {
-        super(player, LEAF_DECAY, world, x, y, z, type, data);
+        super(player, Action.LEAF_DECAY, world, x, y, z, type, data);
     }
 
     private void torchCheck(Player player, Block block) {

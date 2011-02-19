@@ -5,7 +5,8 @@ import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.BigBrother;
 
-import org.bukkit.*;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -16,11 +17,11 @@ public class DeltaChest extends BBDataBlock {
 
     public DeltaChest(String player, Chest chest, String changes) {
         // TODO Better World support
-        super(player, DELTA_CHEST, 0, chest.getX(), chest.getY(), chest.getZ(), chest.getTypeId(), changes);
+        super(player, Action.DELTA_CHEST, 0, chest.getX(), chest.getY(), chest.getZ(), chest.getTypeId(), changes);
     }
 
     private DeltaChest(String player, int world, int x, int y, int z, int type, String data) {
-        super(player, DELTA_CHEST, world, x, y, z, type, data);
+        super(player, Action.DELTA_CHEST, world, x, y, z, type, data);
     }
 
     public void rollback(Server server) {

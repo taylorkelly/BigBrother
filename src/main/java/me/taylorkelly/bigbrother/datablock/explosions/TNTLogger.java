@@ -2,8 +2,6 @@ package me.taylorkelly.bigbrother.datablock.explosions;
 
 import java.util.List;
 
-import me.taylorkelly.bigbrother.datablock.BBDataBlock;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

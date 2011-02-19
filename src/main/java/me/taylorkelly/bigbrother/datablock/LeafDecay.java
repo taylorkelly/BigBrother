@@ -16,7 +16,7 @@ public class LeafDecay extends BBDataBlock {
 
     public LeafDecay(Player player, Block block) {
         // TODO Better World support
-        super(player.getName(), LEAF_DECAY, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
+        super(player.getName(), Action.LEAF_DECAY, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
         surroundingSignChecks(player, block);
@@ -26,7 +26,7 @@ public class LeafDecay extends BBDataBlock {
 
     public LeafDecay(Block block) {
         // TODO Better World support
-        super(ENVIRONMENT, LEAF_DECAY, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
+        super(ENVIRONMENT, Action.LEAF_DECAY, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(block);
         surroundingSignChecks(block);
@@ -35,7 +35,7 @@ public class LeafDecay extends BBDataBlock {
     }
 
     public LeafDecay(Player player, int x, int y, int z, int type, int data) {
-        super(player.getName(), LEAF_DECAY, 0, x, y, z, type, data + "");
+        super(player.getName(), Action.LEAF_DECAY, 0, x, y, z, type, String.valueOf(data));
         bystanders = new ArrayList<BBDataBlock>();
     }
 
@@ -79,7 +79,7 @@ public class LeafDecay extends BBDataBlock {
     }
 
     private LeafDecay(String player, int world, int x, int y, int z, int type, String data) {
-        super(player, LEAF_DECAY, world, x, y, z, type, data);
+        super(player, Action.LEAF_DECAY, world, x, y, z, type, data);
     }
 
     private void torchCheck(Player player, Block block) {

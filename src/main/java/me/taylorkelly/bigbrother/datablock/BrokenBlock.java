@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import me.taylorkelly.bigbrother.BBSettings;
 
-import org.bukkit.*;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +18,7 @@ public class BrokenBlock extends BBDataBlock {
 
     public BrokenBlock(Player player, Block block) {
         // TODO Better World support
-        super(player.getName(), BLOCK_BROKEN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), block.getData() + "");
+        super(player.getName(), Action.BLOCK_BROKEN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
         surroundingSignChecks(player, block);
@@ -49,7 +50,7 @@ public class BrokenBlock extends BBDataBlock {
     }
 
     public BrokenBlock(Player player, int x, int y, int z, int type, int data) {
-        super(player.getName(), BLOCK_BROKEN, 0, x, y, z, type, data + "");
+        super(player.getName(), Action.BLOCK_BROKEN, 0, x, y, z, type, String.valueOf(data));
         bystanders = new ArrayList<BBDataBlock>();
     }
 
@@ -88,7 +89,7 @@ public class BrokenBlock extends BBDataBlock {
     }
 
     private BrokenBlock(String player, int world, int x, int y, int z, int type, String data) {
-        super(player, BLOCK_BROKEN, world, x, y, z, type, data);
+        super(player, Action.BLOCK_BROKEN, world, x, y, z, type, data);
     }
 
     private void torchCheck(Player player, Block block) {

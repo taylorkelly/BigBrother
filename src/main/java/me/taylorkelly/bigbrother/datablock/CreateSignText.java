@@ -4,7 +4,8 @@ import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BigBrother;
 
-import org.bukkit.*;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -13,7 +14,7 @@ import org.bukkit.entity.Player;
 public class CreateSignText extends BBDataBlock {
     public CreateSignText(Player player, Sign sign) {
         // TODO Better World support
-        super(player.getName(), CREATE_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
+        super(player.getName(), Action.CREATE_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
     private static String getText(Sign sign) {
@@ -31,7 +32,7 @@ public class CreateSignText extends BBDataBlock {
     }
 
     private CreateSignText(String player, int world, int x, int y, int z, int type, String data) {
-        super(player, CREATE_SIGN_TEXT, world, x, y, z, type, data);
+        super(player, Action.CREATE_SIGN_TEXT, world, x, y, z, type, data);
     }
 
     public void redo(Server server) {

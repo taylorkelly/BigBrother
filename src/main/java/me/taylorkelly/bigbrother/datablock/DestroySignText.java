@@ -4,7 +4,8 @@ import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BigBrother;
 
-import org.bukkit.*;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.CraftWorld;
@@ -17,7 +18,7 @@ public class DestroySignText extends BBDataBlock {
 
     public DestroySignText(String name, Sign sign) {
         // TODO Better World support
-        super(name, DESTROY_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
+        super(name, Action.DESTROY_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
     private static String getText(Sign sign) {
@@ -35,7 +36,7 @@ public class DestroySignText extends BBDataBlock {
     }
 
     private DestroySignText(String player, int world, int x, int y, int z, int type, String data) {
-        super(player, DESTROY_SIGN_TEXT, world, x, y, z, type, data);
+        super(player, Action.DESTROY_SIGN_TEXT, world, x, y, z, type, data);
     }
 
     public void rollback(Server server) {

@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.rollback;
 import java.util.ArrayList;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 
 public class RollbackPreparedStatement {
 
@@ -98,25 +99,25 @@ public class RollbackPreparedStatement {
         // TODO maybe more customizable actions?
         StringBuilder ret = new StringBuilder("action IN(");
         ret.append("'");
-        ret.append(BBDataBlock.BLOCK_BROKEN);
+        ret.append(Action.BLOCK_BROKEN.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.BLOCK_PLACED);
+        ret.append(Action.BLOCK_PLACED.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.DELTA_CHEST);
+        ret.append(Action.DELTA_CHEST.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.CREATE_SIGN_TEXT);
+        ret.append(Action.CREATE_SIGN_TEXT.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.DESTROY_SIGN_TEXT);
+        ret.append(Action.DESTROY_SIGN_TEXT.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.LEAF_DECAY);
+        ret.append(Action.LEAF_DECAY.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.TNT_EXPLOSION);
+        ret.append(Action.TNT_EXPLOSION.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.CREEPER_EXPLOSION);
+        ret.append(Action.CREEPER_EXPLOSION.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.MISC_EXPLOSION);
+        ret.append(Action.MISC_EXPLOSION.ordinal());
         ret.append("','");
-        ret.append(BBDataBlock.BLOCK_BURN);
+        ret.append(Action.BLOCK_BURN.ordinal());
         ret.append("')");
         return ret;
     }

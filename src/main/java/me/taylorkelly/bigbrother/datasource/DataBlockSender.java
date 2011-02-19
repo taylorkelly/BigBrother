@@ -19,6 +19,7 @@ import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 
 public class DataBlockSender {
     public static final LinkedBlockingQueue<BBDataBlock> SENDING = new LinkedBlockingQueue<BBDataBlock>();
@@ -69,7 +70,7 @@ public class DataBlockSender {
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);
                 ps.setString(2, block.player);
-                ps.setInt(3, block.action);
+                ps.setInt(3, block.action.ordinal());
                 ps.setInt(4, block.world);
                 ps.setInt(5, block.x);
                 if (block.y < 0)
@@ -156,47 +157,47 @@ public class DataBlockSender {
         }
     }
 
-    public static String getAction(int action) {
+    public static String getAction(Action action) {
         switch (action) {
-        case (BBDataBlock.BLOCK_BROKEN):
+        case BLOCK_BROKEN:
             return "broke block";
-        case (BBDataBlock.BLOCK_PLACED):
+        case BLOCK_PLACED:
             return "placed block";
-        case (BBDataBlock.DESTROY_SIGN_TEXT):
+        case DESTROY_SIGN_TEXT:
             return "destroyed sign text";
-        case (BBDataBlock.TELEPORT):
+        case TELEPORT:
             return "teleport";
-        case (BBDataBlock.DELTA_CHEST):
+        case DELTA_CHEST:
             return "changed chest";
-        case (BBDataBlock.COMMAND):
+        case COMMAND:
             return "command";
-        case (BBDataBlock.CHAT):
+        case CHAT:
             return "chat";
-        case (BBDataBlock.DISCONNECT):
+        case DISCONNECT:
             return "disconnect";
-        case (BBDataBlock.LOGIN):
+        case LOGIN:
             return "login";
-        case (BBDataBlock.DOOR_OPEN):
+        case DOOR_OPEN:
             return "door";
-        case (BBDataBlock.BUTTON_PRESS):
+        case BUTTON_PRESS:
             return "button";
-        case (BBDataBlock.LEVER_SWITCH):
+        case LEVER_SWITCH:
             return "lever";
-        case (BBDataBlock.CREATE_SIGN_TEXT):
+        case CREATE_SIGN_TEXT:
             return "created sign text";
-        case (BBDataBlock.LEAF_DECAY):
+        case LEAF_DECAY:
             return "decayed leafe";
-        case (BBDataBlock.FLINT_AND_STEEL):
+        case FLINT_AND_STEEL:
             return "flint'd";
-        case (BBDataBlock.TNT_EXPLOSION):
+        case TNT_EXPLOSION:
             return "TNT-exploded";
-        case (BBDataBlock.CREEPER_EXPLOSION):
+        case CREEPER_EXPLOSION:
             return "Creeper-exploded";
-        case (BBDataBlock.MISC_EXPLOSION):
+        case MISC_EXPLOSION:
             return "Misc-exploded";
-        case (BBDataBlock.OPEN_CHEST):
+        case OPEN_CHEST:
             return "opened chest";
-        case (BBDataBlock.BLOCK_BURN):
+        case BLOCK_BURN:
             return "burned block";
         default:
             return "" + action;
