@@ -28,6 +28,7 @@ public class BBSettings {
     public static boolean tntExplosions;
     public static boolean creeperExplosions;
     public static boolean miscExplosions;
+    public static boolean ipPlayer;
 
     public static boolean restoreFire;
 	public static boolean autoWatch;
@@ -46,7 +47,7 @@ public class BBSettings {
 
 	public static String liteDb;
 
-	public static void initialize(File dataFolder) {	    
+	public static void initialize(File dataFolder) {
 	    liteDb = "jdbc:sqlite:plugins" + File.separator + "BigBrother" + File.separator + "bigbrother.db";
 		watchList = new ArrayList<String>();
 		seenList = new ArrayList<String>();
@@ -54,7 +55,7 @@ public class BBSettings {
 		loadPropertiesFiles(dataFolder);
 		loadLists(dataFolder);
 	}
-	
+
 	public static void onDisable(File dataFolder) {
 	    PropertiesFile pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
 	    pf.setDouble("freedMem", Stats.getGlobalMemory(), "The amount of memory freed by BB");
@@ -80,6 +81,7 @@ public class BBSettings {
         tntExplosions = pf.getBoolean("tntExplosions", true, "Watch for when TNT explodes");
         creeperExplosions = pf.getBoolean("creeperExplosions", true, "Watch for when Creepers explodes");
         miscExplosions = pf.getBoolean("miscExplosions", true, "Watch for miscellaneous explosions");
+        ipPlayer = pf.getBoolean("ipPlayer", false, "Add player's IP when login");
 	    pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
@@ -94,7 +96,7 @@ public class BBSettings {
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL db (if applicable)");
 		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "DB for MySQL (if applicable)");
         BBDataBlock.BBDATA_TABLE_MYSQL= BBDataBlock.BBDATA_TABLE_MYSQL +  " ENGINE=" + pf.getString("engine", "INNODB", "Engine for the Database (INNODB is recommended)") + ";";
-		
+
 	    sendDelay = pf.getInt("sendDelay", 4, "Delay to batch send updates to database (4-5 recommended)");
 		pf.save();
 	}
@@ -116,7 +118,7 @@ public class BBSettings {
 		} catch (IOException e) {
 			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName() + "");
 		}
-		
+
 		file = new File(dataFolder, "SeenPlayers.txt");
 		try {
 			if (!file.exists())
