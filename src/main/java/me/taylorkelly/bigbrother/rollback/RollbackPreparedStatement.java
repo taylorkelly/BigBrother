@@ -174,6 +174,10 @@ public class RollbackPreparedStatement {
             statement.append("'");
             statement.append(rollback.center.getBlockZ() - rollback.radius);
             statement.append("'");
+            statement.append(" AND world = ");
+            statement.append("'");
+            statement.append(rollback.server.getWorlds().indexOf(rollback.center.getWorld()));
+            statement.append("'");
         }
 
         statement.append(" AND rbacked = '0'");
@@ -232,6 +236,10 @@ public class RollbackPreparedStatement {
             statement.append("z > ");
             statement.append("'");
             statement.append(rollback.center.getBlockZ() - rollback.radius);
+            statement.append("'");
+            statement.append(" AND world = ");
+            statement.append("'");
+            statement.append(rollback.server.getWorlds().indexOf(rollback.center.getWorld()));
             statement.append("'");
         }
 
