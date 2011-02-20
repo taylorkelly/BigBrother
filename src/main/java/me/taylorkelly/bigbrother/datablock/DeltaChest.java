@@ -15,9 +15,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class DeltaChest extends BBDataBlock {
 
-    public DeltaChest(String player, Chest chest, String changes) {
-        // TODO Better World support
-        super(player, Action.DELTA_CHEST, 0, chest.getX(), chest.getY(), chest.getZ(), chest.getTypeId(), changes);
+    public DeltaChest(String player, Chest chest, String changes, int world) {
+        super(player, Action.DELTA_CHEST, world, chest.getX(), chest.getY(), chest.getZ(), chest.getTypeId(), changes);
     }
 
     private DeltaChest(String player, int world, int x, int y, int z, int type, String data) {

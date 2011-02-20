@@ -5,9 +5,8 @@ import org.bukkit.block.Block;
 
 public class LeverSwitch extends BBDataBlock {
 
-	public LeverSwitch(String player, Block lever) {
-		//TODO Better world support
-		super(player, Action.LEVER_SWITCH, 0, lever.getX(), lever.getY(), lever.getZ(), 69, Byte.toString(lever.getData()));
+	public LeverSwitch(String player, Block lever, int world) {
+		super(player, Action.LEVER_SWITCH, world, lever.getX(), lever.getY(), lever.getZ(), 69, Byte.toString(lever.getData()));
 	}
 
 	public void rollback(Server server) {}

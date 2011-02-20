@@ -14,9 +14,8 @@ import org.bukkit.entity.Player;
 public class LeafDecay extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
 
-    public LeafDecay(Player player, Block block) {
-        // TODO Better World support
-        super(player.getName(), Action.LEAF_DECAY, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public LeafDecay(Player player, Block block, int world) {
+        super(player.getName(), Action.LEAF_DECAY, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
         surroundingSignChecks(player, block);
@@ -24,9 +23,8 @@ public class LeafDecay extends BBDataBlock {
         checkGnomesLivingOnTop(player, block);
     }
 
-    public LeafDecay(Block block) {
-        // TODO Better World support
-        super(ENVIRONMENT, Action.LEAF_DECAY, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public LeafDecay(Block block, int world) {
+        super(ENVIRONMENT, Action.LEAF_DECAY, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(block);
         surroundingSignChecks(block);
@@ -39,9 +37,9 @@ public class LeafDecay extends BBDataBlock {
         bystanders = new ArrayList<BBDataBlock>();
     }
 
-    public static BBDataBlock create(Block block) {
+    public static BBDataBlock create(Block block, int world) {
         // TODO Player handling
-        return new LeafDecay(block);
+        return new LeafDecay(block, world);
     }
 
 	@Override
@@ -95,23 +93,23 @@ public class LeafDecay extends BBDataBlock {
         Block torchTop = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (torchTypes.contains(torchTop.getTypeId()) && torchTop.getData() == 5) {
-            bystanders.add(new BrokenBlock(player, torchTop));
+            bystanders.add(new BrokenBlock(player, torchTop, world));
         }
         Block torchNorth = block.getWorld().getBlockAt(x + 1, y, z);
         if (torchTypes.contains(torchNorth.getTypeId()) && torchNorth.getData() == 1) {
-            bystanders.add(new BrokenBlock(player, torchNorth));
+            bystanders.add(new BrokenBlock(player, torchNorth, world));
         }
         Block torchSouth = block.getWorld().getBlockAt(x - 1, y, z);
         if (torchTypes.contains(torchSouth.getTypeId()) && torchSouth.getData() == 2) {
-            bystanders.add(new BrokenBlock(player, torchSouth));
+            bystanders.add(new BrokenBlock(player, torchSouth, world));
         }
         Block torchEast = block.getWorld().getBlockAt(x, y, z + 1);
         if (torchTypes.contains(torchEast.getTypeId()) && torchEast.getData() == 3) {
-            bystanders.add(new BrokenBlock(player, torchEast));
+            bystanders.add(new BrokenBlock(player, torchEast, world));
         }
         Block torchWest = block.getWorld().getBlockAt(x, y, z - 1);
         if (torchTypes.contains(torchWest.getTypeId()) && torchWest.getData() == 4) {
-            bystanders.add(new BrokenBlock(player, torchWest));
+            bystanders.add(new BrokenBlock(player, torchWest, world));
         }
     }
 
@@ -122,30 +120,30 @@ public class LeafDecay extends BBDataBlock {
 
         Block top = block.getWorld().getBlockAt(x, y + 1, z);
         if (top.getTypeId() == 63) {
-            bystanders.add(new BrokenBlock(player, top));
+            bystanders.add(new BrokenBlock(player, top, world));
         }
         Block north = block.getWorld().getBlockAt(x + 1, y, z);
         if (north.getTypeId() == 68 && north.getData() == 5) {
-            bystanders.add(new BrokenBlock(player, north));
+            bystanders.add(new BrokenBlock(player, north, world));
         }
         Block south = block.getWorld().getBlockAt(x - 1, y, z);
         if (south.getTypeId() == 68 && south.getData() == 4) {
-            bystanders.add(new BrokenBlock(player, south));
+            bystanders.add(new BrokenBlock(player, south, world));
         }
         Block east = block.getWorld().getBlockAt(x, y, z + 1);
         if (east.getTypeId() == 68 && east.getData() == 3) {
-            bystanders.add(new BrokenBlock(player, east));
+            bystanders.add(new BrokenBlock(player, east, world));
         }
         Block west = block.getWorld().getBlockAt(x, y, z - 1);
         if (west.getTypeId() == 68 && west.getData() == 2) {
-            bystanders.add(new BrokenBlock(player, west));
+            bystanders.add(new BrokenBlock(player, west, world));
         }
     }
 
     private void signCheck(Player player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(player, sign));
+            bystanders.add(new DestroySignText(player, sign, world));
         }
     }
 
@@ -174,7 +172,7 @@ public class LeafDecay extends BBDataBlock {
         Block mrGnome = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (gnomes.contains(mrGnome.getTypeId())) {
-            bystanders.add(new BrokenBlock(player, mrGnome));
+            bystanders.add(new BrokenBlock(player, mrGnome, world));
         }
     }
 
@@ -191,23 +189,23 @@ public class LeafDecay extends BBDataBlock {
         Block torchTop = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (torchTypes.contains(torchTop.getTypeId()) && torchTop.getData() == 5) {
-            bystanders.add(new LeafDecay(torchTop));
+            bystanders.add(new LeafDecay(torchTop, world));
         }
         Block torchNorth = block.getWorld().getBlockAt(x + 1, y, z);
         if (torchTypes.contains(torchNorth.getTypeId()) && torchNorth.getData() == 1) {
-            bystanders.add(new LeafDecay(torchNorth));
+            bystanders.add(new LeafDecay(torchNorth, world));
         }
         Block torchSouth = block.getWorld().getBlockAt(x - 1, y, z);
         if (torchTypes.contains(torchSouth.getTypeId()) && torchSouth.getData() == 2) {
-            bystanders.add(new LeafDecay(torchSouth));
+            bystanders.add(new LeafDecay(torchSouth, world));
         }
         Block torchEast = block.getWorld().getBlockAt(x, y, z + 1);
         if (torchTypes.contains(torchEast.getTypeId()) && torchEast.getData() == 3) {
-            bystanders.add(new LeafDecay(torchEast));
+            bystanders.add(new LeafDecay(torchEast, world));
         }
         Block torchWest = block.getWorld().getBlockAt(x, y, z - 1);
         if (torchTypes.contains(torchWest.getTypeId()) && torchWest.getData() == 4) {
-            bystanders.add(new LeafDecay(torchWest));
+            bystanders.add(new LeafDecay(torchWest, world));
         }
     }
 
@@ -218,30 +216,30 @@ public class LeafDecay extends BBDataBlock {
 
         Block top = block.getWorld().getBlockAt(x, y + 1, z);
         if (top.getTypeId() == 63) {
-            bystanders.add(new LeafDecay(top));
+            bystanders.add(new LeafDecay(top, world));
         }
         Block north = block.getWorld().getBlockAt(x + 1, y, z);
         if (north.getTypeId() == 68 && north.getData() == 5) {
-            bystanders.add(new LeafDecay(north));
+            bystanders.add(new LeafDecay(north, world));
         }
         Block south = block.getWorld().getBlockAt(x - 1, y, z);
         if (south.getTypeId() == 68 && south.getData() == 4) {
-            bystanders.add(new LeafDecay(south));
+            bystanders.add(new LeafDecay(south, world));
         }
         Block east = block.getWorld().getBlockAt(x, y, z + 1);
         if (east.getTypeId() == 68 && east.getData() == 3) {
-            bystanders.add(new LeafDecay(east));
+            bystanders.add(new LeafDecay(east, world));
         }
         Block west = block.getWorld().getBlockAt(x, y, z - 1);
         if (west.getTypeId() == 68 && west.getData() == 2) {
-            bystanders.add(new LeafDecay(west));
+            bystanders.add(new LeafDecay(west, world));
         }
     }
 
     private void signCheck(Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(ENVIRONMENT, sign));
+            bystanders.add(new DestroySignText(ENVIRONMENT, sign, world));
         }
     }
 
@@ -270,7 +268,7 @@ public class LeafDecay extends BBDataBlock {
         Block mrGnome = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (gnomes.contains(mrGnome.getTypeId())) {
-            bystanders.add(new LeafDecay(mrGnome));
+            bystanders.add(new LeafDecay(mrGnome, world));
         }
     }
 }

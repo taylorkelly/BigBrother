@@ -12,9 +12,8 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class CreateSignText extends BBDataBlock {
-    public CreateSignText(Player player, Sign sign) {
-        // TODO Better World support
-        super(player.getName(), Action.CREATE_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
+    public CreateSignText(Player player, Sign sign, int world) {
+        super(player.getName(), Action.CREATE_SIGN_TEXT, world, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
     private static String getText(Sign sign) {

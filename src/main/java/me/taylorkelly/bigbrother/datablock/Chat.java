@@ -4,9 +4,8 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 public class Chat extends BBDataBlock {
-	public Chat(Player player, String message) {
-		//TODO Better World support
-		super(player.getName(), Action.CHAT, 0, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, message);
+	public Chat(Player player, String message, int world) {
+		super(player.getName(), Action.CHAT, world, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, message);
 	}
 
 	public void rollback(Server server) {}

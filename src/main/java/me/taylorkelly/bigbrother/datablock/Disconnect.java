@@ -4,9 +4,8 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 public class Disconnect extends BBDataBlock {
-	public Disconnect(Player player) {
-		//TODO Better World support
-		super(player.getName(), Action.DISCONNECT, 0, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, "");
+	public Disconnect(Player player, int world) {
+		super(player.getName(), Action.DISCONNECT, world, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, "");
 	}
 
 	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {

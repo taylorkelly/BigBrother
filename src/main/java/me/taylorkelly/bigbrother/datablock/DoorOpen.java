@@ -5,9 +5,8 @@ import org.bukkit.block.Block;
 
 public class DoorOpen extends BBDataBlock {
 
-	public DoorOpen(String player, Block door) {
-		//TODO Better world support
-		super(player, Action.DOOR_OPEN, 0, door.getX(), door.getY(), door.getZ(), 324, door.getData() + "");
+	public DoorOpen(String player, Block door, int world) {
+		super(player, Action.DOOR_OPEN, world, door.getX(), door.getY(), door.getZ(), 324, door.getData() + "");
 	}
 
 

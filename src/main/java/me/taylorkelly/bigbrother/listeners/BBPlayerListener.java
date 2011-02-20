@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.listeners;
 
+import java.util.List;
+
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
@@ -12,6 +14,7 @@ import me.taylorkelly.bigbrother.datablock.Teleport;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
@@ -21,36 +24,40 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class BBPlayerListener extends PlayerListener {
     private BigBrother plugin;
+    private List<World> worlds;
 
     public BBPlayerListener(BigBrother plugin) {
         this.plugin = plugin;
+        this.worlds = plugin.getServer().getWorlds();
     }
 
     public void onPlayerCommand(PlayerChatEvent event) {
         Player player = event.getPlayer();
         if (BBSettings.commands && plugin.watching(player)) {
-            Command dataBlock = new Command(player, event.getMessage());
+            Command dataBlock = new Command(player, event.getMessage(), worlds.indexOf(player.getLocation().getWorld()));
             dataBlock.send();
         }
     }
 
     public void onPlayerJoin(PlayerEvent event) {
-        if (!plugin.haveSeen(event.getPlayer())) {
-            plugin.markSeen(event.getPlayer());
+        final Player player = event.getPlayer();
+        if (!plugin.haveSeen(player)) {
+            plugin.markSeen(player);
             if (BBSettings.autoWatch) {
-                plugin.watchPlayer(event.getPlayer());
+                plugin.watchPlayer(player);
             }
         }
 
-        if (BBSettings.login && plugin.watching(event.getPlayer())) {
-            Login dataBlock = new Login(event.getPlayer());
+        if (BBSettings.login && plugin.watching(player)) {
+            Login dataBlock = new Login(player, worlds.indexOf(player.getWorld()));
             dataBlock.send();
         }
     }
 
     public void onPlayerQuit(PlayerEvent event) {
-        if (BBSettings.disconnect && plugin.watching(event.getPlayer())) {
-            Disconnect dataBlock = new Disconnect(event.getPlayer());
+        final Player player = event.getPlayer();
+        if (BBSettings.disconnect && plugin.watching(player)) {
+            Disconnect dataBlock = new Disconnect(player, worlds.indexOf(player.getWorld()));
             dataBlock.send();
         }
     }
@@ -59,15 +66,17 @@ public class BBPlayerListener extends PlayerListener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        if (BBSettings.teleport && plugin.watching(event.getPlayer()) && distance(from, to) > 5 && !event.isCancelled()) {
-            Teleport dataBlock = new Teleport(event.getPlayer(), event.getTo());
+        final Player player = event.getPlayer();
+        if (BBSettings.teleport && plugin.watching(player) && distance(from, to) > 5 && !event.isCancelled()) {
+            Teleport dataBlock = new Teleport(player, event.getTo(), worlds.indexOf(player.getWorld()));
             dataBlock.send();
         }
     }
 
     public void onPlayerChat(PlayerChatEvent event) {
-        if (BBSettings.chat && plugin.watching(event.getPlayer())) {
-            Chat dataBlock = new Chat(event.getPlayer(), event.getMessage());
+        final Player player = event.getPlayer();
+        if (BBSettings.chat && plugin.watching(player)) {
+            Chat dataBlock = new Chat(player, event.getMessage(), worlds.indexOf(player.getWorld()));
             dataBlock.send();
         }
     }
@@ -136,7 +145,7 @@ public class BBPlayerListener extends PlayerListener {
                     y = event.getBlockClicked().getY();
                     z = event.getBlockClicked().getZ();
                     type = Material.LAVA.getId();
-                    dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
+                    dataBlock2 = new BrokenBlock(event.getPlayer(), worlds.indexOf(event.getBlockClicked().getWorld()), x, y, z, type, 0);
                     dataBlock2.send();
                     break;
                 case STATIONARY_WATER:
@@ -145,22 +154,12 @@ public class BBPlayerListener extends PlayerListener {
                     y = event.getBlockClicked().getY();
                     z = event.getBlockClicked().getZ();
                     type = Material.WATER.getId();
-                    dataBlock2 = new BrokenBlock(event.getPlayer(), x, y, z, type, 0);
+                    dataBlock2 = new BrokenBlock(event.getPlayer(), worlds.indexOf(event.getBlockClicked().getWorld()), x, y, z, type, 0);
                     dataBlock2.send();
                 }
                 break;
             }
         }
-    }
-
-    private static String combine(int start, String[] split, String spacing) {
-        StringBuilder name = new StringBuilder();
-        for (int i = 2; i < split.length; i++) {
-            name.append(split[i]);
-            if (i + 1 < split.length)
-                name.append(spacing);
-        }
-        return name.toString();
     }
 
     private double distance(Location from, Location to) {

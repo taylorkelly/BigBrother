@@ -14,9 +14,8 @@ import org.bukkit.entity.Player;
 public class BlockBurn extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
 
-    public BlockBurn(Player player, Block block) {
-        // TODO Better World support
-        super(player.getName(), Action.BLOCK_BURN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public BlockBurn(Player player, Block block, int world) {
+        super(player.getName(), Action.BLOCK_BURN, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
         surroundingSignChecks(player, block);
@@ -24,9 +23,8 @@ public class BlockBurn extends BBDataBlock {
         checkGnomesLivingOnTop(player, block);
     }
 
-    public BlockBurn(Block block) {
-        // TODO Better World support
-        super(ENVIRONMENT, Action.BLOCK_BURN, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public BlockBurn(Block block, int world) {
+        super(ENVIRONMENT, Action.BLOCK_BURN, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(block);
         surroundingSignChecks(block);
@@ -34,14 +32,9 @@ public class BlockBurn extends BBDataBlock {
         checkGnomesLivingOnTop(block);
     }
 
-    public BlockBurn(Player player, int x, int y, int z, int type, int data) {
-        super(player.getName(), Action.BLOCK_BURN, 0, x, y, z, type, String.valueOf(data));
-        bystanders = new ArrayList<BBDataBlock>();
-    }
-
-    public static BBDataBlock create(Block block) {
+    public static BBDataBlock create(Block block, int world) {
         // TODO Player handling
-        return new BlockBurn(block);
+        return new BlockBurn(block, world);
     }
 
 	@Override
@@ -95,23 +88,23 @@ public class BlockBurn extends BBDataBlock {
         Block torchTop = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (torchTypes.contains(torchTop.getTypeId()) && torchTop.getData() == 5) {
-            bystanders.add(new BrokenBlock(player, torchTop));
+            bystanders.add(new BrokenBlock(player, torchTop, world));
         }
         Block torchNorth = block.getWorld().getBlockAt(x + 1, y, z);
         if (torchTypes.contains(torchNorth.getTypeId()) && torchNorth.getData() == 1) {
-            bystanders.add(new BrokenBlock(player, torchNorth));
+            bystanders.add(new BrokenBlock(player, torchNorth, world));
         }
         Block torchSouth = block.getWorld().getBlockAt(x - 1, y, z);
         if (torchTypes.contains(torchSouth.getTypeId()) && torchSouth.getData() == 2) {
-            bystanders.add(new BrokenBlock(player, torchSouth));
+            bystanders.add(new BrokenBlock(player, torchSouth, world));
         }
         Block torchEast = block.getWorld().getBlockAt(x, y, z + 1);
         if (torchTypes.contains(torchEast.getTypeId()) && torchEast.getData() == 3) {
-            bystanders.add(new BrokenBlock(player, torchEast));
+            bystanders.add(new BrokenBlock(player, torchEast, world));
         }
         Block torchWest = block.getWorld().getBlockAt(x, y, z - 1);
         if (torchTypes.contains(torchWest.getTypeId()) && torchWest.getData() == 4) {
-            bystanders.add(new BrokenBlock(player, torchWest));
+            bystanders.add(new BrokenBlock(player, torchWest, world));
         }
     }
 
@@ -122,30 +115,30 @@ public class BlockBurn extends BBDataBlock {
 
         Block top = block.getWorld().getBlockAt(x, y + 1, z);
         if (top.getTypeId() == 63) {
-            bystanders.add(new BrokenBlock(player, top));
+            bystanders.add(new BrokenBlock(player, top, world));
         }
         Block north = block.getWorld().getBlockAt(x + 1, y, z);
         if (north.getTypeId() == 68 && north.getData() == 5) {
-            bystanders.add(new BrokenBlock(player, north));
+            bystanders.add(new BrokenBlock(player, north, world));
         }
         Block south = block.getWorld().getBlockAt(x - 1, y, z);
         if (south.getTypeId() == 68 && south.getData() == 4) {
-            bystanders.add(new BrokenBlock(player, south));
+            bystanders.add(new BrokenBlock(player, south, world));
         }
         Block east = block.getWorld().getBlockAt(x, y, z + 1);
         if (east.getTypeId() == 68 && east.getData() == 3) {
-            bystanders.add(new BrokenBlock(player, east));
+            bystanders.add(new BrokenBlock(player, east, world));
         }
         Block west = block.getWorld().getBlockAt(x, y, z - 1);
         if (west.getTypeId() == 68 && west.getData() == 2) {
-            bystanders.add(new BrokenBlock(player, west));
+            bystanders.add(new BrokenBlock(player, west, world));
         }
     }
 
     private void signCheck(Player player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(player, sign));
+            bystanders.add(new DestroySignText(player, sign, world));
         }
     }
 
@@ -174,7 +167,7 @@ public class BlockBurn extends BBDataBlock {
         Block mrGnome = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (gnomes.contains(mrGnome.getTypeId())) {
-            bystanders.add(new BrokenBlock(player, mrGnome));
+            bystanders.add(new BrokenBlock(player, mrGnome, world));
         }
     }
 
@@ -191,23 +184,23 @@ public class BlockBurn extends BBDataBlock {
         Block torchTop = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (torchTypes.contains(torchTop.getTypeId()) && torchTop.getData() == 5) {
-            bystanders.add(new BlockBurn(torchTop));
+            bystanders.add(new BlockBurn(torchTop, world));
         }
         Block torchNorth = block.getWorld().getBlockAt(x + 1, y, z);
         if (torchTypes.contains(torchNorth.getTypeId()) && torchNorth.getData() == 1) {
-            bystanders.add(new BlockBurn(torchNorth));
+            bystanders.add(new BlockBurn(torchNorth, world));
         }
         Block torchSouth = block.getWorld().getBlockAt(x - 1, y, z);
         if (torchTypes.contains(torchSouth.getTypeId()) && torchSouth.getData() == 2) {
-            bystanders.add(new BlockBurn(torchSouth));
+            bystanders.add(new BlockBurn(torchSouth, world));
         }
         Block torchEast = block.getWorld().getBlockAt(x, y, z + 1);
         if (torchTypes.contains(torchEast.getTypeId()) && torchEast.getData() == 3) {
-            bystanders.add(new BlockBurn(torchEast));
+            bystanders.add(new BlockBurn(torchEast, world));
         }
         Block torchWest = block.getWorld().getBlockAt(x, y, z - 1);
         if (torchTypes.contains(torchWest.getTypeId()) && torchWest.getData() == 4) {
-            bystanders.add(new BlockBurn(torchWest));
+            bystanders.add(new BlockBurn(torchWest, world));
         }
     }
 
@@ -218,30 +211,30 @@ public class BlockBurn extends BBDataBlock {
 
         Block top = block.getWorld().getBlockAt(x, y + 1, z);
         if (top.getTypeId() == 63) {
-            bystanders.add(new BlockBurn(top));
+            bystanders.add(new BlockBurn(top, world));
         }
         Block north = block.getWorld().getBlockAt(x + 1, y, z);
         if (north.getTypeId() == 68 && north.getData() == 5) {
-            bystanders.add(new BlockBurn(north));
+            bystanders.add(new BlockBurn(north, world));
         }
         Block south = block.getWorld().getBlockAt(x - 1, y, z);
         if (south.getTypeId() == 68 && south.getData() == 4) {
-            bystanders.add(new BlockBurn(south));
+            bystanders.add(new BlockBurn(south, world));
         }
         Block east = block.getWorld().getBlockAt(x, y, z + 1);
         if (east.getTypeId() == 68 && east.getData() == 3) {
-            bystanders.add(new BlockBurn(east));
+            bystanders.add(new BlockBurn(east, world));
         }
         Block west = block.getWorld().getBlockAt(x, y, z - 1);
         if (west.getTypeId() == 68 && west.getData() == 2) {
-            bystanders.add(new BlockBurn(west));
+            bystanders.add(new BlockBurn(west, world));
         }
     }
 
     private void signCheck(Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(ENVIRONMENT, sign));
+            bystanders.add(new DestroySignText(ENVIRONMENT, sign, world));
         }
     }
 
@@ -270,7 +263,7 @@ public class BlockBurn extends BBDataBlock {
         Block mrGnome = block.getWorld().getBlockAt(x, y + 1, z);
 
         if (gnomes.contains(mrGnome.getTypeId())) {
-            bystanders.add(new BlockBurn(mrGnome));
+            bystanders.add(new BlockBurn(mrGnome, world));
         }
     }
 }

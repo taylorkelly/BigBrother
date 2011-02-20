@@ -14,9 +14,8 @@ import org.bukkit.entity.Player;
 public class PlacedBlock extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
 
-    public PlacedBlock(Player player, Block block) {
-        // TODO Better World support
-        super(player.getName(), Action.BLOCK_PLACED, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public PlacedBlock(Player player, Block block, int world) {
+        super(player.getName(), Action.BLOCK_PLACED, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         signCheck(player, block);
         // TODO snow check once it gets fixed
@@ -42,7 +41,7 @@ public class PlacedBlock extends BBDataBlock {
     private void signCheck(Player player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new CreateSignText(player, sign));
+            bystanders.add(new CreateSignText(player, sign, world));
         }
     }
 

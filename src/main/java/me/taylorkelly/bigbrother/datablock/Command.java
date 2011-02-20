@@ -5,9 +5,8 @@ import org.bukkit.entity.Player;
 
 public class Command extends BBDataBlock {
 
-	public Command(Player player, String command) {
-		//TODO Better World support
-		super(player.getName(), Action.COMMAND, 0, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, command);
+	public Command(Player player, String command, int world) {
+		super(player.getName(), Action.COMMAND, world, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, command);
 	}
 
 	public void rollback(Server server) {}

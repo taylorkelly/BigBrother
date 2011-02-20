@@ -9,21 +9,21 @@ import org.bukkit.block.Block;
 
 public class CreeperExplosion extends Explosion {
 
-    public CreeperExplosion(String player, Block block) {
-        super(Action.CREEPER_EXPLOSION, player, block);
+    public CreeperExplosion(String player, Block block, int world) {
+        super(Action.CREEPER_EXPLOSION, player, block, world);
     }
 
-    public CreeperExplosion(Block block) {
-        super(Action.CREEPER_EXPLOSION, ENVIRONMENT, block);
+    public CreeperExplosion(Block block, int world) {
+        super(Action.CREEPER_EXPLOSION, ENVIRONMENT, block, world);
     }
 
     protected Explosion newInstance(String player, Block block) {
-        return new CreeperExplosion(player, block);
+        return new CreeperExplosion(player, block, world);
     }
 
-    public static void create(Location location, List<Block> blockList) {
+    public static void create(Location location, List<Block> blockList, int world) {
         for(Block block: blockList) {
-            BBDataBlock dataBlock = new CreeperExplosion(ENVIRONMENT, block);
+            BBDataBlock dataBlock = new CreeperExplosion(ENVIRONMENT, block, world);
             dataBlock.send();
         }
     }

@@ -6,9 +6,8 @@ import org.bukkit.entity.Player;
 
 public class ChestOpen extends BBDataBlock {
 
-    public ChestOpen(Player player, Block block) {
-        // TODO Better World support
-        super(player.getName(), Action.OPEN_CHEST, 0, block.getX(), block.getY(), block.getZ(), 54, "");
+    public ChestOpen(Player player, Block block, int world) {
+        super(player.getName(), Action.OPEN_CHEST, world, block.getX(), block.getY(), block.getZ(), 54, "");
     }
 
     private ChestOpen(String player, int world, int x, int y, int z, int type, String data) {

@@ -12,13 +12,12 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class DestroySignText extends BBDataBlock {
-    public DestroySignText(Player player, Sign sign) {
-        this(player.getName(), sign);
+    public DestroySignText(Player player, Sign sign, int world) {
+        this(player.getName(), sign, world);
     }
 
-    public DestroySignText(String name, Sign sign) {
-        // TODO Better World support
-        super(name, Action.DESTROY_SIGN_TEXT, 0, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
+    public DestroySignText(String name, Sign sign, int world) {
+        super(name, Action.DESTROY_SIGN_TEXT, world, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
     private static String getText(Sign sign) {

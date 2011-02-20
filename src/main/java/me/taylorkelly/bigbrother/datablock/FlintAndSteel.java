@@ -6,9 +6,8 @@ import org.bukkit.entity.Player;
 
 public class FlintAndSteel extends BBDataBlock {
 
-    public FlintAndSteel(Player player, Block block) {
-        // TODO Better World support
-        super(player.getName(), Action.FLINT_AND_STEEL, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), "");
+    public FlintAndSteel(Player player, Block block, int world) {
+        super(player.getName(), Action.FLINT_AND_STEEL, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), "");
     }
 
     private FlintAndSteel(String player, int world, int x, int y, int z, int type, String data) {

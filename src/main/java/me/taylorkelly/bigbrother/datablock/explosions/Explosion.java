@@ -18,8 +18,8 @@ import org.bukkit.inventory.ItemStack;
 public abstract class Explosion extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
 
-    public Explosion(Action dataBlockType, String name, Block block) {
-        super(name, dataBlockType, 0, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public Explosion(Action dataBlockType, String name, Block block, int world) {
+        super(name, dataBlockType, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(name, block);
         surroundingSignChecks(name, block);
@@ -54,7 +54,7 @@ public abstract class Explosion extends BBDataBlock {
                 if (i + 1 < chest.getInventory().getSize())
                     builder.append(";");
             }
-            bystanders.add(new DeltaChest(player, chest, builder.toString()));
+            bystanders.add(new DeltaChest(player, chest, builder.toString(), world));
         }
     }
 
@@ -143,7 +143,7 @@ public abstract class Explosion extends BBDataBlock {
     protected final void signCheck(String player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(player, sign));
+            bystanders.add(new DestroySignText(player, sign, world));
         }
     }
 

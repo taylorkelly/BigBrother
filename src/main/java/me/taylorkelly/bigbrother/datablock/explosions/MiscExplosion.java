@@ -9,21 +9,21 @@ import org.bukkit.block.Block;
 
 public class MiscExplosion extends Explosion {
 
-    public MiscExplosion(String player, Block block) {
-        super(Action.MISC_EXPLOSION, player, block);
+    public MiscExplosion(String player, Block block, int world) {
+        super(Action.MISC_EXPLOSION, player, block, world);
     }
 
-    public MiscExplosion(Block block) {
-        super(Action.MISC_EXPLOSION, ENVIRONMENT, block);
+    public MiscExplosion(Block block, int world) {
+        super(Action.MISC_EXPLOSION, ENVIRONMENT, block, world);
     }
 
     protected Explosion newInstance(String player, Block block) {
-        return new MiscExplosion(player, block);
+        return new MiscExplosion(player, block, world);
     }
 
-    public static void create(Location location, List<Block> blockList) {
+    public static void create(Location location, List<Block> blockList, int world) {
         for(Block block: blockList) {
-            BBDataBlock dataBlock = new MiscExplosion(ENVIRONMENT, block);
+            BBDataBlock dataBlock = new MiscExplosion(ENVIRONMENT, block, world);
             dataBlock.send();
         }
     }

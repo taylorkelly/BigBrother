@@ -6,9 +6,8 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 public class Login extends BBDataBlock {
-	public Login(Player player) {
-		//TODO Better World support
-        super(player.getName(), Action.LOGIN, 0, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0,
+	public Login(Player player, int world) {
+        super(player.getName(), Action.LOGIN, world, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0,
                 BBSettings.ipPlayer ? player.getAddress().getAddress().toString().substring(1) : "");
 	}
 

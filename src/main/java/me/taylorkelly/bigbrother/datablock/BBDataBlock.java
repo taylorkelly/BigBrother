@@ -44,7 +44,6 @@ public abstract class BBDataBlock {
     public String data;
     public long date;
 
-
     public static enum Action {
         BLOCK_BROKEN,
         BLOCK_PLACED,

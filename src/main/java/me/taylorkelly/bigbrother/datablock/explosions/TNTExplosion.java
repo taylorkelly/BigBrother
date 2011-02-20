@@ -9,21 +9,21 @@ import org.bukkit.block.Block;
 
 public class TNTExplosion extends Explosion {
 
-    public TNTExplosion(String player, Block block) {
-        super(Action.TNT_EXPLOSION, player, block);
+    public TNTExplosion(String player, Block block, int world) {
+        super(Action.TNT_EXPLOSION, player, block, world);
     }
 
-    public TNTExplosion(Block block) {
-        super(Action.TNT_EXPLOSION, ENVIRONMENT, block);
+    public TNTExplosion(Block block, int world) {
+        super(Action.TNT_EXPLOSION, ENVIRONMENT, block, world);
     }
 
     protected Explosion newInstance(String player, Block block) {
-        return new TNTExplosion(player, block);
+        return new TNTExplosion(player, block, world);
     }
 
-    public static void create(Location location, List<Block> blockList) {
+    public static void create(Location location, List<Block> blockList, int world) {
         for(Block block: blockList) {
-            BBDataBlock dataBlock = new TNTExplosion(ENVIRONMENT, block);
+            BBDataBlock dataBlock = new TNTExplosion(ENVIRONMENT, block, world);
             dataBlock.send();
         }
     }
@@ -36,9 +36,9 @@ public class TNTExplosion extends Explosion {
         return new TNTExplosion(player, world, x, y, z, type, data);
     }
 
-    public static void create(List<Block> blockList) {
+    public static void create(List<Block> blockList, int world) {
         for(Block block: blockList) {
-            BBDataBlock dataBlock = new TNTExplosion(ENVIRONMENT, block);
+            BBDataBlock dataBlock = new TNTExplosion(ENVIRONMENT, block, world);
             dataBlock.send();
         }
     }
