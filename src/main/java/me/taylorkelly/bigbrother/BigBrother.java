@@ -290,16 +290,16 @@ public class BigBrother extends JavaPlugin {
 						}
 					} else if (split[0].equalsIgnoreCase("here") && BBPermissions.info(player)) {
 						if (split.length == 1) {
-							Finder finder = new Finder(player.getLocation());
+							Finder finder = new Finder(player.getLocation(), getServer().getWorlds());
 							finder.addReciever(player);
 							finder.find();
 						} else if (isNumber(split[1]) && split.length == 2) {
-							Finder finder = new Finder(player.getLocation());
+							Finder finder = new Finder(player.getLocation(), getServer().getWorlds());
 							finder.setRadius(Double.parseDouble(split[1]));
 							finder.addReciever(player);
 							finder.find();
 						} else if (split.length == 2) {
-							Finder finder = new Finder(player.getLocation());
+							Finder finder = new Finder(player.getLocation(), getServer().getWorlds());
 							finder.addReciever(player);
 							List<Player> targets = getServer().matchPlayer(split[1]);
 							Player findee = null;
@@ -308,7 +308,7 @@ public class BigBrother extends JavaPlugin {
 							}
 							finder.find((findee == null) ? split[1] : findee.getName());
 						} else if (isNumber(split[2]) && split.length == 3) {
-							Finder finder = new Finder(player.getLocation());
+							Finder finder = new Finder(player.getLocation(), getServer().getWorlds());
 							finder.setRadius(Double.parseDouble(split[2]));
 							finder.addReciever(player);
 							List<Player> targets = getServer().matchPlayer(split[1]);
@@ -327,20 +327,20 @@ public class BigBrother extends JavaPlugin {
 						if (split.length == 4 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3])) {
 							World currentWorld = player.getWorld();
 							Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
-							Finder finder = new Finder(loc);
+							Finder finder = new Finder(loc, getServer().getWorlds());
 							finder.addReciever(player);
 							finder.find();
 						} else if (split.length == 5 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4])) {
 							World currentWorld = player.getWorld();
 							Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
-							Finder finder = new Finder(loc);
+							Finder finder = new Finder(loc, getServer().getWorlds());
 							finder.setRadius(Double.parseDouble(split[4]));
 							finder.addReciever(player);
 							finder.find();
 						} else if (split.length == 5 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3])) {
 							World currentWorld = player.getWorld();
 							Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
-							Finder finder = new Finder(loc);
+							Finder finder = new Finder(loc, getServer().getWorlds());
 							finder.addReciever(player);
 							List<Player> targets = getServer().matchPlayer(split[4]);
 							Player findee = null;
@@ -351,7 +351,7 @@ public class BigBrother extends JavaPlugin {
 						} else if (split.length == 6 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[5])) {
 							World currentWorld = player.getWorld();
 							Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
-							Finder finder = new Finder(loc);
+							Finder finder = new Finder(loc, getServer().getWorlds());
 							finder.setRadius(Double.parseDouble(split[5]));
 							finder.addReciever(player);
 							List<Player> targets = getServer().matchPlayer(split[4]);

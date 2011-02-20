@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.finder;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
@@ -19,11 +20,13 @@ public class Finder {
     private Location location;
     private int radius;
     private ArrayList<Player> players;
+    private List<World> worlds;
 
-    public Finder(Location location) {
+    public Finder(Location location, List<World> worlds) {
         this.location = location;
         this.radius = BBSettings.defaultSearchRadius;
         players = new ArrayList<Player>();
+        this.worlds = worlds;
     }
 
     public void setRadius(double radius) {
@@ -58,7 +61,7 @@ public class Finder {
             // TODO maybe more customizable actions?
             String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
             ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
-                    + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? GROUP BY player ORDER BY id DESC");
+                    + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY player ORDER BY id DESC");
 
             ps.setInt(1, location.getBlockX() + radius);
             ps.setInt(2, location.getBlockX() - radius);
@@ -66,6 +69,7 @@ public class Finder {
             ps.setInt(4, location.getBlockY() - radius);
             ps.setInt(5, location.getBlockZ() + radius);
             ps.setInt(6, location.getBlockZ() - radius);
+            ps.setInt(7, worlds.indexOf(location.getWorld()));
             rs = ps.executeQuery();
             conn.commit();
 
@@ -128,7 +132,7 @@ public class Finder {
             // TODO maybe more customizable actions?
             String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
             ps = conn.prepareStatement("SELECT action, type FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
-                    + " AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ?  AND z < ? AND z > ? AND player = ? order by date desc");
+                    + " AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ?  AND z < ? AND z > ? AND player = ? AND world = ? order by date desc");
 
             ps.setInt(1, location.getBlockX() + radius);
             ps.setInt(2, location.getBlockX() - radius);
@@ -137,6 +141,7 @@ public class Finder {
             ps.setInt(5, location.getBlockZ() + radius);
             ps.setInt(6, location.getBlockZ() - radius);
             ps.setString(7, playerName);
+            ps.setInt(8, worlds.indexOf(location.getWorld()));
             rs = ps.executeQuery();
             conn.commit();
 

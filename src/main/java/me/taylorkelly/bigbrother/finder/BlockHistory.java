@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BigBrother;
@@ -12,11 +13,12 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class BlockHistory {
 
-    public static ArrayList<BBDataBlock> hist(Block block) {
+    public static ArrayList<BBDataBlock> hist(Block block, List<World> worlds) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -26,11 +28,12 @@ public class BlockHistory {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            ps = conn.prepareStatement("SELECT * FROM " + BBDataBlock.BBDATA_NAME + " WHERE rbacked = 0 AND x = ? AND y = ?  AND z = ? ORDER BY id ASC");
+            ps = conn.prepareStatement("SELECT * FROM " + BBDataBlock.BBDATA_NAME + " WHERE rbacked = 0 AND x = ? AND y = ?  AND z = ? AND world = ? ORDER BY id ASC");
 
             ps.setInt(1, block.getX());
             ps.setInt(2, block.getY());
             ps.setInt(3, block.getZ());
+            ps.setInt(4, worlds.indexOf(block.getWorld()));
             rs = ps.executeQuery();
             conn.commit();
 

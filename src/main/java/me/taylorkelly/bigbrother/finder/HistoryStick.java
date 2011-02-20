@@ -3,12 +3,14 @@ package me.taylorkelly.bigbrother.finder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +19,7 @@ import org.bukkit.Material;
 public class HistoryStick extends StickMode {
     private ItemStack oldItem;
     private int slot;
-    
+
     public void initialize(Player player) {
         slot = player.getInventory().getHeldItemSlot();
         oldItem = player.getInventory().getItem(slot);
@@ -26,7 +28,7 @@ public class HistoryStick extends StickMode {
         }
         player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
     }
-    
+
     public void disable(Player player) {
         if(oldItem != null && oldItem.getAmount() > 0) {
             player.sendMessage(ChatColor.AQUA + "Here's your " + oldItem.getType() + " back!");
@@ -36,14 +38,14 @@ public class HistoryStick extends StickMode {
         }
     }
 
-    public ArrayList<String> getInfoOnBlock(Block block) {
-        ArrayList<BBDataBlock> history = BlockHistory.hist(block);
+    public ArrayList<String> getInfoOnBlock(Block block, List<World> worlds) {
+        ArrayList<BBDataBlock> history = BlockHistory.hist(block, worlds);
 
         ArrayList<String> msgs = new ArrayList<String>();
         if (history.size() == 0) {
             msgs.add(ChatColor.RED + "No edits on this block");
         } else {
-            msgs.add(ChatColor.AQUA.toString() + history.size() + " edits on this block"); 
+            msgs.add(ChatColor.AQUA.toString() + history.size() + " edits on this block");
             for (BBDataBlock dataBlock : history) {
                 Calendar cal = Calendar.getInstance();
                 String DATE_FORMAT = "MMM.d@'" + ChatColor.GRAY + "'kk.mm.ss";
@@ -68,7 +70,7 @@ public class HistoryStick extends StickMode {
     public String getDescription() {
         return "History Stick";
     }
-    
+
 
     public void update(Player player) {
         player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));

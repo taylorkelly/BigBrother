@@ -3,12 +3,14 @@ package me.taylorkelly.bigbrother.finder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,8 +38,8 @@ public class HistoryLog extends StickMode {
     }
 
     @Override
-    public ArrayList<String> getInfoOnBlock(Block block) {
-        ArrayList<BBDataBlock> history = BlockHistory.hist(block);
+    public ArrayList<String> getInfoOnBlock(Block block, List<World> worlds) {
+        ArrayList<BBDataBlock> history = BlockHistory.hist(block, worlds);
 
         ArrayList<String> msgs = new ArrayList<String>();
         if (history.size() == 0) {

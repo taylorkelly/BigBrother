@@ -14,7 +14,7 @@ public class Sticker {
     private Server server;
     private HashMap<String, StickMode> playerModes;
     private ArrayList<Class<? extends StickMode>> modes;
-    
+
     public Sticker(Server server) {
         this.server = server;
         playerModes = new HashMap<String, StickMode>();
@@ -66,7 +66,7 @@ public class Sticker {
     private void blockInfo(Player player, Block block) {
         if(playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
-            ArrayList<String> info = mode.getInfoOnBlock(block);
+            ArrayList<String> info = mode.getInfoOnBlock(block, server.getWorlds());
             for(String msg : info) {
                 player.sendMessage(msg);
             }
