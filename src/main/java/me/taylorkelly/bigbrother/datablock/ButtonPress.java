@@ -6,7 +6,6 @@ import org.bukkit.block.Block;
 public class ButtonPress extends BBDataBlock {
 
 	public ButtonPress(String player, Block button, int world) {
-		//TODO Better world support
 		super(player, Action.BUTTON_PRESS, world, button.getX(), button.getY(), button.getZ(), 77, Byte.toString(button.getData()));
 	}
 
