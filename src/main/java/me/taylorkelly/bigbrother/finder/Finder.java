@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -21,8 +22,10 @@ public class Finder {
     private int radius;
     private ArrayList<Player> players;
     private List<World> worlds;
+    private WorldManager manager;
 
-    public Finder(Location location, List<World> worlds) {
+    public Finder(Location location, List<World> worlds, WorldManager manager) {
+        this.manager = manager;
         this.location = location;
         this.radius = BBSettings.defaultSearchRadius;
         players = new ArrayList<Player>();
@@ -69,7 +72,7 @@ public class Finder {
             ps.setInt(4, location.getBlockY() - radius);
             ps.setInt(5, location.getBlockZ() + radius);
             ps.setInt(6, location.getBlockZ() - radius);
-            ps.setInt(7, worlds.indexOf(location.getWorld()));
+            ps.setInt(7, manager.getWorld(location.getWorld().getName()));
             rs = ps.executeQuery();
             conn.commit();
 
@@ -141,7 +144,7 @@ public class Finder {
             ps.setInt(5, location.getBlockZ() + radius);
             ps.setInt(6, location.getBlockZ() - radius);
             ps.setString(7, playerName);
-            ps.setInt(8, worlds.indexOf(location.getWorld()));
+            ps.setInt(8, manager.getWorld(location.getWorld().getName()));
             rs = ps.executeQuery();
             conn.commit();
 

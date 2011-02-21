@@ -10,7 +10,8 @@ public class RollbackPreparedStatement {
 
     public static String create(Rollback rollback, WorldManager manager) {
         // TODO More variable prepared statements
-        StringBuilder statement = new StringBuilder("SELECT * FROM ");
+        StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
+        statement.append(" FROM ");
         statement.append(BBDataBlock.BBDATA_NAME);
         statement.append(" WHERE ");
         statement.append(getActionString());
@@ -66,6 +67,7 @@ public class RollbackPreparedStatement {
         }
         statement.append(" AND rbacked = '0'");
         statement.append(" ORDER BY id DESC");
+        statement.append(" INNER JOIN bbworlds ON bbworlds.id = bbdata.world");
         statement.append(";");
         return statement.toString();
     }
@@ -187,6 +189,7 @@ public class RollbackPreparedStatement {
         }
 
         statement.append(" AND rbacked = '0'");
+        statement.append(" INNER JOIN bbworlds ON bbworlds.id = bbdata.world");
         statement.append(";");
         return statement.toString();
     }
@@ -253,6 +256,7 @@ public class RollbackPreparedStatement {
         }
 
         statement.append(" AND rbacked = '1'");
+        statement.append(" INNER JOIN bbworlds ON bbworlds.id = bbdata.world");
         statement.append(";");
         return statement.toString();
     }
