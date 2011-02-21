@@ -48,22 +48,11 @@ public class BigBrother extends JavaPlugin {
     private Sticker sticker;
 
     public static final Logger log = Logger.getLogger("Minecraft");
-    public final String name = this.getDescription().getName();
-    public final String version = this.getDescription().getVersion();
+    public String name;
+    public String version;
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
 
     private Updater updater;
-
-    public BigBrother(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
-        super(pluginLoader, instance, desc, folder, plugin, cLoader);
-        updater = new Updater();
-        playerListener = new BBPlayerListener(this);
-        blockListener = new BBBlockListener(this);
-        entityListener = new BBEntityListener(this);
-        stickListener = new StickListener(this);
-        sticker = new Sticker(getServer());
-
-    }
 
     public void onDisable() {
         DataBlockSender.disable();
@@ -72,6 +61,14 @@ public class BigBrother extends JavaPlugin {
 
 	@SuppressWarnings({"CallToThreadDumpStack", "LoggerStringConcat"})
     public void onEnable() {
+        name = this.getDescription().getName();
+        version = this.getDescription().getVersion();
+        updater = new Updater();
+        playerListener = new BBPlayerListener(this);
+        blockListener = new BBBlockListener(this);
+        entityListener = new BBEntityListener(this);
+        stickListener = new StickListener(this);
+        sticker = new Sticker(getServer());
         try {
             updater.check();
             updater.update();
