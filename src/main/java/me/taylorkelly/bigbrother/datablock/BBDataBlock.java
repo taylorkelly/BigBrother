@@ -39,7 +39,7 @@ public abstract class BBDataBlock {
     public int x;
     public int y;
     public int z;
-    public int world;
+    public String world;
     public int type;
     public String data;
     public long date;
@@ -67,7 +67,7 @@ public abstract class BBDataBlock {
         BLOCK_BURN
     }
 
-    public BBDataBlock(String player, Action action, int world, int x, int y, int z, int type, String data) {
+    public BBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
         this.date = System.currentTimeMillis() / 1000;
         this.player = player;
         this.action = action;

@@ -71,7 +71,7 @@ public class DataBlockSender {
                 ps.setLong(1, block.date);
                 ps.setString(2, block.player);
                 ps.setInt(3, block.action.ordinal());
-                ps.setInt(4, block.world);
+                ps.setInt(4, block.world); // TODO Tons of shit...
                 ps.setInt(5, block.x);
                 if (block.y < 0)
                     block.y = 0;

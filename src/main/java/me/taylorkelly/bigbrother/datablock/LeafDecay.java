@@ -12,10 +12,11 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class LeafDecay extends BBDataBlock {
+
     private ArrayList<BBDataBlock> bystanders;
 
-    public LeafDecay(Player player, Block block, int world) {
-        super(player.getName(), Action.LEAF_DECAY, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public LeafDecay(String player, Block block, String world) {
+        super(player, Action.LEAF_DECAY, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
         surroundingSignChecks(player, block);
@@ -23,7 +24,7 @@ public class LeafDecay extends BBDataBlock {
         checkGnomesLivingOnTop(player, block);
     }
 
-    public LeafDecay(Block block, int world) {
+    public LeafDecay(Block block, String world) {
         super(ENVIRONMENT, Action.LEAF_DECAY, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(block);
@@ -32,17 +33,20 @@ public class LeafDecay extends BBDataBlock {
         checkGnomesLivingOnTop(block);
     }
 
-    public LeafDecay(Player player, int x, int y, int z, int type, int data) {
-        super(player.getName(), Action.LEAF_DECAY, 0, x, y, z, type, String.valueOf(data));
+    /*
+     * TODO Remove if not used
+    public LeafDecay(String player, int x, int y, int z, int type, int data) {
+        super(player, Action.LEAF_DECAY, 0, x, y, z, type, String.valueOf(data));
         bystanders = new ArrayList<BBDataBlock>();
     }
+     */
 
-    public static BBDataBlock create(Block block, int world) {
+    public static BBDataBlock create(Block block, String world) {
         // TODO Player handling
         return new LeafDecay(block, world);
     }
 
-	@Override
+    @Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
@@ -52,35 +56,35 @@ public class LeafDecay extends BBDataBlock {
 
     public void rollback(Server server) {
         if (type != 51 || BBSettings.restoreFire) {
-            World worldy = server.getWorlds().get(world);
-            if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-                ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+            World currWorld = server.getWorld(world);
+            if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+                currWorld.loadChunk(x >> 4, z >> 4);
             }
 
             byte blockData = Byte.parseByte(data);
-            worldy.getBlockAt(x, y, z).setTypeId(type);
-            worldy.getBlockAt(x, y, z).setData(blockData);
+            currWorld.getBlockAt(x, y, z).setTypeId(type);
+            currWorld.getBlockAt(x, y, z).setData(blockData);
         }
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds().get(world);
-        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+        World currWorld = server.getWorld(world);
+        if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+            currWorld.loadChunk(x >> 4, z >> 4);
         }
 
-        worldy.getBlockAt(x, y, z).setTypeId(0);
+        currWorld.getBlockAt(x, y, z).setTypeId(0);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new LeafDecay(player, world, x, y, z, type, data);
     }
 
-    private LeafDecay(String player, int world, int x, int y, int z, int type, String data) {
+    private LeafDecay(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.LEAF_DECAY, world, x, y, z, type, data);
     }
 
-    private void torchCheck(Player player, Block block) {
+    private void torchCheck(String player, Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
         torchTypes.add(50);
         torchTypes.add(75);
@@ -113,7 +117,7 @@ public class LeafDecay extends BBDataBlock {
         }
     }
 
-    private void surroundingSignChecks(Player player, Block block) {
+    private void surroundingSignChecks(String player, Block block) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -140,14 +144,14 @@ public class LeafDecay extends BBDataBlock {
         }
     }
 
-    private void signCheck(Player player, Block block) {
+    private void signCheck(String player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             bystanders.add(new DestroySignText(player, sign, world));
         }
     }
 
-    private void checkGnomesLivingOnTop(Player player, Block block) {
+    private void checkGnomesLivingOnTop(String player, Block block) {
         ArrayList<Integer> gnomes = new ArrayList<Integer>();
         gnomes.add(6); // Sapling
         gnomes.add(37); // Yellow Flower

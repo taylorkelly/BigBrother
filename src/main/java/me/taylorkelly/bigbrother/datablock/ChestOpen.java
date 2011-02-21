@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 
 public class ChestOpen extends BBDataBlock {
 
-    public ChestOpen(Player player, Block block, int world) {
-        super(player.getName(), Action.OPEN_CHEST, world, block.getX(), block.getY(), block.getZ(), 54, "");
+    public ChestOpen(String player, Block block, String world) {
+        super(player, Action.OPEN_CHEST, world, block.getX(), block.getY(), block.getZ(), 54, "");
     }
 
-    private ChestOpen(String player, int world, int x, int y, int z, int type, String data) {
+    private ChestOpen(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.OPEN_CHEST, world, x, y, z, type, data);
     }
 
@@ -20,7 +20,7 @@ public class ChestOpen extends BBDataBlock {
     public void redo(Server server) {
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new ChestOpen(player, world, x, y, z, type, data);
     }
 

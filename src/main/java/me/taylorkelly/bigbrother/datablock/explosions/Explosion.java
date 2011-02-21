@@ -16,9 +16,10 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class Explosion extends BBDataBlock {
+
     private ArrayList<BBDataBlock> bystanders;
 
-    public Explosion(Action dataBlockType, String name, Block block, int world) {
+    public Explosion(Action dataBlockType, String name, Block block, String world) {
         super(name, dataBlockType, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(name, block);
@@ -28,7 +29,7 @@ public abstract class Explosion extends BBDataBlock {
         checkGnomesLivingOnTop(name, block);
     }
 
-	@Override
+    @Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
@@ -51,8 +52,9 @@ public abstract class Explosion extends BBDataBlock {
                     builder.append(",");
                     builder.append("-").append(stack.getAmount());
                 }
-                if (i + 1 < chest.getInventory().getSize())
+                if (i + 1 < chest.getInventory().getSize()) {
                     builder.append(";");
+                }
             }
             bystanders.add(new DeltaChest(player, chest, builder.toString(), world));
         }
@@ -60,24 +62,24 @@ public abstract class Explosion extends BBDataBlock {
 
     public void rollback(Server server) {
         if (type != 51 || BBSettings.restoreFire) {
-            World worldy = server.getWorlds().get(world);
-            if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-                ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+            World currWorld = server.getWorld(world);
+            if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+                currWorld.loadChunk(x >> 4, z >> 4);
             }
 
             byte blockData = Byte.parseByte(data);
-            worldy.getBlockAt(x, y, z).setTypeId(type);
-            worldy.getBlockAt(x, y, z).setData(blockData);
+            currWorld.getBlockAt(x, y, z).setTypeId(type);
+            currWorld.getBlockAt(x, y, z).setData(blockData);
         }
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds().get(world);
-        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+        World currWorld = server.getWorld(world);
+        if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+            currWorld.loadChunk(x >> 4, z >> 4);
         }
 
-        worldy.getBlockAt(x, y, z).setTypeId(0);
+        currWorld.getBlockAt(x, y, z).setTypeId(0);
     }
 
     protected final void torchCheck(String player, Block block) {
@@ -178,7 +180,7 @@ public abstract class Explosion extends BBDataBlock {
 
     protected abstract Explosion newInstance(String player, Block block);
 
-    protected Explosion(String player, Action dataType, int world, int x, int y, int z, int type, String data) {
+    protected Explosion(String player, Action dataType, String world, int x, int y, int z, int type, String data) {
         super(player, dataType, world, x, y, z, type, data);
     }
 }

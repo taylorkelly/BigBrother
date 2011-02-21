@@ -9,30 +9,30 @@ import org.bukkit.block.Block;
 
 public class CreeperExplosion extends Explosion {
 
-    public CreeperExplosion(String player, Block block, int world) {
+    public CreeperExplosion(String player, Block block, String world) {
         super(Action.CREEPER_EXPLOSION, player, block, world);
     }
 
-    public CreeperExplosion(Block block, int world) {
+    public CreeperExplosion(Block block, String world) {
         super(Action.CREEPER_EXPLOSION, ENVIRONMENT, block, world);
     }
 
     protected Explosion newInstance(String player, Block block) {
-        return new CreeperExplosion(player, block, world);
+        return new CreeperExplosion(player, block, block.getWorld().getName());
     }
 
-    public static void create(Location location, List<Block> blockList, int world) {
+    public static void create(Location location, List<Block> blockList, String world) {
         for(Block block: blockList) {
             BBDataBlock dataBlock = new CreeperExplosion(ENVIRONMENT, block, world);
             dataBlock.send();
         }
     }
 
-    private CreeperExplosion(String player, int world, int x, int y, int z, int type, String data) {
+    private CreeperExplosion(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.CREEPER_EXPLOSION, world, x, y, z, type, data);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new CreeperExplosion(player, world, x, y, z, type, data);
     }
 

@@ -1,18 +1,18 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 public class Disconnect extends BBDataBlock {
-	public Disconnect(Player player, int world) {
-		super(player.getName(), Action.DISCONNECT, world, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, "");
+	public Disconnect(String player, Location location, String world) {
+		super(player, Action.DISCONNECT, world, location.getBlockX(), location.getBlockY(), location.getBlockZ(), 0, "");
 	}
 
-	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+	public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
 		return new Disconnect(player, world, x, y, z, type, data);
 	}
 
-	private Disconnect(String player, int world, int x, int y, int z, int type, String data) {
+	private Disconnect(String player, String world, int x, int y, int z, int type, String data) {
 		super(player, Action.DISCONNECT, world, x, y, z, type, data);
 	}
 

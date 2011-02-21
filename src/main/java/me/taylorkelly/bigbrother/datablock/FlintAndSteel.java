@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 
 public class FlintAndSteel extends BBDataBlock {
 
-    public FlintAndSteel(Player player, Block block, int world) {
-        super(player.getName(), Action.FLINT_AND_STEEL, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), "");
+    public FlintAndSteel(String player, Block block, String world) {
+        super(player, Action.FLINT_AND_STEEL, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), "");
     }
 
-    private FlintAndSteel(String player, int world, int x, int y, int z, int type, String data) {
+    private FlintAndSteel(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.FLINT_AND_STEEL, world, x, y, z, type, data);
     }
 
@@ -20,7 +20,7 @@ public class FlintAndSteel extends BBDataBlock {
     public void redo(Server server) {
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new FlintAndSteel(player, world, x, y, z, type, data);
     }
 

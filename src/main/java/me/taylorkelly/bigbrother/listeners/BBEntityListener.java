@@ -27,14 +27,14 @@ public class BBEntityListener extends EntityListener {
         // Need a fix to get location.
         if (event.getEntity() == null) {
             if (BBSettings.tntExplosions) {
-                TNTLogger.createTNTDataBlock(event.blockList(), worlds.indexOf(event.getLocation().getWorld()));
+                TNTLogger.createTNTDataBlock(event.blockList(), event.getLocation().getWorld().getName());
             }
         } else if (event.getEntity() instanceof CraftLivingEntity) {
             if (BBSettings.creeperExplosions) {
-                CreeperExplosion.create(event.getEntity().getLocation(), event.blockList(), worlds.indexOf(event.getLocation().getWorld()));
+                CreeperExplosion.create(event.getEntity().getLocation(), event.blockList(), event.getLocation().getWorld().getName());
             }
         } else if (BBSettings.miscExplosions) {
-            MiscExplosion.create(event.getEntity().getLocation(), event.blockList(), worlds.indexOf(event.getLocation().getWorld()));
+            MiscExplosion.create(event.getEntity().getLocation(), event.blockList(), event.getLocation().getWorld().getName());
         }
 
     }

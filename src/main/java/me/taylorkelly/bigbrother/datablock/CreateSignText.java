@@ -8,12 +8,11 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.entity.Player;
 
 public class CreateSignText extends BBDataBlock {
-    public CreateSignText(Player player, Sign sign, int world) {
-        super(player.getName(), Action.CREATE_SIGN_TEXT, world, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
+
+    public CreateSignText(String player, Sign sign, String world) {
+        super(player, Action.CREATE_SIGN_TEXT, world, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
     private static String getText(Sign sign) {
@@ -21,29 +20,31 @@ public class CreateSignText extends BBDataBlock {
         String[] lines = sign.getLines();
         for (int i = 0; i < lines.length; i++) {
             message.append(lines[i]);
-            if(i < lines.length - 1) message.append("\u0060");
+            if (i < lines.length - 1) {
+                message.append("\u0060");
+            }
         }
         return message.toString();
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new CreateSignText(player, world, x, y, z, type, data);
     }
 
-    private CreateSignText(String player, int world, int x, int y, int z, int type, String data) {
+    private CreateSignText(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.CREATE_SIGN_TEXT, world, x, y, z, type, data);
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds().get(world);
-        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        World currWorld = server.getWorld(world);
+        if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+            currWorld.loadChunk(x >> 4, z >> 4);
         }
 
         String[] lines = data.split("\u0060");
 
 
-        Block block = worldy.getBlockAt(x, y, z);
+        Block block = currWorld.getBlockAt(x, y, z);
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             for (int i = 0; i < lines.length; i++) {
@@ -55,12 +56,12 @@ public class CreateSignText extends BBDataBlock {
     }
 
     public void rollback(Server server) {
-        World worldy = server.getWorlds().get(world);
-        if(!((CraftWorld)worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld)worldy).getHandle().A.d(x >> 4, z >> 4);
+        World currWorld = server.getWorld(world);
+        if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+            currWorld.loadChunk(x >> 4, z >> 4);
         }
 
-        Block block = worldy.getBlockAt(x, y, z);
+        Block block = currWorld.getBlockAt(x, y, z);
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             for (int i = 0; i < sign.getLines().length; i++) {
@@ -69,5 +70,5 @@ public class CreateSignText extends BBDataBlock {
         } else {
             BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring sign");
         }
-     }
+    }
 }

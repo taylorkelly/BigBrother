@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class BBPlayerListener extends PlayerListener {
+
     private BigBrother plugin;
     private List<World> worlds;
 
@@ -34,7 +35,7 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerCommand(PlayerChatEvent event) {
         Player player = event.getPlayer();
         if (BBSettings.commands && plugin.watching(player)) {
-            Command dataBlock = new Command(player, event.getMessage(), worlds.indexOf(player.getLocation().getWorld()));
+            Command dataBlock = new Command(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
         }
     }
@@ -49,7 +50,7 @@ public class BBPlayerListener extends PlayerListener {
         }
 
         if (BBSettings.login && plugin.watching(player)) {
-            Login dataBlock = new Login(player, worlds.indexOf(player.getWorld()));
+            Login dataBlock = new Login(player, player.getWorld().getName());
             dataBlock.send();
         }
     }
@@ -57,7 +58,7 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerEvent event) {
         final Player player = event.getPlayer();
         if (BBSettings.disconnect && plugin.watching(player)) {
-            Disconnect dataBlock = new Disconnect(player, worlds.indexOf(player.getWorld()));
+            Disconnect dataBlock = new Disconnect(player.getName(), player.getLocation(), player.getWorld().getName());
             dataBlock.send();
         }
     }
@@ -68,7 +69,7 @@ public class BBPlayerListener extends PlayerListener {
 
         final Player player = event.getPlayer();
         if (BBSettings.teleport && plugin.watching(player) && distance(from, to) > 5 && !event.isCancelled()) {
-            Teleport dataBlock = new Teleport(player, event.getTo(), worlds.indexOf(player.getWorld()));
+            Teleport dataBlock = new Teleport(player.getName(), event.getTo());
             dataBlock.send();
         }
     }
@@ -76,7 +77,7 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerChat(PlayerChatEvent event) {
         final Player player = event.getPlayer();
         if (BBSettings.chat && plugin.watching(player)) {
-            Chat dataBlock = new Chat(player, event.getMessage(), worlds.indexOf(player.getWorld()));
+            Chat dataBlock = new Chat(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
         }
     }
@@ -88,76 +89,83 @@ public class BBPlayerListener extends PlayerListener {
             int z;
             int type;
             PlacedBlock dataBlock;
+            World world;
             switch (event.getMaterial()) {
-            case LAVA_BUCKET:
-                x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
-                y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
-                z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                type = Material.LAVA.getId();
-                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
-                dataBlock.send();
-                break;
-            case WATER_BUCKET:
-                x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
-                y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
-                z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                type = Material.WATER.getId();
-                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, 0);
-                dataBlock.send();
-                break;
-            case SIGN:
-                x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
-                y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
-                z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                int data = 0;
-                switch (event.getBlockFace()) {
-                case UP:
-                    type = Material.SIGN_POST.getId();
-                    break;
-                case NORTH:
-                    data = 4;
-                    type = Material.WALL_SIGN.getId();
-                    break;
-                case SOUTH:
-                    data = 5;
-                    type = Material.WALL_SIGN.getId();
-                    break;
-                case EAST:
-                    data = 2;
-                    type = Material.WALL_SIGN.getId();
-                    break;
-                case WEST:
-                    data = 3;
-                    type = Material.WALL_SIGN.getId();
-                    break;
-                default:
-                    type = Material.SIGN.getId();
-                }
-                dataBlock = new PlacedBlock(event.getPlayer(), x, y, z, type, data);
-                dataBlock.send();
-                break;
-            case BUCKET:
-                BrokenBlock dataBlock2;
-                switch (event.getBlockClicked().getType()) {
-                case STATIONARY_LAVA:
-                case LAVA:
-                    x = event.getBlockClicked().getX();
-                    y = event.getBlockClicked().getY();
-                    z = event.getBlockClicked().getZ();
+                //TODO Door logging
+                case LAVA_BUCKET:
+                    x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
+                    y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
+                    z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
                     type = Material.LAVA.getId();
-                    dataBlock2 = new BrokenBlock(event.getPlayer(), worlds.indexOf(event.getBlockClicked().getWorld()), x, y, z, type, 0);
-                    dataBlock2.send();
+                    world = event.getBlockClicked().getWorld();
+                    dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                    dataBlock.send();
                     break;
-                case STATIONARY_WATER:
-                case WATER:
-                    x = event.getBlockClicked().getX();
-                    y = event.getBlockClicked().getY();
-                    z = event.getBlockClicked().getZ();
+                case WATER_BUCKET:
+                    x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
+                    y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
+                    z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
                     type = Material.WATER.getId();
-                    dataBlock2 = new BrokenBlock(event.getPlayer(), worlds.indexOf(event.getBlockClicked().getWorld()), x, y, z, type, 0);
-                    dataBlock2.send();
-                }
-                break;
+                    world = event.getBlockClicked().getWorld();
+                    dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                    dataBlock.send();
+                    break;
+                case SIGN:
+                    x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
+                    y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
+                    z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
+                    world = event.getBlockClicked().getWorld();
+
+                    int data = 0;
+                    switch (event.getBlockFace()) {
+                        case UP:
+                            type = Material.SIGN_POST.getId();
+                            break;
+                        case NORTH:
+                            data = 4;
+                            type = Material.WALL_SIGN.getId();
+                            break;
+                        case SOUTH:
+                            data = 5;
+                            type = Material.WALL_SIGN.getId();
+                            break;
+                        case EAST:
+                            data = 2;
+                            type = Material.WALL_SIGN.getId();
+                            break;
+                        case WEST:
+                            data = 3;
+                            type = Material.WALL_SIGN.getId();
+                            break;
+                        default:
+                            type = Material.SIGN.getId();
+                    }
+                    dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) data);
+                    dataBlock.send();
+                    break;
+                case BUCKET:
+                    BrokenBlock dataBlock2;
+                    world = event.getBlockClicked().getWorld();
+                    switch (event.getBlockClicked().getType()) {
+                        case STATIONARY_LAVA:
+                        case LAVA:
+                            x = event.getBlockClicked().getX();
+                            y = event.getBlockClicked().getY();
+                            z = event.getBlockClicked().getZ();
+                            type = Material.LAVA.getId();
+                            dataBlock2 = new BrokenBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                            dataBlock2.send();
+                            break;
+                        case STATIONARY_WATER:
+                        case WATER:
+                            x = event.getBlockClicked().getX();
+                            y = event.getBlockClicked().getY();
+                            z = event.getBlockClicked().getZ();
+                            type = Material.WATER.getId();
+                            dataBlock2 = new BrokenBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                            dataBlock2.send();
+                    }
+                    break;
             }
         }
     }

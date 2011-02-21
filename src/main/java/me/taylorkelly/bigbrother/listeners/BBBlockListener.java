@@ -50,7 +50,7 @@ public class BBBlockListener extends BlockListener {
             Player player = event.getPlayer();
             if (BBSettings.blockBreak && plugin.watching(player)) {
                 Block block = event.getBlock();
-                BrokenBlock dataBlock = new BrokenBlock(player, block, worlds.indexOf(block.getWorld()));
+                BrokenBlock dataBlock = new BrokenBlock(player.getName(), block, block.getWorld().getName());
                 dataBlock.send();
             }
         }
@@ -60,7 +60,7 @@ public class BBBlockListener extends BlockListener {
         Player player = event.getPlayer();
         if (BBSettings.blockPlace && plugin.watching(player) && !event.isCancelled()) {
             Block block = event.getBlockPlaced();
-            PlacedBlock dataBlock = new PlacedBlock(player, block, worlds.indexOf(block.getWorld()));
+            PlacedBlock dataBlock = new PlacedBlock(player.getName(), block, block.getWorld().getName());
             dataBlock.send();
         }
     }
@@ -74,25 +74,25 @@ public class BBBlockListener extends BlockListener {
                 switch (block.getType()) {
                 case WOODEN_DOOR:
                     if (BBSettings.doorOpen) {
-                        DoorOpen doorDataBlock = new DoorOpen(player.getName(), block, worlds.indexOf(block.getWorld()));
+                        DoorOpen doorDataBlock = new DoorOpen(player.getName(), block, block.getWorld().getName());
                         doorDataBlock.send();
                     }
                     break;
                 case LEVER:
                     if (BBSettings.leverSwitch) {
-                        LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block, worlds.indexOf(block.getWorld()));
+                        LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block, block.getWorld().getName());
                         leverDataBlock.send();
                     }
                     break;
                 case STONE_BUTTON:
                     if (BBSettings.buttonPress) {
-                        ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block, worlds.indexOf(block.getWorld()));
+                        ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block, block.getWorld().getName());
                         buttonDataBlock.send();
                     }
                     break;
                 case CHEST:
                     if (BBSettings.chestChanges) {
-                        BBDataBlock chestDataBlock = new ChestOpen(player, block, worlds.indexOf(block.getWorld()));
+                        BBDataBlock chestDataBlock = new ChestOpen(player.getName(), block, block.getWorld().getName());
                         chestDataBlock.send();
                     }
                     break;
@@ -105,7 +105,7 @@ public class BBBlockListener extends BlockListener {
         if (BBSettings.leafDrops && !event.isCancelled()) {
             // TODO try to find a player that did it.
             final Block block = event.getBlock();
-            BBDataBlock dataBlock = LeafDecay.create(block, worlds.indexOf(block.getWorld()));
+            BBDataBlock dataBlock = LeafDecay.create(block, block.getWorld().getName());
             dataBlock.send();
         }
     }
@@ -113,7 +113,7 @@ public class BBBlockListener extends BlockListener {
     public void onBlockIgnite(BlockIgniteEvent event) {
         if (BBSettings.fire && event.getCause() == IgniteCause.FLINT_AND_STEEL && !event.isCancelled()) {
             final Block block = event.getBlock();
-            BBDataBlock dataBlock = new FlintAndSteel(event.getPlayer(), block, worlds.indexOf(block.getWorld()));
+            BBDataBlock dataBlock = new FlintAndSteel(event.getPlayer().getName(), block, block.getWorld().getName());
             dataBlock.send();
         }
     }
@@ -121,7 +121,7 @@ public class BBBlockListener extends BlockListener {
     public void onBlockBurn(BlockBurnEvent event) {
         if (BBSettings.fire && !event.isCancelled()) {
             final Block block = event.getBlock();
-            BBDataBlock dataBlock = BlockBurn.create(block, worlds.indexOf(block.getWorld()));
+            BBDataBlock dataBlock = BlockBurn.create(block, block.getWorld().getName());
             dataBlock.send();
         }
     }

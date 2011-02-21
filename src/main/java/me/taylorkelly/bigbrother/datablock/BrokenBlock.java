@@ -14,15 +14,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class BrokenBlock extends BBDataBlock {
+
     private ArrayList<BBDataBlock> bystanders;
 
-    public BrokenBlock(Player player, Block block, int world) {
-        super(player.getName(), Action.BLOCK_BROKEN, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
+    public BrokenBlock(String player, Block block, String world) {
+        super(player, Action.BLOCK_BROKEN, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
         torchCheck(player, block);
         surroundingSignChecks(player, block);
         signCheck(player, block);
-        chestCheck(player.getName(), block);
+        chestCheck(player, block);
         checkGnomesLivingOnTop(player, block);
     }
 
@@ -41,19 +42,20 @@ public class BrokenBlock extends BBDataBlock {
                     builder.append(",");
                     builder.append("-").append(stack.getAmount());
                 }
-                if (i + 1 < chest.getInventory().getSize())
+                if (i + 1 < chest.getInventory().getSize()) {
                     builder.append(";");
+                }
             }
             bystanders.add(new DeltaChest(player, chest, builder.toString(), world));
         }
     }
 
-    public BrokenBlock(Player player, int world, int x, int y, int z, int type, int data) {
-        super(player.getName(), Action.BLOCK_BROKEN, world, x, y, z, type, String.valueOf(data));
+    public BrokenBlock(String player, String world, int x, int y, int z, int type, byte data) {
+        super(player, Action.BLOCK_BROKEN, world, x, y, z, type, Byte.toString(data));
         bystanders = new ArrayList<BBDataBlock>();
     }
 
-	@Override
+    @Override
     public void send() {
         for (BBDataBlock block : bystanders) {
             block.send();
@@ -63,35 +65,35 @@ public class BrokenBlock extends BBDataBlock {
 
     public void rollback(Server server) {
         if (type != 51 || BBSettings.restoreFire) {
-            World worldy = server.getWorlds().get(world);
-            if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-                ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+            World currWorld = server.getWorld(world);
+            if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+                currWorld.loadChunk(x >> 4, z >> 4);
             }
 
             byte blockData = Byte.parseByte(data);
-            worldy.getBlockAt(x, y, z).setTypeId(type);
-            worldy.getBlockAt(x, y, z).setData(blockData);
+            currWorld.getBlockAt(x, y, z).setTypeId(type);
+            currWorld.getBlockAt(x, y, z).setData(blockData);
         }
     }
 
     public void redo(Server server) {
-        World worldy = server.getWorlds().get(world);
-        if (!((CraftWorld) worldy).getHandle().A.a(x >> 4, z >> 4)) {
-            ((CraftWorld) worldy).getHandle().A.d(x >> 4, z >> 4);
+        World currWorld = server.getWorld(world);
+        if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
+            currWorld.loadChunk(x >> 4, z >> 4);
         }
 
-        worldy.getBlockAt(x, y, z).setTypeId(0);
+        currWorld.getBlockAt(x, y, z).setTypeId(0);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new BrokenBlock(player, world, x, y, z, type, data);
     }
 
-    private BrokenBlock(String player, int world, int x, int y, int z, int type, String data) {
+    private BrokenBlock(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.BLOCK_BROKEN, world, x, y, z, type, data);
     }
 
-    private void torchCheck(Player player, Block block) {
+    private void torchCheck(String player, Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
         torchTypes.add(50);
         torchTypes.add(75);
@@ -124,7 +126,7 @@ public class BrokenBlock extends BBDataBlock {
         }
     }
 
-    private void surroundingSignChecks(Player player, Block block) {
+    private void surroundingSignChecks(String player, Block block) {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -151,14 +153,14 @@ public class BrokenBlock extends BBDataBlock {
         }
     }
 
-    private void signCheck(Player player, Block block) {
+    private void signCheck(String player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
             bystanders.add(new DestroySignText(player, sign, world));
         }
     }
 
-    private void checkGnomesLivingOnTop(Player player, Block block) {
+    private void checkGnomesLivingOnTop(String player, Block block) {
         ArrayList<Integer> gnomes = new ArrayList<Integer>();
         gnomes.add(6); // Sapling
         gnomes.add(37); // Yellow Flower
@@ -186,5 +188,4 @@ public class BrokenBlock extends BBDataBlock {
             bystanders.add(new BrokenBlock(player, mrGnome, world));
         }
     }
-
 }

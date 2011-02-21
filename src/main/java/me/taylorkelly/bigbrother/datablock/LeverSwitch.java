@@ -5,7 +5,7 @@ import org.bukkit.block.Block;
 
 public class LeverSwitch extends BBDataBlock {
 
-	public LeverSwitch(String player, Block lever, int world) {
+	public LeverSwitch(String player, Block lever, String world) {
 		super(player, Action.LEVER_SWITCH, world, lever.getX(), lever.getY(), lever.getZ(), 69, Byte.toString(lever.getData()));
 	}
 
@@ -13,11 +13,11 @@ public class LeverSwitch extends BBDataBlock {
 	public void redo(Server server) {}
 
 
-	public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+	public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
 		return new LeverSwitch(player, world, x, y, z, type, data);
 	}
 
-	private LeverSwitch(String player, int world, int x, int y, int z, int type, String data) {
+	private LeverSwitch(String player, String world, int x, int y, int z, int type, String data) {
 		super(player, Action.LEVER_SWITCH, world, x, y, z, type, data);
 	}
 

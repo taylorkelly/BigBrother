@@ -16,7 +16,7 @@ public class TNTLogger {
         // TODO Auto-generated method stub
     }
 
-    public static void createTNTDataBlock(List<Block> blockList, int world) {
+    public static void createTNTDataBlock(List<Block> blockList, String world) {
         TNTExplosion.create(blockList, world);
     }
 
