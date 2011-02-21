@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import me.taylorkelly.bigbrother.WorldManager;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
@@ -38,8 +39,8 @@ public class HistoryLog extends StickMode {
     }
 
     @Override
-    public ArrayList<String> getInfoOnBlock(Block block, List<World> worlds) {
-        ArrayList<BBDataBlock> history = BlockHistory.hist(block, worlds);
+    public ArrayList<String> getInfoOnBlock(Block block, List<World> worlds, WorldManager manager) {
+        ArrayList<BBDataBlock> history = BlockHistory.hist(block, worlds, manager);
 
         ArrayList<String> msgs = new ArrayList<String>();
         if (history.size() == 0) {

@@ -1,13 +1,14 @@
 package me.taylorkelly.bigbrother.rollback;
 
 import java.util.ArrayList;
+import me.taylorkelly.bigbrother.WorldManager;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 
 public class RollbackPreparedStatement {
 
-    public static String create(Rollback rollback) {
+    public static String create(Rollback rollback, WorldManager manager) {
         // TODO More variable prepared statements
         StringBuilder statement = new StringBuilder("SELECT * FROM ");
         statement.append(BBDataBlock.BBDATA_NAME);
@@ -59,8 +60,10 @@ public class RollbackPreparedStatement {
             statement.append("'");
             statement.append(rollback.center.getBlockZ() - rollback.radius);
             statement.append("'");
+            statement.append(" AND world = '");
+            statement.append(manager.getWorld(rollback.center.getWorld().getName()));
+            statement.append("'");
         }
-
         statement.append(" AND rbacked = '0'");
         statement.append(" ORDER BY id DESC");
         statement.append(";");
@@ -122,7 +125,7 @@ public class RollbackPreparedStatement {
         return ret;
     }
 
-    public static String update(Rollback rollback) {
+    public static String update(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
         statement.append(BBDataBlock.BBDATA_NAME);
         statement.append(" SET rbacked = '1'");
@@ -178,6 +181,9 @@ public class RollbackPreparedStatement {
             statement.append("'");
             statement.append(rollback.server.getWorlds().indexOf(rollback.center.getWorld()));
             statement.append("'");
+            statement.append(" AND world = '");
+            statement.append(manager.getWorld(rollback.center.getWorld().getName()));
+            statement.append("'");
         }
 
         statement.append(" AND rbacked = '0'");
@@ -185,7 +191,7 @@ public class RollbackPreparedStatement {
         return statement.toString();
     }
 
-    public static String undoStatement(Rollback rollback) {
+    public static String undoStatement(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
         statement.append(BBDataBlock.BBDATA_NAME);
         statement.append(" SET rbacked = '0'");
@@ -241,11 +247,13 @@ public class RollbackPreparedStatement {
             statement.append("'");
             statement.append(rollback.server.getWorlds().indexOf(rollback.center.getWorld()));
             statement.append("'");
+            statement.append(" AND world = '");
+            statement.append(manager.getWorld(rollback.center.getWorld().getName()));
+            statement.append("'");
         }
 
         statement.append(" AND rbacked = '1'");
         statement.append(";");
         return statement.toString();
     }
-
 }

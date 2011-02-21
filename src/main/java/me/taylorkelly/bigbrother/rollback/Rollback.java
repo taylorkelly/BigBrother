@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.Stats;
+import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -35,8 +36,10 @@ public class Rollback {
     private LinkedList<BBDataBlock> listBlocks;
     private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
     private static String undoRollback = null;
+    private WorldManager manager;
 
-    public Rollback(Server server) {
+    public Rollback(Server server, WorldManager manager) {
+        this.manager = manager;
         this.rollbackAll = false;
         this.server = server;
         this.time = 0;
@@ -61,21 +64,21 @@ public class Rollback {
         Connection conn = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement(RollbackPreparedStatement.create(this));
+            ps = conn.prepareStatement(RollbackPreparedStatement.create(this, manager));
             set = ps.executeQuery();
             conn.commit();
 
             int size = 0;
             while (set.next()) {
-                listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), Action.values()[set.getInt("action")], set.getInt("world"), set.getInt("x"),
+                listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), Action.values()[set.getInt("action")], set.getString("world"), set.getInt("x"),
                         set.getInt("y"), set.getInt("z"), set.getInt("type"), set.getString("data")));
                 size++;
             }
             if (size > 0) {
                 for (Player player : recievers) {
                     player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
-                    String players = (rollbackAll) ? "All Players" : getSimpleString(this.players);
-                    player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + players);
+                    String playersString = (rollbackAll) ? "All Players" : getSimpleString(this.players);
+                    player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + playersString);
                     if (blockTypes.size() > 0) {
                         player.sendMessage(ChatColor.BLUE + "Block Type(s): " + ChatColor.WHITE + getSimpleString(this.blockTypes));
                     }
@@ -94,14 +97,14 @@ public class Rollback {
                 try {
                     ps.close();
                     rollbackBlocks();
-                    ps = conn.prepareStatement(RollbackPreparedStatement.update(this));
+                    ps = conn.prepareStatement(RollbackPreparedStatement.update(this, manager));
                     ps.execute();
                     conn.commit();
 
                     for (Player player : recievers) {
                         player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
                     }
-                    undoRollback = RollbackPreparedStatement.undoStatement(this);
+                    undoRollback = RollbackPreparedStatement.undoStatement(this, manager);
                 } catch (SQLException ex) {
                     BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception", ex);
                 }

@@ -25,7 +25,6 @@ import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -34,8 +33,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BigBrother extends JavaPlugin {
@@ -53,15 +50,27 @@ public class BigBrother extends JavaPlugin {
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
     private Updater updater;
 
+    @Override
     public void onDisable() {
         DataBlockSender.disable();
     }
 
-    @SuppressWarnings({"CallToThreadDumpStack", "LoggerStringConcat"})
+    @Override
     public void onEnable() {
+        // TODO More verbose enabling
+
         // Stuff that was in Constructor
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
+
+        // Download dependencies...
+        updater = new Updater();
+        try {
+            updater.check();
+            updater.update();
+        } catch (Throwable e) {
+            log.log(Level.SEVERE, "[BBROTHER] Could not download dependencies", e);
+        }
 
         // Create Connection
         Connection conn = ConnectionManager.createConnection();
@@ -73,7 +82,7 @@ public class BigBrother extends JavaPlugin {
             try {
                 conn.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE, "[BBROTHER] Could not close connection", e);
             }
         }
 
@@ -87,16 +96,7 @@ public class BigBrother extends JavaPlugin {
         blockListener = new BBBlockListener(this);
         entityListener = new BBEntityListener(this);
         stickListener = new StickListener(this);
-        sticker = new Sticker(getServer());
-
-        // Download dependencies...
-        updater = new Updater();
-        try {
-            updater.check();
-            updater.update();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        sticker = new Sticker(getServer(), worldManager);
 
         // Update settings from old versions of BB
         if (new File("BigBrother").exists()) {
@@ -104,6 +104,12 @@ public class BigBrother extends JavaPlugin {
         } else if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
+
+        // Apply fixes to DB for old BB
+        Fix fix = new Fix13(getDataFolder());
+        fix.apply();
+        Fix fix2 = new Fix14(getDataFolder());
+        fix2.apply();
 
         // Initialize Permissions, Settings, Stats
         BBPermissions.initialize(getServer());
@@ -117,7 +123,10 @@ public class BigBrother extends JavaPlugin {
         watcher = BBSettings.getWatcher(getServer(), getDataFolder());
 
         // Initialize DataBlockSender
-        DataBlockSender.initialize(getDataFolder());
+        DataBlockSender.initialize(getDataFolder(), worldManager);
+
+        // Done!
+        log.log(Level.INFO, "{0} {1} initialized", new Object[]{name, version});
     }
 
     private void updateSettings(File dataFolder) {
@@ -127,6 +136,7 @@ public class BigBrother extends JavaPlugin {
     }
 
     private void registerEvents() {
+        // TODO Only register events that are being listened to
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Monitor, this);
@@ -227,7 +237,7 @@ public class BigBrother extends JavaPlugin {
                         }
                     } else if (split[0].equalsIgnoreCase("rollback") && BBPermissions.rollback(player)) {
                         if (split.length > 1) {
-                            RollbackInterpreter interpreter = new RollbackInterpreter(player, split, getServer());
+                            RollbackInterpreter interpreter = new RollbackInterpreter(player, split, getServer(), worldManager);
                             Boolean passed = interpreter.interpret();
                             if (passed != null) {
                                 if (passed) {

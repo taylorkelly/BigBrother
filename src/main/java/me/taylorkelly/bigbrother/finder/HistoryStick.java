@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
@@ -20,6 +21,7 @@ public class HistoryStick extends StickMode {
     private ItemStack oldItem;
     private int slot;
 
+    @Override
     public void initialize(Player player) {
         slot = player.getInventory().getHeldItemSlot();
         oldItem = player.getInventory().getItem(slot);
@@ -29,6 +31,7 @@ public class HistoryStick extends StickMode {
         player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
     }
 
+    @Override
     public void disable(Player player) {
         if(oldItem != null && oldItem.getAmount() > 0) {
             player.sendMessage(ChatColor.AQUA + "Here's your " + oldItem.getType() + " back!");
@@ -38,11 +41,12 @@ public class HistoryStick extends StickMode {
         }
     }
 
-    public ArrayList<String> getInfoOnBlock(Block block, List<World> worlds) {
-        ArrayList<BBDataBlock> history = BlockHistory.hist(block, worlds);
+    @Override
+    public ArrayList<String> getInfoOnBlock(Block block, List<World> worlds, WorldManager manager) {
+        ArrayList<BBDataBlock> history = BlockHistory.hist(block, worlds, manager);
 
         ArrayList<String> msgs = new ArrayList<String>();
-        if (history.size() == 0) {
+        if (history.isEmpty()) {
             msgs.add(ChatColor.RED + "No edits on this block");
         } else {
             msgs.add(ChatColor.AQUA.toString() + history.size() + " edits on this block");
@@ -52,7 +56,7 @@ public class HistoryStick extends StickMode {
                 SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
                 cal.setTimeInMillis(dataBlock.date * 1000);
                 StringBuilder msg = new StringBuilder(sdf.format(cal.getTime()));
-                msg.append(ChatColor.WHITE + " - " + ChatColor.YELLOW);
+                msg.append(ChatColor.WHITE).append(" - ").append(ChatColor.YELLOW);
                 msg.append(dataBlock.player);
                 msg.append(ChatColor.WHITE);
                 msg.append(" ");
@@ -67,15 +71,18 @@ public class HistoryStick extends StickMode {
         return msgs;
     }
 
+    @Override
     public String getDescription() {
         return "History Stick";
     }
 
 
+    @Override
     public void update(Player player) {
         player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
     }
 
+    @Override
     public boolean usesStick(ItemStack itemStack) {
         if(itemStack.getTypeId() == BBSettings.stickItem) {
             return true;

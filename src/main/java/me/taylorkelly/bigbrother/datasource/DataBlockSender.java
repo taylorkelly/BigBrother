@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.Stats;
+import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 
@@ -30,23 +31,23 @@ public class DataBlockSender {
             sendTimer.cancel();
     }
 
-    public static void initialize(File dataFolder) {
+    public static void initialize(File dataFolder, WorldManager manager) {
         sendTimer = new Timer();
-        sendTimer.schedule(new SendingTask(dataFolder), BBSettings.sendDelay * 1000L, BBSettings.sendDelay * 1000L);
+        sendTimer.schedule(new SendingTask(dataFolder, manager), BBSettings.sendDelay * 1000L, BBSettings.sendDelay * 1000L);
     }
 
     public static void offer(BBDataBlock dataBlock) {
         SENDING.add(dataBlock);
     }
 
-    private static void sendBlocks(File dataFolder) {
+    private static void sendBlocks(File dataFolder, WorldManager manager) {
         if (SENDING.size() == 0)
             return;
 
         Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
         SENDING.drainTo(collection);
 
-        boolean worked = sendBlocksMySQL(collection);
+        boolean worked = sendBlocksMySQL(collection, manager);
         if (BBSettings.flatLog) {
             sendBlocksFlatFile(dataFolder, collection);
         }
@@ -59,7 +60,7 @@ public class DataBlockSender {
         }
     }
 
-    private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection) {
+    private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection, WorldManager manager) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -71,7 +72,7 @@ public class DataBlockSender {
                 ps.setLong(1, block.date);
                 ps.setString(2, block.player);
                 ps.setInt(3, block.action.ordinal());
-                ps.setInt(4, block.world); // TODO Tons of shit...
+                ps.setInt(4, manager.getWorld(block.world));
                 ps.setInt(5, block.x);
                 if (block.y < 0)
                     block.y = 0;
@@ -211,13 +212,15 @@ public class DataBlockSender {
 
     private static class SendingTask extends TimerTask {
         private File dataFolder;
+        private WorldManager manager;
 
-        public SendingTask(File dataFolder) {
+        public SendingTask(File dataFolder, WorldManager manager) {
             this.dataFolder = dataFolder;
+            this.manager = manager;
         }
 
         public void run() {
-            sendBlocks(dataFolder);
+            sendBlocks(dataFolder, manager);
         }
     }
 }

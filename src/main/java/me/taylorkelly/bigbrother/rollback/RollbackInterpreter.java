@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.rollback;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import me.taylorkelly.bigbrother.WorldManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,9 +18,11 @@ public class RollbackInterpreter {
     private boolean all = false;
     private Server server;
     private Player player;
+    private WorldManager manager;
     private int radius = 0;
 
-    public RollbackInterpreter(Player player, String[] split, Server server) {
+    public RollbackInterpreter(Player player, String[] split, Server server, WorldManager manager) {
+        this.manager = manager;
         this.player = player;
         this.server = server;
         playerList = new ArrayList<String>();
@@ -142,7 +145,7 @@ public class RollbackInterpreter {
     }
 
     public Boolean interpret() {
-        rollback = new Rollback(server);
+        rollback = new Rollback(server, manager);
         rollback.addReciever(player);
         if (all) {
             rollback.rollbackAll();

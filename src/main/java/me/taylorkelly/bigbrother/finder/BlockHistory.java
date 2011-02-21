@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -18,7 +19,7 @@ import org.bukkit.block.Block;
 
 public class BlockHistory {
 
-    public static ArrayList<BBDataBlock> hist(Block block, List<World> worlds) {
+    public static ArrayList<BBDataBlock> hist(Block block, List<World> worlds, WorldManager manager) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -33,12 +34,12 @@ public class BlockHistory {
             ps.setInt(1, block.getX());
             ps.setInt(2, block.getY());
             ps.setInt(3, block.getZ());
-            ps.setInt(4, worlds.indexOf(block.getWorld()));
+            ps.setInt(4, manager.getWorld(block.getWorld().getName()));
             rs = ps.executeQuery();
             conn.commit();
 
             while (rs.next()) {
-                BBDataBlock newBlock = BBDataBlock.getBBDataBlock(rs.getString("player"), Action.values()[rs.getInt("action")], rs.getInt("world"), rs.getInt("x"), rs.getInt("y"),  rs.getInt("z"), rs.getInt("type"),  rs.getString("data"));
+                BBDataBlock newBlock = BBDataBlock.getBBDataBlock(rs.getString("player"), Action.values()[rs.getInt("action")], rs.getString("world"), rs.getInt("x"), rs.getInt("y"),  rs.getInt("z"), rs.getInt("type"),  rs.getString("data"));
                 newBlock.date = rs.getLong("date");
                 blockList.add(newBlock);
             }

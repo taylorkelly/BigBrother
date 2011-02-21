@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.WorldManager;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -14,8 +15,10 @@ public class Sticker {
     private Server server;
     private HashMap<String, StickMode> playerModes;
     private ArrayList<Class<? extends StickMode>> modes;
+    private WorldManager manager;
 
-    public Sticker(Server server) {
+    public Sticker(Server server, WorldManager manager) {
+        this.manager = manager;
         this.server = server;
         playerModes = new HashMap<String, StickMode>();
         modes = new ArrayList<Class<? extends StickMode>>();
@@ -42,9 +45,7 @@ public class Sticker {
             playerModes.put(player.getName(), modes.get(i).newInstance());
             playerModes.get(player.getName()).initialize(player);
         } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
     }
 
@@ -66,7 +67,7 @@ public class Sticker {
     private void blockInfo(Player player, Block block) {
         if(playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
-            ArrayList<String> info = mode.getInfoOnBlock(block, server.getWorlds());
+            ArrayList<String> info = mode.getInfoOnBlock(block, server.getWorlds(), manager);
             for(String msg : info) {
                 player.sendMessage(msg);
             }

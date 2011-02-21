@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.finder;
 
 import java.util.ArrayList;
 import java.util.List;
+import me.taylorkelly.bigbrother.WorldManager;
 
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -10,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class StickMode {
 
-    public abstract ArrayList<String> getInfoOnBlock(Block block, List<World> worlds);
+    public abstract ArrayList<String> getInfoOnBlock(Block block, List<World> worlds, WorldManager manager);
 
     public abstract String getDescription();
 

@@ -145,11 +145,11 @@ public abstract class BBDataBlock {
 
     public abstract void redo(Server server);
 
-    public static BBDataBlock getBBDataBlock(String player, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return null;
     }
 
-    public static BBDataBlock getBBDataBlock(String player, Action action, int world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
         switch (action) {
         case BLOCK_BROKEN:
             return BrokenBlock.getBBDataBlock(player, world, x, y, z, type, data);
