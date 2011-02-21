@@ -56,10 +56,9 @@ public class BigBrother extends JavaPlugin {
 
     public void onDisable() {
         DataBlockSender.disable();
-        BBSettings.onDisable(getDataFolder());
     }
 
-	@SuppressWarnings({"CallToThreadDumpStack", "LoggerStringConcat"})
+    @SuppressWarnings({"CallToThreadDumpStack", "LoggerStringConcat"})
     public void onEnable() {
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();

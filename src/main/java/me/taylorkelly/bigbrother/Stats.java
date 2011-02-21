@@ -13,21 +13,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Stats {
-    private static double globalMemory;
-    private static double sessionMemory;
     private static long globalRollback;
     private static long sessionRollback;
     private static long globalEdits;
     private static long sessionEdits;
 
     public static void initialize() {
-        globalMemory = BBSettings.freedMem;
         globalEdits = loadNumEdits();
         globalRollback = loadNumRollback();
-    }
-
-    public static double getGlobalMemory() {
-        return globalMemory;
     }
 
     private static long loadNumRollback() {
@@ -98,11 +91,6 @@ public class Stats {
         player.sendMessage("- " + ChatColor.YELLOW + sessionEdits + ChatColor.WHITE + " edits logged");
         player.sendMessage("- " + ChatColor.YELLOW + sessionRollback + ChatColor.WHITE + " edits rollback'd");
 
-    }
-
-    public static void logMemory(double mem) {
-        sessionMemory += mem;
-        globalMemory += mem;
     }
 
     public static void logBlocks(int size) {
