@@ -62,7 +62,7 @@ public class RollbackPreparedStatement {
             statement.append("'");
             statement.append(rollback.center.getBlockZ() - rollback.radius);
             statement.append("'");
-            statement.append(" AND world = '");
+            statement.append(" AND bbdata.world = '");
             statement.append(manager.getWorld(rollback.center.getWorld().getName()));
             statement.append("'");
         }
