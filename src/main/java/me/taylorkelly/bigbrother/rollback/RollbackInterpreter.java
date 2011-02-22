@@ -144,6 +144,7 @@ public class RollbackInterpreter {
 		}
 	}
 
+<<<<<<< HEAD
 	public Boolean interpret() {
 		rollback = new Rollback(server, manager);
 		rollback.addReciever(player);
@@ -174,6 +175,38 @@ public class RollbackInterpreter {
 		rollback.prepareRollback();
 		return rollback;
 	}
+=======
+    public Boolean interpret() {
+        rollback = new Rollback(server, manager);
+        rollback.addReciever(player);
+        if (all) {
+            rollback.rollbackAll();
+        } else {
+            if (playerList.size() == 0) {
+                player.sendMessage(ChatColor.RED + "No players marked for rollback. Cancelling rollback.");
+                player.sendMessage(ChatColor.RED + "Use * for all players");
+                return null;
+            }
+            rollback.addPlayers(playerList);
+        }
+        if (dateSearch != null) {
+            rollback.setTime(dateSearch.getTimeInMillis() / 1000);
+        }
+        if (blockTypes.size() != 0) {
+            rollback.addTypes(blockTypes);
+        }
+        rollback.setRadius(radius, player.getLocation());
+        if (radius == 0 && dateSearch == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public void send() {
+        rollback.rollback();
+    }
+>>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
 
 	public void send() {
 		rollback.rollback();
