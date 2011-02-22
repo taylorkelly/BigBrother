@@ -92,7 +92,7 @@ public class DataBlockSender {
             conn.commit();
             return true;
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception", ex);
+            BigBrother.severe("Data Insert SQL Exception when sending blocks", ex);
             return false;
         } finally {
             try {
@@ -105,7 +105,7 @@ public class DataBlockSender {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert SQL Exception (on close)");
+                BigBrother.severe("Data Insert SQL Exception when sending blocks (on close)", ex);
             }
         }
     }
