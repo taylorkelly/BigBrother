@@ -4,4 +4,4 @@ main: me.taylorkelly.bigbrother.BigBrother
 commands:
   bb:
     description: All of the BigBrother commands
-    usage: Tsk. Tsk. Wrong command, buddy.
+    usage: Command unrecognised, please read the documentation before using BigBrother.
