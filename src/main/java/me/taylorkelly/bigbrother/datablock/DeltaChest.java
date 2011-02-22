@@ -9,7 +9,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 

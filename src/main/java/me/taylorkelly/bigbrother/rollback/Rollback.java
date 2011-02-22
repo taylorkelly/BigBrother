@@ -196,7 +196,6 @@ public class Rollback {
             Connection conn = null;
             PreparedStatement ps = null;
             ResultSet set = null;
-            boolean sqlite = !BBSettings.mysql;
             try {
                 conn = ConnectionManager.getConnection();
                 ps = conn.prepareStatement(undoRollback);

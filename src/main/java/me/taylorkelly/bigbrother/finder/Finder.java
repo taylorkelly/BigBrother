@@ -21,7 +21,7 @@ public class Finder {
     private Location location;
     private int radius;
     private ArrayList<Player> players;
-    private List<World> worlds;
+    //private List<World> worlds; // Not used- N3X
     private WorldManager manager;
 
     public Finder(Location location, List<World> worlds, WorldManager manager) {
@@ -29,7 +29,7 @@ public class Finder {
         this.location = location;
         this.radius = BBSettings.defaultSearchRadius;
         players = new ArrayList<Player>();
-        this.worlds = worlds;
+        //this.worlds = worlds;
     }
 
     public void setRadius(double radius) {

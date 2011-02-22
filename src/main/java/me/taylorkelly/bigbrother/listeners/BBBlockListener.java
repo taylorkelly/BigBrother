@@ -1,7 +1,5 @@
 package me.taylorkelly.bigbrother.listeners;
 
-import java.util.List;
-
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -17,7 +15,6 @@ import me.taylorkelly.bigbrother.datablock.PlacedBlock;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockDamageLevel;
 import org.bukkit.entity.LivingEntity;
@@ -33,11 +30,11 @@ import org.bukkit.event.block.LeavesDecayEvent;
 
 public class BBBlockListener extends BlockListener {
     private BigBrother plugin;
-    private List<World> worlds;
+    //private List<World> worlds; // Not used - N3X
 
     public BBBlockListener(BigBrother plugin) {
         this.plugin = plugin;
-        this.worlds = plugin.getServer().getWorlds();
+        //this.worlds = plugin.getServer().getWorlds();
     }
 
     public void onBlockDamage(BlockDamageEvent event) {

@@ -8,8 +8,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.entity.Player;
 
 public class LeafDecay extends BBDataBlock {
 

@@ -2,7 +2,6 @@ package me.taylorkelly.bigbrother.datablock;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
 public class FlintAndSteel extends BBDataBlock {
 

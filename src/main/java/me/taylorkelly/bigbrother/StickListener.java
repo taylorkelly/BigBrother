@@ -2,12 +2,6 @@ package me.taylorkelly.bigbrother;
 
 import java.util.ArrayList;
 
-import me.taylorkelly.bigbrother.datablock.BBDataBlock;
-import me.taylorkelly.bigbrother.datablock.ButtonPress;
-import me.taylorkelly.bigbrother.datablock.ChestOpen;
-import me.taylorkelly.bigbrother.datablock.DoorOpen;
-import me.taylorkelly.bigbrother.datablock.LeverSwitch;
-
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;

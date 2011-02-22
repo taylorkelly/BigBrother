@@ -1,25 +1,22 @@
 package me.taylorkelly.bigbrother.listeners;
 
-import java.util.List;
-
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.explosions.CreeperExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.MiscExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 
-import org.bukkit.World;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
 public class BBEntityListener extends EntityListener {
-    private BigBrother plugin;
-    private List<World> worlds;
+    //private BigBrother plugin; // Not used - N3X
+    //private List<World> worlds; // Not used - N3X
 
     public BBEntityListener(BigBrother bigBrother) {
-        this.plugin = bigBrother;
-        this.worlds = plugin.getServer().getWorlds();
+        //this.plugin = bigBrother;
+        //this.worlds = plugin.getServer().getWorlds();
     }
 
     public void onEntityExplode(EntityExplodeEvent event) {

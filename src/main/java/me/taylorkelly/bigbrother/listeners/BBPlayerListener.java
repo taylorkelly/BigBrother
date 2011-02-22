@@ -1,7 +1,5 @@
 package me.taylorkelly.bigbrother.listeners;
 
-import java.util.List;
-
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
@@ -25,11 +23,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class BBPlayerListener extends PlayerListener {
 
     private BigBrother plugin;
-    private List<World> worlds;
+    //private List<World> worlds; // Not used - N3X
 
     public BBPlayerListener(BigBrother plugin) {
         this.plugin = plugin;
-        this.worlds = plugin.getServer().getWorlds();
+        //this.worlds = plugin.getServer().getWorlds();
     }
 
     public void onPlayerCommand(PlayerChatEvent event) {

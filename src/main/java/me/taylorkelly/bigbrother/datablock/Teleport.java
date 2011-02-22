@@ -2,11 +2,9 @@ package me.taylorkelly.bigbrother.datablock;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 public class Teleport extends BBDataBlock {
 	public Teleport(String player, Location to) {
-		//TODO Better World support
 		super(player, Action.TELEPORT, to.getWorld().getName(), to.getBlockX(), to.getBlockY(), to.getBlockZ(), 0, "");
 	}
 
