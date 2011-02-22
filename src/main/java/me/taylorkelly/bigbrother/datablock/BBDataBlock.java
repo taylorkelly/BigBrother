@@ -64,7 +64,8 @@ public abstract class BBDataBlock {
         CREEPER_EXPLOSION,
         MISC_EXPLOSION,
         OPEN_CHEST,
-        BLOCK_BURN
+        BLOCK_BURN,
+        LAVA_FLOW
     }
 
     public BBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
@@ -191,6 +192,8 @@ public abstract class BBDataBlock {
             return ChestOpen.getBBDataBlock(player, world, x, y, z, type, data);
         case BLOCK_BURN:
             return BlockBurn.getBBDataBlock(player, world, x, y, z, type, data);
+        case LAVA_FLOW:
+            return LavaFlow.getBBDataBlock(player, world, x, y, z, type, data);
         default:
             return null;
         }

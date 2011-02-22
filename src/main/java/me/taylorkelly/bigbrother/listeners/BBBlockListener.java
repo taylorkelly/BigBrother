@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.listeners;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.LavaFlowLogger;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BlockBurn;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
@@ -9,6 +10,7 @@ import me.taylorkelly.bigbrother.datablock.ButtonPress;
 import me.taylorkelly.bigbrother.datablock.ChestOpen;
 import me.taylorkelly.bigbrother.datablock.DoorOpen;
 import me.taylorkelly.bigbrother.datablock.FlintAndSteel;
+import me.taylorkelly.bigbrother.datablock.LavaFlow;
 import me.taylorkelly.bigbrother.datablock.LeafDecay;
 import me.taylorkelly.bigbrother.datablock.LeverSwitch;
 import me.taylorkelly.bigbrother.datablock.PlacedBlock;
@@ -21,6 +23,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockInteractEvent;
@@ -37,6 +40,7 @@ public class BBBlockListener extends BlockListener {
         //this.worlds = plugin.getServer().getWorlds();
     }
 
+    @Override
     public void onBlockDamage(BlockDamageEvent event) {
         if (event.getDamageLevel() == BlockDamageLevel.STARTED && !event.isCancelled()) {
             if (event.getBlock().getType() == Material.TNT) {
@@ -53,15 +57,18 @@ public class BBBlockListener extends BlockListener {
         }
     }
 
+    @Override
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (BBSettings.blockPlace && plugin.watching(player) && !event.isCancelled()) {
+            //TODO: Lava Check for LavaFlows
             Block block = event.getBlockPlaced();
             PlacedBlock dataBlock = new PlacedBlock(player.getName(), block, block.getWorld().getName());
             dataBlock.send();
         }
     }
 
+    @Override
     public void onBlockInteract(BlockInteractEvent event) {
         Block block = event.getBlock();
         LivingEntity entity = event.getEntity();
@@ -98,6 +105,7 @@ public class BBBlockListener extends BlockListener {
         }
     }
 
+    @Override
     public void onLeavesDecay(LeavesDecayEvent event) {
         if (BBSettings.leafDrops && !event.isCancelled()) {
             // TODO try to find a player that did it.
@@ -107,6 +115,7 @@ public class BBBlockListener extends BlockListener {
         }
     }
 
+    @Override
     public void onBlockIgnite(BlockIgniteEvent event) {
         if (BBSettings.fire && event.getCause() == IgniteCause.FLINT_AND_STEEL && !event.isCancelled()) {
             final Block block = event.getBlock();
@@ -115,10 +124,22 @@ public class BBBlockListener extends BlockListener {
         }
     }
 
+    @Override
     public void onBlockBurn(BlockBurnEvent event) {
         if (BBSettings.fire && !event.isCancelled()) {
             final Block block = event.getBlock();
             BBDataBlock dataBlock = BlockBurn.create(block, block.getWorld().getName());
+            dataBlock.send();
+        }
+    }
+
+    @Override
+    public void onBlockFlow(BlockFromToEvent event) {
+        Block blockFrom = event.getBlock();
+        Block blockTo = event.getToBlock();
+        boolean lava = blockFrom.getType() == Material.LAVA || blockFrom.getType() == Material.STATIONARY_LAVA;
+        if (!event.isCancelled() && lava && BBSettings.lavaFlow) {
+            LavaFlow dataBlock = LavaFlowLogger.getFlow(blockFrom, blockTo);
             dataBlock.send();
         }
     }

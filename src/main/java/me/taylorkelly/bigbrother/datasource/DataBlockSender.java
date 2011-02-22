@@ -200,8 +200,10 @@ public class DataBlockSender {
             return "opened chest";
         case BLOCK_BURN:
             return "burned block";
+        case LAVA_FLOW:
+            return "flowed lava";
         default:
-            return "" + action;
+            return action.name();
         }
     }
 

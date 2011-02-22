@@ -29,6 +29,9 @@ public class BBSettings {
 	public static boolean creeperExplosions;
 	public static boolean miscExplosions;
 	public static boolean ipPlayer;
+        public static boolean lavaFlow;
+
+
 	public static boolean restoreFire;
 	public static boolean autoWatch;
 	public static int defaultSearchRadius;
@@ -55,7 +58,7 @@ public class BBSettings {
 	}
 
 	private static void loadPropertiesFiles(File dataFolder) {
-		//Use Configuration once it's finished.
+		//TODO: Use Configuration once it's finished.
 		PropertiesFile pf = new PropertiesFile(new File(dataFolder, "watching.properties"));
 		blockBreak = pf.getBoolean("blockBreak", true, "Watch when players break blocks");
 		blockPlace = pf.getBoolean("blockPlace", true, "Watch when players place blocks");
@@ -73,7 +76,8 @@ public class BBSettings {
 		tntExplosions = pf.getBoolean("tntExplosions", true, "Watch for when TNT explodes");
 		creeperExplosions = pf.getBoolean("creeperExplosions", true, "Watch for when Creepers explodes");
 		miscExplosions = pf.getBoolean("miscExplosions", true, "Watch for miscellaneous explosions");
-		ipPlayer = pf.getBoolean("ipPlayer", false, "Add player's IP when login");
+                ipPlayer = pf.getBoolean("ipPlayer", true, "Add player's IP when login");
+                lavaFlow = pf.getBoolean("lavaFlow", true, "Log lava flow (useful for rolling-back lava)");
 		pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
