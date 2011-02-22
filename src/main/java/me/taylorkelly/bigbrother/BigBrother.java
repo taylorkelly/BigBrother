@@ -197,6 +197,7 @@ public class BigBrother extends JavaPlugin {
             String commandName = command.getName().toLowerCase();
             if (sender instanceof Player) {
                 Player player = (Player) sender;
+                // TODO: Make this more modular.  If-trees drive me nuts. - N3X
                 if (commandName.equals("bb")) {
                     if (split.length == 0) {
                         return false;
@@ -223,7 +224,7 @@ public class BigBrother extends JavaPlugin {
                     } else if (split[0].equalsIgnoreCase("watched") && BBPermissions.info(player)) {
                         String watchedPlayers = getWatchedPlayers();
                         if (watchedPlayers.equals("")) {
-                            player.sendMessage(BigBrother.premessage + "Not currently watching anyone.");
+                            player.sendMessage(BigBrother.premessage + "Not watching anyone.");
                         } else {
                             player.sendMessage(BigBrother.premessage + "Now watching:");
                             player.sendMessage(watchedPlayers);
@@ -235,7 +236,7 @@ public class BigBrother extends JavaPlugin {
                         if (unwatchedPlayers.equals("")) {
                             player.sendMessage(BigBrother.premessage + "Everyone on is being watched.");
                         } else {
-                            player.sendMessage(BigBrother.premessage + "Not currently watching:");
+                            player.sendMessage(BigBrother.premessage + "Currently not watching:");
                             player.sendMessage(unwatchedPlayers);
                         }
                     } else if (split[0].equalsIgnoreCase("rollback") && BBPermissions.rollback(player)) {
@@ -253,8 +254,8 @@ public class BigBrother extends JavaPlugin {
                                 }
                             }
                         } else {
-                            // TODO Better help
-                            player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb rollback <arg1> <arg2>");
+                            player.sendMessage(BigBrother.premessage + "Usage is: " + ChatColor.RED + "/bb rollback name1 [name2] [options]");
+                            player.sendMessage(BigBrother.premessage + "Please read the full command documentation at https://github.com/tkelly910/BigBrother/wiki/Commands");
                         }
                     } else if (split[0].equalsIgnoreCase("confirm") && BBPermissions.rollback(player)) {
                         if (split.length == 1) {
@@ -387,7 +388,13 @@ public class BigBrother extends JavaPlugin {
                             player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <name> <radius>");
                         }
                     } else if (split[0].equalsIgnoreCase("help")) {
-                        player.sendMessage(BigBrother.premessage + "help!");
+                        player.sendMessage(BigBrother.premessage + "BigBrother version 1.6 help"); // TODO: Find version variable and use it
+                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb stick (0|1|2)"+ChatColor.WHITE+" - Gives you a stick (1), a log you can place (2), or disables either (0).");
+                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb here"+ChatColor.WHITE+" - See changes that took place in the area you are standing in.");
+                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb undo"+ChatColor.WHITE+" - Great for fixing bad rollbacks. It's like it never happened!");
+                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb delete"+ChatColor.WHITE+" - Delete your rollback."); // TODO: Clarify what /bb delete does
+                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb rollback name1 [name2] [options]"+ChatColor.WHITE+" - A command you should study in length via our helpful online wiki.");
+                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb find x y z"+ChatColor.WHITE+""); // TODO: Clarify /bb find docs
                     } else {
                         return false;
                     }
