@@ -93,9 +93,9 @@ public class BrokenBlock extends BBDataBlock {
 
     private void torchCheck(String player, Block block) {
         ArrayList<Integer> torchTypes = new ArrayList<Integer>();
-        torchTypes.add(50);
-        torchTypes.add(75);
-        torchTypes.add(76);
+        torchTypes.add(50); // Torch
+        torchTypes.add(75); // Redstone torch (on)
+        torchTypes.add(76); // Redstone torch (off)
 
         int x = block.getX();
         int y = block.getY();

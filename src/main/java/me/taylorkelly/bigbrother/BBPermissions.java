@@ -1,8 +1,5 @@
 
 package me.taylorkelly.bigbrother;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -15,12 +12,10 @@ public class BBPermissions {
     public static void initialize(Server server) {
         Plugin test = server.getPluginManager().getPlugin("Permissions");
         if (test != null) {
-            Logger log = Logger.getLogger("Minecraft");
             permissionsEnabled = true;
-            log.log(Level.INFO, "[BBROTHER] Permissions enabled.");
+            BigBrother.info("Permissions enabled.",null);
         } else {
-            Logger log = Logger.getLogger("Minecraft");
-            log.log(Level.SEVERE, "[BBROTHER] Permissions isn't loaded, there are no restrictions.");
+            BigBrother.severe("Permissions isn't loaded, there are no restrictions.",null);
         }
     }
 

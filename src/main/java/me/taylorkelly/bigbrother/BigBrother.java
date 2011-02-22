@@ -54,6 +54,38 @@ public class BigBrother extends JavaPlugin {
     public void onDisable() {
         DataBlockSender.disable();
     }
+    
+    /**
+     * Log INFO-level messages with a minimum of cruft.
+     * @author N3X15
+     */
+    public static void info(String message, Throwable e) {
+        log.log(Level.INFO, "[BBROTHER] "+message, e);
+    }
+    
+    /**
+     * Log WARNING-level messages with a minimum of cruft.
+     * @author N3X15
+     */
+    public static void warning(String message, Throwable e) {
+        log.log(Level.WARNING, "[BBROTHER] "+message, e);
+    }
+    
+    /**
+     * Log SEVERE-level messages with a minimum of cruft.
+     * @author N3X15
+     */
+    public static void severe(String message, Throwable e) {
+        log.log(Level.SEVERE, "[BBROTHER] "+message, e);
+    }
+    
+    /**
+     * Log FINE-level messages with a minimum of cruft.
+     * @author N3X15
+     */
+    public static void fine(String message, Throwable e) {
+        log.log(Level.FINE, "[BBROTHER] "+message, e);
+    }
 
     @Override
     public void onEnable() {
@@ -72,20 +104,20 @@ public class BigBrother extends JavaPlugin {
             updater.check();
             updater.update();
         } catch (Throwable e) {
-            log.log(Level.SEVERE, "[BBROTHER] Could not download dependencies", e);
+        	BigBrother.severe("Could not download dependencies", e);
         }
 
         // Create Connection
         Connection conn = ConnectionManager.createConnection();
         if (conn == null) {
-            log.log(Level.SEVERE, "[BBROTHER] Could not establish SQL connection. Disabling BigBrother");
+        	BigBrother.severe("Could not establish SQL connection. Disabling BigBrother",null);
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
             try {
                 conn.close();
             } catch (SQLException e) {
-                log.log(Level.SEVERE, "[BBROTHER] Could not close connection", e);
+            	BigBrother.severe("Could not close connection", e);
             }
         }
 
@@ -388,7 +420,8 @@ public class BigBrother extends JavaPlugin {
                             player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <name> <radius>");
                         }
                     } else if (split[0].equalsIgnoreCase("help")) {
-                        player.sendMessage(BigBrother.premessage + "BigBrother version 1.6 help"); // TODO: Find version variable and use it
+                    	// TODO: Modular help system, prereq: modular commands
+                        player.sendMessage(BigBrother.premessage + "BigBrother version "+version+" help");
                         player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb stick (0|1|2)"+ChatColor.WHITE+" - Gives you a stick (1), a log you can place (2), or disables either (0).");
                         player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb here"+ChatColor.WHITE+" - See changes that took place in the area you are standing in.");
                         player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb undo"+ChatColor.WHITE+" - Great for fixing bad rollbacks. It's like it never happened!");
