@@ -31,39 +31,6 @@ public class BBSettings {
 	public static boolean ipPlayer;
         public static boolean lavaFlow;
 
-<<<<<<< HEAD
-=======
-    public static boolean blockBreak;
-    public static boolean blockPlace;
-    public static boolean teleport;
-    public static boolean chestChanges;
-    public static boolean commands;
-    public static boolean chat;
-    public static boolean disconnect;
-    public static boolean login;
-    public static boolean doorOpen;
-    public static boolean buttonPress;
-    public static boolean leverSwitch;
-    public static boolean leafDrops;
-    public static boolean fire;
-    public static boolean tntExplosions;
-    public static boolean creeperExplosions;
-    public static boolean miscExplosions;
-    public static boolean ipPlayer;
-    public static boolean restoreFire;
-    public static boolean autoWatch;
-    public static int defaultSearchRadius;
-    public static boolean mysql;
-    public static boolean flatLog;
-    public static String mysqlUser = "root";
-    public static String mysqlPass = "root";
-    public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
-    public static int sendDelay;
-    public static long stickItem;
-    private static ArrayList<String> watchList;
-    private static ArrayList<String> seenList;
-    public static String liteDb;
->>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
 
 	public static boolean restoreFire;
 	public static boolean autoWatch;

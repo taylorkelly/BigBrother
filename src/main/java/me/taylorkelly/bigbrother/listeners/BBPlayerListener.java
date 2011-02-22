@@ -28,7 +28,6 @@ public class BBPlayerListener extends PlayerListener {
         this.plugin = plugin;
     }
 
-<<<<<<< HEAD
     /**
      * Only used for lag avoidance.
      */
@@ -40,9 +39,6 @@ public class BBPlayerListener extends PlayerListener {
     @Override
     public void onPlayerCommand(PlayerChatEvent event) {
         plugin.processPsuedotick();
-=======
-    public void onPlayerCommand(PlayerChatEvent event) {
->>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
         Player player = event.getPlayer();
         if (BBSettings.commands && plugin.watching(player)) {
             Command dataBlock = new Command(player, event.getMessage(), player.getWorld().getName());
@@ -52,10 +48,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerJoin(PlayerEvent event) {
-<<<<<<< HEAD
         plugin.processPsuedotick();
-=======
->>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
         final Player player = event.getPlayer();
         if (!plugin.haveSeen(player)) {
             plugin.markSeen(player);
@@ -72,10 +65,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerQuit(PlayerEvent event) {
-<<<<<<< HEAD
         plugin.processPsuedotick();
-=======
->>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
         final Player player = event.getPlayer();
         if (BBSettings.disconnect && plugin.watching(player)) {
             Disconnect dataBlock = new Disconnect(player.getName(), player.getLocation(), player.getWorld().getName());
@@ -85,10 +75,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerTeleport(PlayerMoveEvent event) {
-<<<<<<< HEAD
         plugin.processPsuedotick();
-=======
->>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
         Location from = event.getFrom();
         Location to = event.getTo();
 
@@ -101,10 +88,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerChat(PlayerChatEvent event) {
-<<<<<<< HEAD
         plugin.processPsuedotick();
-=======
->>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
         final Player player = event.getPlayer();
         if (BBSettings.chat && plugin.watching(player)) {
             Chat dataBlock = new Chat(player, event.getMessage(), player.getWorld().getName());
@@ -114,10 +98,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerItem(PlayerItemEvent event) {
-<<<<<<< HEAD
         plugin.processPsuedotick();
-=======
->>>>>>> parent of efe5d9c... Imported my shitty code from my repo for rolling back 100 blocks per tick.
         if (BBSettings.blockPlace && plugin.watching(event.getPlayer()) && !event.isCancelled()) {
             int x;
             int y;
