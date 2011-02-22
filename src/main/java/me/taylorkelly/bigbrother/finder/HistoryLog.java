@@ -3,7 +3,6 @@ package me.taylorkelly.bigbrother.finder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import me.taylorkelly.bigbrother.WorldManager;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -11,7 +10,6 @@ import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +18,7 @@ public class HistoryLog extends StickMode {
     private ItemStack oldItem;
     private int slot;
 
+    @Override
     public void initialize(Player player) {
         slot = player.getInventory().getHeldItemSlot();
         oldItem = player.getInventory().getItem(slot);
@@ -29,6 +28,7 @@ public class HistoryLog extends StickMode {
         player.getInventory().setItem(slot, new ItemStack(Material.LOG, 1));
     }
 
+    @Override
     public void disable(Player player) {
         if(oldItem != null && oldItem.getAmount() > 0) {
             player.sendMessage(ChatColor.AQUA + "Here's your " + oldItem.getType() + " back!");
@@ -43,7 +43,7 @@ public class HistoryLog extends StickMode {
         ArrayList<BBDataBlock> history = BlockHistory.hist(block, manager);
 
         ArrayList<String> msgs = new ArrayList<String>();
-        if (history.size() == 0) {
+        if (history.isEmpty()) {
             msgs.add(ChatColor.RED + "No edits on this block");
         } else {
             msgs.add(ChatColor.AQUA.toString() + history.size() + " edits on this block");
@@ -53,7 +53,7 @@ public class HistoryLog extends StickMode {
                 SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
                 cal.setTimeInMillis(dataBlock.date * 1000);
                 StringBuilder msg = new StringBuilder(sdf.format(cal.getTime()));
-                msg.append(ChatColor.WHITE + " - " + ChatColor.YELLOW);
+                msg.append(ChatColor.WHITE).append(" - ").append(ChatColor.YELLOW);
                 msg.append(dataBlock.player);
                 msg.append(ChatColor.WHITE);
                 msg.append(" ");
@@ -68,6 +68,7 @@ public class HistoryLog extends StickMode {
         return msgs;
     }
 
+    @Override
     public String getDescription() {
         return "History Log";
     }
@@ -76,10 +77,12 @@ public class HistoryLog extends StickMode {
         return false;
     }
 
+    @Override
     public void update(Player player) {
         player.getInventory().setItem(slot, new ItemStack(Material.LOG, 1));
     }
 
+    @Override
     public boolean usesStick(ItemStack itemStack) {
         if(itemStack.getType() == Material.LOG) {
             return true;
@@ -87,6 +90,7 @@ public class HistoryLog extends StickMode {
         return false;
     }
 
+    @Override
     public boolean rightClickStick() {
         return false;
     }

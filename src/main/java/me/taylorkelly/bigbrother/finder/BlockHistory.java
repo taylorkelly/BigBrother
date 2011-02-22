@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
@@ -18,7 +17,6 @@ import org.bukkit.block.Block;
 /**
  * Currently contains only one static method for getting the history of one
  * particular block. Could be expanded to include area histories, etc.
- * @author tkelly
  */
 public class BlockHistory {
 
@@ -49,7 +47,7 @@ public class BlockHistory {
             conn.commit();
 
             while (rs.next()) {
-                BBDataBlock newBlock = BBDataBlock.getBBDataBlock(rs.getString("player"), Action.values()[rs.getInt("action")], rs.getString("world"), rs.getInt("x"), rs.getInt("y"),  rs.getInt("z"), rs.getInt("type"),  rs.getString("data"));
+                BBDataBlock newBlock = BBDataBlock.getBBDataBlock(rs.getString("player"), Action.values()[rs.getInt("action")], rs.getString("world"), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"), rs.getInt("type"), rs.getString("data"));
                 newBlock.date = rs.getLong("date");
                 blockList.add(newBlock);
             }
@@ -57,12 +55,15 @@ public class BlockHistory {
             BigBrother.severe("Find SQL Exception", ex);
         } finally {
             try {
-                if (rs != null)
+                if (rs != null) {
                     rs.close();
-                if (ps != null)
+                }
+                if (ps != null) {
                     ps.close();
-                if (conn != null)
+                }
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException ex) {
                 BigBrother.severe("Find SQL Exception (on close)", ex);
             }

@@ -49,7 +49,7 @@ public class Finder {
     }
 
     public void find(ArrayList<String> players) {
-        // TODO find around player
+        // TODO find around multiple players
     }
 
     // TODO use IN(1,2,3)
