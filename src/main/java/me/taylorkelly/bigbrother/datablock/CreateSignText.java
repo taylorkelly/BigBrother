@@ -8,6 +8,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 public class CreateSignText extends BBDataBlock {
 
@@ -15,9 +16,17 @@ public class CreateSignText extends BBDataBlock {
         super(player, Action.CREATE_SIGN_TEXT, world, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
+    public CreateSignText(String player, String[] lines, Block block) {
+        super(player, Action.CREATE_SIGN_TEXT, block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), 323, getText(lines));
+    }
+
     private static String getText(Sign sign) {
-        StringBuilder message = new StringBuilder();
         String[] lines = sign.getLines();
+        return getText(lines);
+    }
+
+    private static String getText(String[] lines) {
+        StringBuilder message = new StringBuilder();
         for (int i = 0; i < lines.length; i++) {
             message.append(lines[i]);
             if (i < lines.length - 1) {
@@ -34,6 +43,7 @@ public class CreateSignText extends BBDataBlock {
     private CreateSignText(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.CREATE_SIGN_TEXT, world, x, y, z, type, data);
     }
+
 
     public void redo(Server server) {
         World currWorld = server.getWorld(world);

@@ -16,7 +16,6 @@ public class PlacedBlock extends BBDataBlock {
     public PlacedBlock(String player, Block block, String world) {
         super(player, Action.BLOCK_PLACED, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
-        signCheck(player, block);
         // TODO snow check once it gets fixed
         // TODO Water/Lava Check
     }
@@ -36,13 +35,6 @@ public class PlacedBlock extends BBDataBlock {
 
     private PlacedBlock(String player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.BLOCK_PLACED, world, x, y, z, type, data);
-    }
-
-    private void signCheck(String player, Block block) {
-        if (block.getState() instanceof Sign) {
-            Sign sign = (Sign) block.getState();
-            bystanders.add(new CreateSignText(player, sign, world));
-        }
     }
 
     public void rollback(Server server) {

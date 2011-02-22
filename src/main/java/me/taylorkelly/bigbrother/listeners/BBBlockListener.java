@@ -8,6 +8,7 @@ import me.taylorkelly.bigbrother.datablock.BlockBurn;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
 import me.taylorkelly.bigbrother.datablock.ButtonPress;
 import me.taylorkelly.bigbrother.datablock.ChestOpen;
+import me.taylorkelly.bigbrother.datablock.CreateSignText;
 import me.taylorkelly.bigbrother.datablock.DoorOpen;
 import me.taylorkelly.bigbrother.datablock.FlintAndSteel;
 import me.taylorkelly.bigbrother.datablock.LavaFlow;
@@ -30,6 +31,7 @@ import org.bukkit.event.block.BlockInteractEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.SignChangeEvent;
 
 public class BBBlockListener extends BlockListener {
     private BigBrother plugin;
@@ -140,6 +142,14 @@ public class BBBlockListener extends BlockListener {
         boolean lava = blockFrom.getType() == Material.LAVA || blockFrom.getType() == Material.STATIONARY_LAVA;
         if (!event.isCancelled() && lava && BBSettings.lavaFlow) {
             LavaFlow dataBlock = LavaFlowLogger.getFlow(blockFrom, blockTo);
+            dataBlock.send();
+        }
+    }
+
+    @Override
+    public void onSignChange(SignChangeEvent event) {
+        if(!event.isCancelled() && BBSettings.blockPlace) {
+            CreateSignText dataBlock = new CreateSignText(event.getPlayer().getName(), event.getLines(), event.getBlock());
             dataBlock.send();
         }
     }

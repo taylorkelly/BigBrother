@@ -207,6 +207,7 @@ public class BigBrother extends JavaPlugin {
         getServer().getPluginManager().registerEvent(Event.Type.LEAVES_DECAY, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.BLOCK_FLOW, blockListener, Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
 
         getServer().getPluginManager().registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.Monitor, this);
 
