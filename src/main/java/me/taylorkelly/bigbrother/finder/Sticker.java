@@ -67,7 +67,7 @@ public class Sticker {
     private void blockInfo(Player player, Block block) {
         if(playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
-            ArrayList<String> info = mode.getInfoOnBlock(block, server.getWorlds(), manager);
+            ArrayList<String> info = mode.getInfoOnBlock(block, manager);
             for(String msg : info) {
                 player.sendMessage(msg);
             }

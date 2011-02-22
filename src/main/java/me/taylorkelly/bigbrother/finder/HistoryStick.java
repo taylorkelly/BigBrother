@@ -42,8 +42,8 @@ public class HistoryStick extends StickMode {
     }
 
     @Override
-    public ArrayList<String> getInfoOnBlock(Block block, List<World> worlds, WorldManager manager) {
-        ArrayList<BBDataBlock> history = BlockHistory.hist(block, worlds, manager);
+    public ArrayList<String> getInfoOnBlock(Block block, WorldManager manager) {
+        ArrayList<BBDataBlock> history = BlockHistory.hist(block, manager);
 
         ArrayList<String> msgs = new ArrayList<String>();
         if (history.isEmpty()) {

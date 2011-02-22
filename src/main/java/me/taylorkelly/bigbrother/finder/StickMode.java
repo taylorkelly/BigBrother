@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class StickMode {
 
-    public abstract ArrayList<String> getInfoOnBlock(Block block, List<World> worlds, WorldManager manager);
+    public abstract ArrayList<String> getInfoOnBlock(Block block, WorldManager manager);
 
     public abstract String getDescription();
 

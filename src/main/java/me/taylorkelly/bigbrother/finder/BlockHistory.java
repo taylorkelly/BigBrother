@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.BigBrother;
@@ -14,12 +13,23 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
+/**
+ * Currently contains only one static method for getting the history of one
+ * particular block. Could be expanded to include area histories, etc.
+ * @author tkelly
+ */
 public class BlockHistory {
 
-    public static ArrayList<BBDataBlock> hist(Block block, List<World> worlds, WorldManager manager) {
+    /**
+     * Returns the list of changes to a given block.
+     * Currently use with HistoryLog and HistoryStick, but can be used with other things
+     * @param block The block to get the history of
+     * @param manager The world manager (so we can get the world index)
+     * @return The ArrayList of BBDataBlocks that represent the history
+     */
+    public static ArrayList<BBDataBlock> hist(Block block, WorldManager manager) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -44,7 +54,7 @@ public class BlockHistory {
                 blockList.add(newBlock);
             }
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
+            BigBrother.severe("Find SQL Exception", ex);
         } finally {
             try {
                 if (rs != null)
@@ -54,10 +64,9 @@ public class BlockHistory {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
+                BigBrother.severe("Find SQL Exception (on close)", ex);
             }
         }
         return blockList;
     }
-
 }
