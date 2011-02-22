@@ -170,6 +170,10 @@ public class RollbackInterpreter {
             return true;
         }
     }
+    public Rollback getAndInitializeRollback() {
+    	rollback.prepareRollback();
+    	return rollback;
+    }
     
     public void send() {
         rollback.rollback();

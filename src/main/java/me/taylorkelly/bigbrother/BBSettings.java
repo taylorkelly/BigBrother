@@ -35,6 +35,8 @@ public class BBSettings {
     public static int defaultSearchRadius;
     public static boolean mysql;
     public static boolean flatLog;
+    public static int maxRollbackRadius; // Maximum rollback radius. - N3X
+    public static int maxBlocksRolledBackPerPass; // Maximum blocks rolled back per "pass".
     public static String mysqlUser = "root";
     public static String mysqlPass = "root";
     public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";

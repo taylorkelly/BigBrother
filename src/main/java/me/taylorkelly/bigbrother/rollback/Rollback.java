@@ -37,6 +37,7 @@ public class Rollback {
     private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
     private static String undoRollback = null;
     private WorldManager manager;
+	private int size; // Number of items to roll back
 
     public Rollback(Server server, WorldManager manager) {
         this.manager = manager;
@@ -56,7 +57,130 @@ public class Rollback {
 
     public void rollback() {
         mysqlRollback(!BBSettings.mysql);
+    }    
+    /**
+     * Rollback stuff.
+     * @return Rollback done
+     */
+    public boolean nextPass() {
+        return doRollback(!BBSettings.mysql);
     }
+    
+    private int rollbackBlocks() {
+        lastRollback.clear();
+        int numChanged = 0;
+        while (listBlocks.size() > 0) {
+            BBDataBlock dataBlock = listBlocks.removeFirst();
+            if (dataBlock != null) {
+                lastRollback.addFirst(dataBlock);
+                dataBlock.rollback(server);
+                numChanged++;
+                if(numChanged > BBSettings.maxBlocksRolledBackPerPass)
+                	return numChanged-1;
+            }
+        }
+        Stats.logRollback(size);
+        return numChanged;
+    }
+
+    
+    private boolean doRollback(boolean sqlite) {
+        PreparedStatement ps = null;
+        ResultSet set = null;
+        Connection conn = null;
+        int blocksRolled=-1;
+        boolean done=false;
+        try {
+        conn = ConnectionManager.getConnection();
+        	blocksRolled=rollbackBlocks();
+        	ps = conn.prepareStatement(RollbackPreparedStatement.update(this, manager));
+        	ps.execute();
+        	conn.commit();
+
+        	for (Player player : recievers) {
+        		player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
+        	}
+        	undoRollback = RollbackPreparedStatement.undoStatement(this, manager);
+        	done=(blocksRolled<BBSettings.maxBlocksRolledBackPerPass);
+        } catch (SQLException ex) {
+        	BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception", ex);
+        	done=true;
+        } finally {
+        	try {
+        		if (set != null)
+        			set.close();
+        		if (ps != null)
+        			ps.close();
+        		if (conn != null)
+        			conn.close();
+        	} catch (SQLException ex) {
+        		BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception (on close)");
+        	}
+        }
+        return done;
+    }
+
+
+    
+    /**
+     * Prefretch blocks that need changin'.
+     * 
+     * Should be done in a seperate thread to avoid blocking the server...
+     * @return Success
+     */
+    public boolean prepareRollback()
+    {
+    	boolean success=false;
+    	PreparedStatement ps = null;
+    	ResultSet set = null;
+    	Connection conn = null;
+    	try {
+
+    		conn = ConnectionManager.getConnection();
+    		ps = conn.prepareStatement(RollbackPreparedStatement.create(this,manager));
+    		set = ps.executeQuery();
+    		conn.commit();
+    		size=0;
+    		if (size > 0) {
+    			for (Player player : recievers) {
+    				player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
+    				String players = (rollbackAll) ? "All Players" : getSimpleString(this.players);
+    				player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + players);
+    				if (blockTypes.size() > 0) {
+    					player.sendMessage(ChatColor.BLUE + "Block Type(s): " + ChatColor.WHITE + getSimpleString(this.blockTypes));
+    				}
+    				if (time != 0) {
+    					Calendar cal = Calendar.getInstance();
+    					String DATE_FORMAT = "kk:mm:ss 'on' MMM d";
+    					SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+    					cal.setTimeInMillis(time * 1000);
+    					player.sendMessage(ChatColor.BLUE + "Since: " + ChatColor.WHITE + sdf.format(cal.getTime()));
+    				}
+    				if (radius != 0) {
+    					player.sendMessage(ChatColor.BLUE + "Radius: " + ChatColor.WHITE + radius + " blocks");
+    				}
+
+    			}
+    		}
+    		success=true;
+    	} catch (SQLException ex) {
+    		BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception", ex);
+    	} finally {
+    		try {
+    			if (set != null)
+    				set.close();
+    			if (ps != null)
+    				ps.close();
+    			if (conn != null)
+    				conn.close();
+    		} catch (SQLException ex) {
+    			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception (on close)");
+    		}
+    	}
+    	return success;
+    }
+
+
 
     private void mysqlRollback(boolean sqlite) {
         PreparedStatement ps = null;
@@ -153,20 +277,6 @@ public class Rollback {
 
     public void addTypes(ArrayList<Integer> blockTypes) {
         this.blockTypes.addAll(blockTypes);
-    }
-
-    private void rollbackBlocks() {
-        lastRollback.clear();
-        long size = 0;
-        while (listBlocks.size() > 0) {
-            BBDataBlock dataBlock = listBlocks.removeFirst();
-            if (dataBlock != null) {
-                lastRollback.addFirst(dataBlock);
-                dataBlock.rollback(server);
-                size++;
-            }
-        }
-        Stats.logRollback(size);
     }
 
     public static boolean canUndo() {
