@@ -30,7 +30,7 @@ public class TimeParser {
         int lastIndex = 0;
         int currIndex = 1;
         while (currIndex <= strTime.length()) {
-            while (Numbers.isInteger(strTime.substring(lastIndex, currIndex)) && currIndex <= strTime.length()) {
+            while (currIndex <= strTime.length() && Numbers.isInteger(strTime.substring(lastIndex, currIndex))) {
                 currIndex++;
             }
             if (currIndex - 1 == lastIndex) {
