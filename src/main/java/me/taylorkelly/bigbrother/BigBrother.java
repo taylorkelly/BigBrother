@@ -74,9 +74,6 @@ public class BigBrother extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // TODO Better startup messages
-        // TODO More verbose enabling
-
         // Stuff that was in Constructor
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
@@ -116,7 +113,6 @@ public class BigBrother extends JavaPlugin {
             Cleanser.clean();
         }
 
-
         // Initialize Listeners
         playerListener = new BBPlayerListener(this);
         blockListener = new BBBlockListener(this);
@@ -151,7 +147,7 @@ public class BigBrother extends JavaPlugin {
         DataBlockSender.initialize(getDataFolder(), worldManager);
 
         // Done!
-        BBLogging.info(name + " " + version + "initialized");
+        BBLogging.info(name + " " + version + " enabled");
     }
 
     private void updateSettings(File dataFolder) {
@@ -234,7 +230,6 @@ public class BigBrother extends JavaPlugin {
     }
 
     @Override
-    @SuppressWarnings("CallToThreadDumpStack")
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         try {
             String[] split = args;
@@ -326,7 +321,6 @@ public class BigBrother extends JavaPlugin {
                                 player.sendMessage(BigBrother.premessage + "You have no rollback to confirm.");
                             }
                         } else {
-                            // TODO Better help
                             player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb confirm");
                         }
 
@@ -339,7 +333,6 @@ public class BigBrother extends JavaPlugin {
                                 player.sendMessage(BigBrother.premessage + "You have no rollback to delete.");
                             }
                         } else {
-                            // TODO Better help
                             player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb delete");
                         }
                     } else if (split[0].equalsIgnoreCase("undo") && BBPermissions.rollback(player)) {
@@ -450,12 +443,16 @@ public class BigBrother extends JavaPlugin {
                     } else if (split[0].equalsIgnoreCase("help")) {
                         // TODO: Modular help system, prereq: modular commands
                         player.sendMessage(BigBrother.premessage + "BigBrother version " + version + " help");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb watch (name)" + ChatColor.WHITE + " - Toggles the whether BB is watching (name)");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb watched" + ChatColor.WHITE + " - Shows which users are being watched by BB");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb unwatched" + ChatColor.WHITE + " - Shows which users that are logged in are unwatched");
                         player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb stick (0|1|2)" + ChatColor.WHITE + " - Gives you a stick (1), a log you can place (2), or disables either (0).");
                         player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb here" + ChatColor.WHITE + " - See changes that took place in the area you are standing in.");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb find x y z" + ChatColor.WHITE + " - Get the history of an area at a specific coordinate");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb rollback (name1) [name2] [options]" + ChatColor.WHITE + " - A command you should study in length via our helpful online wiki.");
                         player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb undo" + ChatColor.WHITE + " - Great for fixing bad rollbacks. It's like it never happened!");
-                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " - Delete your rollback."); // TODO: Clarify what /bb delete does
-                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb rollback name1 [name2] [options]" + ChatColor.WHITE + " - A command you should study in length via our helpful online wiki.");
-                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb find x y z" + ChatColor.WHITE + ""); // TODO: Clarify /bb find docs
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb confirm" + ChatColor.WHITE + " - Confirms your rollback (if applicable).");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " - Delete your rollback (if applicable).");
                     } else {
                         return false;
                     }

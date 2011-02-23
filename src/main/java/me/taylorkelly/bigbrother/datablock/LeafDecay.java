@@ -31,14 +31,6 @@ public class LeafDecay extends BBDataBlock {
         checkGnomesLivingOnTop(block);
     }
 
-    /*
-     * TODO Remove if not used
-    public LeafDecay(String player, int x, int y, int z, int type, int data) {
-        super(player, Action.LEAF_DECAY, 0, x, y, z, type, String.valueOf(data));
-        bystanders = new ArrayList<BBDataBlock>();
-    }
-     */
-
     public static BBDataBlock create(Block block, String world) {
         // TODO Player handling
         return new LeafDecay(block, world);
