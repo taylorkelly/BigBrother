@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
+import me.taylorkelly.util.TimeParser;
 
 import org.bukkit.Server;
 
@@ -45,8 +46,13 @@ public class BBSettings {
 	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
 	public static int sendDelay;
 	public static long stickItem;
+        public static long cleanseAge;
+
+
+
 	private static ArrayList<String> watchList;
 	private static ArrayList<String> seenList;
+
 	public static String liteDb;
 
 	public static void initialize(File dataFolder) {
@@ -82,6 +88,7 @@ public class BBSettings {
 		pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
+                cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "1d12h", "The maximum age of items in the database (can be mixture of #d,h,m,s"));
 		stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");
 		restoreFire = pf.getBoolean("restoreFire", false, "Restore fire when rolling back");
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");

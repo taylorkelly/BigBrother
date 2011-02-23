@@ -114,7 +114,7 @@ public class BigBrother extends JavaPlugin {
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
 
-        // Initialize Settings
+        // Initialize Settings - Needs to come pretty much first
         BBSettings.initialize(getDataFolder());
 
         // Download dependencies...
@@ -138,6 +138,10 @@ public class BigBrother extends JavaPlugin {
             } catch (SQLException e) {
                 BigBrother.severe("Could not close connection", e);
             }
+        }
+        //Check for old records
+        if(Cleanser.needsCleaning()) {
+            Cleanser.clean();
         }
 
         // Initialize tables
