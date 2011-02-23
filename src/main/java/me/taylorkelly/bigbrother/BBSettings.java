@@ -37,8 +37,9 @@ public class BBSettings {
 	public static int defaultSearchRadius;
 	public static boolean mysql;
 	public static boolean flatLog;
-	public static int maxRollbackRadius; // Maximum rollback radius. - N3X
-	public static int maxBlocksRolledBackPerPass; // Maximum blocks rolled back per "pass".
+        //Disabled until we can get a way for it to not break rollbacks - tkelly
+	//public static int maxRollbackRadius; // Maximum rollback radius. - N3X
+	//public static int maxBlocksRolledBackPerPass; // Maximum blocks rolled back per "pass".
 	public static String mysqlUser = "root";
 	public static String mysqlPass = "root";
 	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
@@ -92,9 +93,10 @@ public class BBSettings {
 		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "DB for MySQL (if applicable)");
 		BBDataBlock.BBDATA_TABLE_MYSQL = BBDataBlock.BBDATA_TABLE_MYSQL + " ENGINE=" + pf.getString("engine", "INNODB", "Engine for the Database (INNODB is recommended)") + ";";
 
-		sendDelay = pf.getInt("sendDelay", 4, "Delay to batch send updates to database (4-5 recommended)");
-		maxRollbackRadius = pf.getInt("maxRollbackRadius", 15, "Maximum radius of rollbacks before confirmation is required.");
-		maxBlocksRolledBackPerPass=pf.getInt("maxBlocksRolledBackPerPass", 100, "Maximum blocks rolled back per \"tick\".");
+		sendDelay = pf.getInt("sendDelay", 4, "Delay in seconds to batch send updates to database (4-5 recommended)");
+                //Disabled until we can get a way to not break rollbacks
+                //maxRollbackRadius = pf.getInt("maxRollbackRadius", 15, "Maximum radius of rollbacks before confirmation is required.");
+		//maxBlocksRolledBackPerPass=pf.getInt("maxBlocksRolledBackPerPass", 100, "Maximum blocks rolled back per \"tick\".");
 		pf.save();
 	}
 

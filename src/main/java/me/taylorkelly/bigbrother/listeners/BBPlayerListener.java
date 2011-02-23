@@ -31,14 +31,14 @@ public class BBPlayerListener extends PlayerListener {
     /**
      * Only used for lag avoidance.
      */
-    @Override
-    public void onPlayerMove(PlayerMoveEvent event) {
-        plugin.processPsuedotick();
-    }
+//   @Override
+//    public void onPlayerMove(PlayerMoveEvent event) {
+//        plugin.processPsuedotick();
+//    }
 
     @Override
     public void onPlayerCommand(PlayerChatEvent event) {
-        plugin.processPsuedotick();
+        //plugin.processPsuedotick();
         Player player = event.getPlayer();
         if (BBSettings.commands && plugin.watching(player)) {
             Command dataBlock = new Command(player, event.getMessage(), player.getWorld().getName());
@@ -48,7 +48,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerJoin(PlayerEvent event) {
-        plugin.processPsuedotick();
+        //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         if (!plugin.haveSeen(player)) {
             plugin.markSeen(player);
@@ -65,7 +65,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerQuit(PlayerEvent event) {
-        plugin.processPsuedotick();
+        //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         if (BBSettings.disconnect && plugin.watching(player)) {
             Disconnect dataBlock = new Disconnect(player.getName(), player.getLocation(), player.getWorld().getName());
@@ -75,7 +75,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerTeleport(PlayerMoveEvent event) {
-        plugin.processPsuedotick();
+        //plugin.processPsuedotick();
         Location from = event.getFrom();
         Location to = event.getTo();
 
@@ -88,7 +88,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerChat(PlayerChatEvent event) {
-        plugin.processPsuedotick();
+        //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         if (BBSettings.chat && plugin.watching(player)) {
             Chat dataBlock = new Chat(player, event.getMessage(), player.getWorld().getName());
@@ -98,7 +98,7 @@ public class BBPlayerListener extends PlayerListener {
 
     @Override
     public void onPlayerItem(PlayerItemEvent event) {
-        plugin.processPsuedotick();
+        //plugin.processPsuedotick();
         if (BBSettings.blockPlace && plugin.watching(event.getPlayer()) && !event.isCancelled()) {
             int x;
             int y;

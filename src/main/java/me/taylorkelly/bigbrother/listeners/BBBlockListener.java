@@ -22,6 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockDamageLevel;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -49,7 +50,11 @@ public class BBBlockListener extends BlockListener {
                 TNTLogger.log(event.getPlayer(), event.getBlock());
             }
         }
-        if (event.getDamageLevel() == BlockDamageLevel.BROKEN && !event.isCancelled()) {
+    }
+
+    @Override
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!event.isCancelled()) {
             Player player = event.getPlayer();
             if (BBSettings.blockBreak && plugin.watching(player)) {
                 Block block = event.getBlock();

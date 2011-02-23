@@ -14,8 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
-
+ */
 package me.taylorkelly.bigbrother;
 
 import java.io.File;
@@ -67,43 +66,44 @@ public class BigBrother extends JavaPlugin {
     public String version;
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
     private Updater updater;
-	private Rollback currentRollback=null;
+    // Disabled until we can get a better way
+    //private Rollback currentRollback = null;
 
     @Override
     public void onDisable() {
         DataBlockSender.disable();
     }
-    
+
     /**
      * Log INFO-level messages with a minimum of cruft.
      * @author N3X15
      */
     public static void info(String message, Throwable e) {
-        log.log(Level.INFO, "[BBROTHER] "+message, e);
+        log.log(Level.INFO, "[BBROTHER] " + message, e);
     }
-    
+
     /**
      * Log WARNING-level messages with a minimum of cruft.
      * @author N3X15
      */
     public static void warning(String message, Throwable e) {
-        log.log(Level.WARNING, "[BBROTHER] "+message, e);
+        log.log(Level.WARNING, "[BBROTHER] " + message, e);
     }
-    
+
     /**
      * Log SEVERE-level messages with a minimum of cruft.
      * @author N3X15
      */
     public static void severe(String message, Throwable e) {
-        log.log(Level.SEVERE, "[BBROTHER] "+message, e);
+        log.log(Level.SEVERE, "[BBROTHER] " + message, e);
     }
-    
+
     /**
      * Log FINE-level messages with a minimum of cruft.
      * @author N3X15
      */
     public static void fine(String message, Throwable e) {
-        log.log(Level.FINE, "[BBROTHER] "+message, e);
+        log.log(Level.FINE, "[BBROTHER] " + message, e);
     }
 
     @Override
@@ -123,20 +123,20 @@ public class BigBrother extends JavaPlugin {
             updater.check();
             updater.update();
         } catch (Throwable e) {
-        	BigBrother.severe("Could not download dependencies", e);
+            BigBrother.severe("Could not download dependencies", e);
         }
 
         // Create Connection
         Connection conn = ConnectionManager.createConnection();
         if (conn == null) {
-        	BigBrother.severe("Could not establish SQL connection. Disabling BigBrother",null);
+            BigBrother.severe("Could not establish SQL connection. Disabling BigBrother", null);
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
             try {
                 conn.close();
             } catch (SQLException e) {
-            	BigBrother.severe("Could not close connection", e);
+                BigBrother.severe("Could not close connection", e);
             }
         }
 
@@ -191,8 +191,8 @@ public class BigBrother extends JavaPlugin {
 
     private void registerEvents() {
         // TODO Only register events that are being listened to
-    	// Movement used for lag avoidance when rolling back.
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Monitor, this);
+        // Movement used for lag avoidance when rolling back. Disabled until we can get a better way -tkelly
+        //getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Monitor, this);
@@ -224,25 +224,28 @@ public class BigBrother extends JavaPlugin {
     public boolean toggleWatch(String player) {
         return watcher.toggleWatch(player);
     }
-    
-    /**
-    * On ANY event we can get our grubby little hands on, try and process a chunk of rollbacks at a time.
-    */
-    public void processPsuedotick()
-    {
-    	// Anything in queue?
-    	if(currentRollback!=null)
-    	{
-    		// Deal with it.
-    		if(currentRollback.nextPass())
-    		{
-    			getServer().broadcastMessage(BigBrother.premessage+"Rollback complete!");
 
-    			// Now that we're all done, make room for the next one!
-    			currentRollback=null;
-    		}
-    	}
-    }
+
+    /**
+     * On ANY event we can get our grubby little hands on, try and process a chunk of rollbacks at a time.
+     */
+
+    //Disabled until we can get a better way
+//    public void processPsuedotick() {
+//        // Anything in queue?
+//        if (currentRollback != null) {
+//            // Deal with it.
+//            if (currentRollback.nextPass()) {
+//                getServer().broadcastMessage(BigBrother.premessage + "Rollback complete!");
+//
+//                // Now that we're all done, make room for the next one!
+//                currentRollback = null;
+//            }
+//        }
+//    }
+
+
+
 
     public String getWatchedPlayers() {
         return watcher.getWatchedPlayers();
@@ -320,20 +323,21 @@ public class BigBrother extends JavaPlugin {
                             Boolean passed = interpreter.interpret();
                             if (passed != null) {
                                 if (passed) {
-                                	if(currentRollback==null) {
-                                		currentRollback=interpreter.getAndInitializeRollback();
-                                	} else {
-                                		player.sendMessage(BigBrother.premessage+"Rollback already in progress, please wait for it to complete!");
-                                	}
+                                    interpreter.send(); //Readded
+                                    //if (currentRollback == null) {
+                                    //    currentRollback = interpreter.getAndInitializeRollback();
+                                    //} else {
+                                    //    player.sendMessage(BigBrother.premessage + "Rollback already in progress, please wait for it to complete!");
+                                    //}
                                 } else {
-                                	if(currentRollback!=null) {
-                                		player.sendMessage(BigBrother.premessage+"Rollback already in progress, please wait for it to complete!");
-                                	} else {
-                                		player.sendMessage(BigBrother.premessage + ChatColor.RED + "Warning: " + ChatColor.WHITE + "You are rolling back without a time or radius argument.");
-                                		player.sendMessage("Use " + ChatColor.RED + "/bb confirm" + ChatColor.WHITE + " to confirm the rollback.");
-                                		player.sendMessage("Use " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " to delete it.");
-                                		RollbackConfirmation.setRI(player, interpreter);
-                                	}
+                                    //if (currentRollback != null) {
+                                    //    player.sendMessage(BigBrother.premessage + "Rollback already in progress, please wait for it to complete!");
+                                    //} else {
+                                        player.sendMessage(BigBrother.premessage + ChatColor.RED + "Warning: " + ChatColor.WHITE + "You are rolling back without a time or radius argument.");
+                                        player.sendMessage("Use " + ChatColor.RED + "/bb confirm" + ChatColor.WHITE + " to confirm the rollback.");
+                                        player.sendMessage("Use " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " to delete it.");
+                                        RollbackConfirmation.setRI(player, interpreter);
+                                    //}
                                 }
                             }
                         } else {
@@ -344,7 +348,8 @@ public class BigBrother extends JavaPlugin {
                         if (split.length == 1) {
                             if (RollbackConfirmation.hasRI(player)) {
                                 RollbackInterpreter interpret = RollbackConfirmation.getRI(player);
-                                currentRollback=interpret.getAndInitializeRollback();
+                                interpret.send(); //Readded
+                                //currentRollback = interpret.getAndInitializeRollback();
                             } else {
                                 player.sendMessage(BigBrother.premessage + "You have no rollback to confirm.");
                             }
@@ -471,14 +476,14 @@ public class BigBrother extends JavaPlugin {
                             player.sendMessage("or " + ChatColor.RED + "/bb find <x> <y> <z> <name> <radius>");
                         }
                     } else if (split[0].equalsIgnoreCase("help")) {
-                    	// TODO: Modular help system, prereq: modular commands
-                        player.sendMessage(BigBrother.premessage + "BigBrother version "+version+" help");
-                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb stick (0|1|2)"+ChatColor.WHITE+" - Gives you a stick (1), a log you can place (2), or disables either (0).");
-                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb here"+ChatColor.WHITE+" - See changes that took place in the area you are standing in.");
-                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb undo"+ChatColor.WHITE+" - Great for fixing bad rollbacks. It's like it never happened!");
-                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb delete"+ChatColor.WHITE+" - Delete your rollback."); // TODO: Clarify what /bb delete does
-                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb rollback name1 [name2] [options]"+ChatColor.WHITE+" - A command you should study in length via our helpful online wiki.");
-                        player.sendMessage(BigBrother.premessage + " "+ChatColor.RED+"/bb find x y z"+ChatColor.WHITE+""); // TODO: Clarify /bb find docs
+                        // TODO: Modular help system, prereq: modular commands
+                        player.sendMessage(BigBrother.premessage + "BigBrother version " + version + " help");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb stick (0|1|2)" + ChatColor.WHITE + " - Gives you a stick (1), a log you can place (2), or disables either (0).");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb here" + ChatColor.WHITE + " - See changes that took place in the area you are standing in.");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb undo" + ChatColor.WHITE + " - Great for fixing bad rollbacks. It's like it never happened!");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " - Delete your rollback."); // TODO: Clarify what /bb delete does
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb rollback name1 [name2] [options]" + ChatColor.WHITE + " - A command you should study in length via our helpful online wiki.");
+                        player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb find x y z" + ChatColor.WHITE + ""); // TODO: Clarify /bb find docs
                     } else {
                         return false;
                     }
