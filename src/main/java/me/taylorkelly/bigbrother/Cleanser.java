@@ -24,7 +24,8 @@ class Cleanser {
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.createStatement();
-            stmt.executeUpdate("DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge)) + ";");
+            int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge)) + ";");
+            BigBrother.info("Cleaned out " + Integer.valueOf(amount) + " records because of age", null);
             conn.commit();
         } catch (SQLException ex) {
             BigBrother.severe("Cleanse SQL exception (by age)", ex);
@@ -50,7 +51,7 @@ class Cleanser {
         try {
             conn = ConnectionManager.getConnection();
             statement = conn.createStatement();
-            set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT 100;");
+            set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT " + Long.valueOf(BBSettings.maxRecords) + ";");
             set.afterLast();
             if (set.previous()) {
                 id = set.getInt("id");
@@ -79,7 +80,8 @@ class Cleanser {
             try {
                 conn = ConnectionManager.getConnection();
                 stmt = conn.createStatement();
-                stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
+                int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
+                BigBrother.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many", null);
                 conn.commit();
             } catch (SQLException ex) {
                 BigBrother.severe("Cleanse SQL exception (by #)", ex);
