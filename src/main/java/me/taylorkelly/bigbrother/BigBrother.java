@@ -1,5 +1,5 @@
 /*
- * BigBrother
+ * BigBrother (http://github.com/tkelly910/BigBrother)
  * Copyright (C) 2010 Taylor Kelly (tkelly), OniTux, N3X15
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,6 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -62,7 +60,6 @@ public class BigBrother extends JavaPlugin {
     private Watcher watcher;
     private Sticker sticker;
     private WorldManager worldManager;
-    public static final Logger log = Logger.getLogger("Minecraft");
     public String name;
     public String version;
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
@@ -75,40 +72,9 @@ public class BigBrother extends JavaPlugin {
         DataBlockSender.disable();
     }
 
-    /**
-     * Log INFO-level messages with a minimum of cruft.
-     * @author N3X15
-     */
-    public static void info(String message, Throwable e) {
-        log.log(Level.INFO, "[BBROTHER] " + message, e);
-    }
-
-    /**
-     * Log WARNING-level messages with a minimum of cruft.
-     * @author N3X15
-     */
-    public static void warning(String message, Throwable e) {
-        log.log(Level.WARNING, "[BBROTHER] " + message, e);
-    }
-
-    /**
-     * Log SEVERE-level messages with a minimum of cruft.
-     * @author N3X15
-     */
-    public static void severe(String message, Throwable e) {
-        log.log(Level.SEVERE, "[BBROTHER] " + message, e);
-    }
-
-    /**
-     * Log FINE-level messages with a minimum of cruft.
-     * @author N3X15
-     */
-    public static void fine(String message, Throwable e) {
-        log.log(Level.FINE, "[BBROTHER] " + message, e);
-    }
-
     @Override
     public void onEnable() {
+        // TODO Better startup messages
         // TODO More verbose enabling
 
         // Stuff that was in Constructor
@@ -124,20 +90,20 @@ public class BigBrother extends JavaPlugin {
             updater.check();
             updater.update();
         } catch (Throwable e) {
-            BigBrother.severe("Could not download dependencies", e);
+            BBLogging.severe("Could not download dependencies", e);
         }
 
         // Create Connection
         Connection conn = ConnectionManager.createConnection();
         if (conn == null) {
-            BigBrother.severe("Could not establish SQL connection. Disabling BigBrother", null);
+            BBLogging.severe("Could not establish SQL connection. Disabling BigBrother");
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
             try {
                 conn.close();
             } catch (SQLException e) {
-                BigBrother.severe("Could not close connection", e);
+                BBLogging.severe("Could not close connection", e);
             }
         }
 
@@ -186,8 +152,7 @@ public class BigBrother extends JavaPlugin {
         DataBlockSender.initialize(getDataFolder(), worldManager);
 
         // Done!
-        // TODO Not concatenate..
-        log.log(Level.INFO, name + " " + version + "initialized");
+        BBLogging.info(name + " " + version + "initialized");
     }
 
     private void updateSettings(File dataFolder) {

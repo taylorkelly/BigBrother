@@ -1,9 +1,6 @@
 package me.taylorkelly.bigbrother.datablock;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.BBLogging;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -22,6 +19,7 @@ public class DeltaChest extends BBDataBlock {
         super(player, Action.DELTA_CHEST, world, x, y, z, type, data);
     }
 
+    @Override
     public void rollback(Server server) {
         World currWorld = server.getWorld(world);
         if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
@@ -43,11 +41,11 @@ public class DeltaChest extends BBDataBlock {
                     continue;
                 }
                 int id = 0;
-                int data = 0;
+                int itemData = 0;
                 if (pieces[0].contains(":")) {
                     String[] subPieces = pieces[0].split(":");
                     id = Integer.parseInt(subPieces[0]);
-                    data = Integer.parseInt(subPieces[1]);
+                    itemData = Integer.parseInt(subPieces[1]);
                 } else {
                     id = Integer.parseInt(pieces[0]);
                 }
@@ -55,31 +53,32 @@ public class DeltaChest extends BBDataBlock {
                 ItemStack stack = inv.getItem(i);
                 if (stack == null || stack.getAmount() == 0) {
                     if (amount > 0) {
-                        ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) data);
+                        ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) itemData);
                         inv.setItem(i, newStack);
                     } else {
-                        Logger.getLogger("Minecraft").info("[BBROTHER] Chest restore conflict. Trying to remove from a empty slot");
+                        BBLogging.warning("Chest restore conflict. Trying to remove from a empty slot");
                     }
                 } else {
                     if (stack.getTypeId() != id) {
-                        Logger.getLogger("Minecraft").info("[BBROTHER] Chest restore conflict. Different types.");
+                        BBLogging.warning("Chest restore conflict. Different types.");
                     } else {
                         amount = stack.getAmount() + amount;
                         int damage = stack.getDurability();
                         if (amount < 0) {
                             inv.clear(i);
                         } else {
-                            ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) data);
+                            ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) itemData);
                             inv.setItem(i, newStack);
                         }
                     }
                 }
             }
         } else {
-            BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring chest");
+            BBLogging.warning("Error when restoring chest");
         }
     }
 
+    @Override
     public void redo(Server server) {
         World currWorld = server.getWorld(world);
         if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
@@ -101,11 +100,11 @@ public class DeltaChest extends BBDataBlock {
                     continue;
                 }
                 int id = 0;
-                int data = 0;
+                int itemData = 0;
                 if (pieces[0].contains(":")) {
                     String[] subPieces = pieces[0].split(":");
                     id = Integer.parseInt(subPieces[0]);
-                    data = Integer.parseInt(subPieces[1]);
+                    itemData = Integer.parseInt(subPieces[1]);
                 } else {
                     id = Integer.parseInt(pieces[0]);
                 }
@@ -113,28 +112,28 @@ public class DeltaChest extends BBDataBlock {
                 ItemStack stack = inv.getItem(i);
                 if (stack == null || stack.getAmount() == 0) {
                     if (amount > 0) {
-                        ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) data);
+                        ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) itemData);
                         inv.setItem(i, newStack);
                     } else {
-                        Logger.getLogger("Minecraft").info("[BBROTHER] Chest restore conflict. Trying to remove from a empty slot");
+                        BBLogging.warning("Chest restore conflict. Trying to remove from a empty slot");
                     }
                 } else {
                     if (stack.getTypeId() != id) {
-                        Logger.getLogger("Minecraft").info("[BBROTHER] Chest restore conflict. Different types.");
+                        BBLogging.warning("Chest restore conflict. Different types.");
                     } else {
                         amount = stack.getAmount() + amount;
                         int damage = stack.getDurability();
                         if (amount < 0) {
                             inv.clear(i);
                         } else {
-                            ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) data);
+                            ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) itemData);
                             inv.setItem(i, newStack);
                         }
                     }
                 }
             }
         } else {
-            BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring chest");
+            BBLogging.warning("Error when restoring chest");
         }
     }
 

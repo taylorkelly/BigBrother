@@ -13,9 +13,9 @@ public class BBPermissions {
         Plugin test = server.getPluginManager().getPlugin("Permissions");
         if (test != null) {
             permissionsEnabled = true;
-            BigBrother.info("Permissions enabled.",null);
+            BBLogging.info("Permissions enabled.");
         } else {
-            BigBrother.severe("Permissions isn't loaded, there are no restrictions.",null);
+            BBLogging.severe("Permissions isn't loaded, there are no restrictions.");
         }
     }
 

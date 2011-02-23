@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Level;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 public class WorldManager {
@@ -41,7 +40,7 @@ public class WorldManager {
             return worldMap.get(world);
         } else {
             int nextKey = 0;
-            if(worldMap.size() != 0) {
+            if(!worldMap.isEmpty()) {
                 nextKey = getMax(worldMap.values()) + 1;
             }
             saveWorld(world, nextKey);
@@ -78,7 +77,7 @@ public class WorldManager {
             conn.commit();
             return true;
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: World Insert Exception", ex);
+            BBLogging.severe("World Insert Exception", ex);
             return false;
         } finally {
             try {
@@ -89,7 +88,7 @@ public class WorldManager {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: World Insert Exception (on close)", ex);
+                BBLogging.severe("World Insert Exception (on close)", ex);
             }
         }
     }
@@ -112,7 +111,7 @@ public class WorldManager {
                 ret.put(name, index);
             }
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BIGBROTHER]: World Load Exception", ex);
+            BBLogging.severe("World Load Exception", ex);
         } finally {
             try {
                 if (statement != null) {
@@ -125,7 +124,7 @@ public class WorldManager {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BIGBROTHER]: World Load Exception (on close)", ex);
+                BBLogging.severe("World Load Exception (on close)", ex);
             }
         }
         return ret;
@@ -143,7 +142,7 @@ public class WorldManager {
             }
             return true;
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: World Table Check SQL Exception", ex);
+            BBLogging.severe("World Table Check SQL Exception", ex);
             return false;
         } finally {
             try {
@@ -154,7 +153,7 @@ public class WorldManager {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: World Table Check SQL Exception (on closing)");
+                BBLogging.severe("World Table Check SQL Exception (on closing)");
             }
         }
     }
@@ -168,7 +167,7 @@ public class WorldManager {
             st.executeUpdate(WORLD_TABLE_SQL);
             conn.commit();
         } catch (SQLException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Create World Table SQL Exception", e);
+            BBLogging.severe("Create World Table SQL Exception", e);
         } finally {
             try {
                 if (st != null) {
@@ -178,7 +177,7 @@ public class WorldManager {
                     conn.close();
                 }
             } catch (SQLException e) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Could not create the world table (on close)");
+                BBLogging.severe("Could not create the world table (on close)");
             }
         }
     }

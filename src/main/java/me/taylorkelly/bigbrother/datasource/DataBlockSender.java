@@ -13,10 +13,9 @@ import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
+import me.taylorkelly.bigbrother.BBLogging;
 
 import me.taylorkelly.bigbrother.BBSettings;
-import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -44,6 +43,8 @@ public class DataBlockSender {
         if (SENDING.size() == 0)
             return;
 
+        //TODO Threading
+
         Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
         SENDING.drainTo(collection);
 
@@ -54,7 +55,7 @@ public class DataBlockSender {
 
         if (!worked) {
             SENDING.addAll(collection);
-            BigBrother.log.log(Level.INFO, "[BBROTHER]: SQL send failed. Keeping data for later send.");
+            BBLogging.warning("SQL send failed. Keeping data for later send.");
         } else {
             Stats.logBlocks(collection.size());
         }
@@ -92,7 +93,7 @@ public class DataBlockSender {
             conn.commit();
             return true;
         } catch (SQLException ex) {
-            BigBrother.severe("Data Insert SQL Exception when sending blocks", ex);
+            BBLogging.severe("Data Insert SQL Exception when sending blocks", ex);
             return false;
         } finally {
             try {
@@ -105,7 +106,7 @@ public class DataBlockSender {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                BigBrother.severe("Data Insert SQL Exception when sending blocks (on close)", ex);
+                BBLogging.severe("Data Insert SQL Exception when sending blocks (on close)", ex);
             }
         }
     }
@@ -144,7 +145,7 @@ public class DataBlockSender {
                 fwriter.close();
             }
         } catch (IOException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception", e);
+            BBLogging.severe("Data Insert IO Exception", e);
         } finally {
             try {
                 if (bwriter != null) {
@@ -153,7 +154,7 @@ public class DataBlockSender {
                 if (fwriter != null)
                     fwriter.close();
             } catch (IOException e) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Data Insert IO Exception (on close)", e);
+                BBLogging.severe("Data Insert IO Exception (on close)", e);
             }
         }
     }
@@ -221,6 +222,7 @@ public class DataBlockSender {
             this.manager = manager;
         }
 
+        @Override
         public void run() {
             sendBlocks(dataFolder, manager);
         }

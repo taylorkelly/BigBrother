@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 
+import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
@@ -18,6 +18,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 public class Finder {
+
     private Location location;
     private int radius;
     private ArrayList<Player> players;
@@ -103,17 +104,20 @@ public class Finder {
 
             }
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
+            BBLogging.severe("Find SQL Exception", ex);
         } finally {
             try {
-                if (rs != null)
+                if (rs != null) {
                     rs.close();
-                if (ps != null)
+                }
+                if (ps != null) {
                     ps.close();
-                if (conn != null)
+                }
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
+                BBLogging.severe("Find SQL Exception (on close)");
             }
         }
     }
@@ -133,7 +137,7 @@ public class Finder {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '"  + Action.LAVA_FLOW.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
+            String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.LAVA_FLOW.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
             ps = conn.prepareStatement("SELECT action, type FROM " + BBDataBlock.BBDATA_NAME + " WHERE " + actionString
                     + " AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ?  AND z < ? AND z > ? AND player = ? AND world = ? order by date desc");
 
@@ -154,53 +158,53 @@ public class Finder {
                 int type = rs.getInt("type");
 
                 switch (action) {
-                case BLOCK_BROKEN:
-                case LEAF_DECAY:
-                    if (destructions.containsKey(type)) {
-                        destructions.put(type, destructions.get(type) + 1);
-                        size++;
-                    } else {
-                        destructions.put(type, 1);
-                        size++;
-                    }
-                    break;
-                case BLOCK_PLACED:
-                    if (creations.containsKey(type)) {
-                        creations.put(type, creations.get(type) + 1);
-                        size++;
-                    } else {
-                        creations.put(type, 1);
-                        size++;
-                    }
-                    break;
-                case TNT_EXPLOSION:
-                case CREEPER_EXPLOSION:
-                case MISC_EXPLOSION:
-                    if (explosions.containsKey(type)) {
-                        explosions.put(type, explosions.get(type) + 1);
-                        size++;
-                    } else {
-                        explosions.put(type, 1);
-                        size++;
-                    }
-                case BLOCK_BURN:
-                    if (burns.containsKey(type)) {
-                        burns.put(type, burns.get(type) + 1);
-                        size++;
-                    } else {
-                        burns.put(type, 1);
-                        size++;
-                    }
-                    break;
-                case LAVA_FLOW:
-                    if (creations.containsKey(type)) {
-                        creations.put(type, creations.get(type) + 1);
-                        size++;
-                    } else {
-                        creations.put(type, 1);
-                        size++;
-                    }
-                    break;
+                    case BLOCK_BROKEN:
+                    case LEAF_DECAY:
+                        if (destructions.containsKey(type)) {
+                            destructions.put(type, destructions.get(type) + 1);
+                            size++;
+                        } else {
+                            destructions.put(type, 1);
+                            size++;
+                        }
+                        break;
+                    case BLOCK_PLACED:
+                        if (creations.containsKey(type)) {
+                            creations.put(type, creations.get(type) + 1);
+                            size++;
+                        } else {
+                            creations.put(type, 1);
+                            size++;
+                        }
+                        break;
+                    case TNT_EXPLOSION:
+                    case CREEPER_EXPLOSION:
+                    case MISC_EXPLOSION:
+                        if (explosions.containsKey(type)) {
+                            explosions.put(type, explosions.get(type) + 1);
+                            size++;
+                        } else {
+                            explosions.put(type, 1);
+                            size++;
+                        }
+                    case BLOCK_BURN:
+                        if (burns.containsKey(type)) {
+                            burns.put(type, burns.get(type) + 1);
+                            size++;
+                        } else {
+                            burns.put(type, 1);
+                            size++;
+                        }
+                        break;
+                    case LAVA_FLOW:
+                        if (creations.containsKey(type)) {
+                            creations.put(type, creations.get(type) + 1);
+                            size++;
+                        } else {
+                            creations.put(type, 1);
+                            size++;
+                        }
+                        break;
                 }
 
             }
@@ -215,8 +219,9 @@ public class Finder {
                     creationList.append(entry.getValue());
                     creationList.append("), ");
                 }
-                if (creationList.toString().contains(","))
+                if (creationList.toString().contains(",")) {
                     creationList.delete(creationList.lastIndexOf(","), creationList.length());
+                }
                 StringBuilder brokenList = new StringBuilder();
                 // brokenList.append(Color.RED);
                 brokenList.append("Broken Blocks: ");
@@ -227,8 +232,9 @@ public class Finder {
                     brokenList.append(entry.getValue());
                     brokenList.append("), ");
                 }
-                if (brokenList.toString().contains(","))
+                if (brokenList.toString().contains(",")) {
                     brokenList.delete(brokenList.lastIndexOf(","), brokenList.length());
+                }
                 StringBuilder explodeList = new StringBuilder();
                 // brokenList.append(Color.RED);
                 explodeList.append("Exploded Blocks: ");
@@ -239,8 +245,9 @@ public class Finder {
                     explodeList.append(entry.getValue());
                     explodeList.append("), ");
                 }
-                if (explodeList.toString().contains(","))
+                if (explodeList.toString().contains(",")) {
                     explodeList.delete(explodeList.lastIndexOf(","), explodeList.length());
+                }
 
                 StringBuilder burnList = new StringBuilder();
                 // brokenList.append(Color.RED);
@@ -252,18 +259,23 @@ public class Finder {
                     burnList.append(entry.getValue());
                     burnList.append("), ");
                 }
-                if (burnList.toString().contains(","))
+                if (burnList.toString().contains(",")) {
                     burnList.delete(burnList.lastIndexOf(","), burnList.length());
+                }
                 for (Player player : players) {
                     player.sendMessage(BigBrother.premessage + playerName + " has made " + size + " modifications");
-                    if (creations.entrySet().size() > 0)
+                    if (creations.entrySet().size() > 0) {
                         player.sendMessage(creationList.toString());
-                    if (destructions.entrySet().size() > 0)
+                    }
+                    if (destructions.entrySet().size() > 0) {
                         player.sendMessage(brokenList.toString());
-                    if (explosions.entrySet().size() > 0)
+                    }
+                    if (explosions.entrySet().size() > 0) {
                         player.sendMessage(explodeList.toString());
-                    if (burns.entrySet().size() > 0)
+                    }
+                    if (burns.entrySet().size() > 0) {
                         player.sendMessage(burnList.toString());
+                    }
                 }
             } else {
                 for (Player player : players) {
@@ -272,17 +284,20 @@ public class Finder {
 
             }
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
+            BBLogging.severe("Find SQL Exception", ex);
         } finally {
             try {
-                if (rs != null)
+                if (rs != null) {
                     rs.close();
-                if (ps != null)
+                }
+                if (ps != null) {
                     ps.close();
-                if (conn != null)
+                }
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
+                BBLogging.severe("Find SQL Exception (on close)");
             }
         }
     }

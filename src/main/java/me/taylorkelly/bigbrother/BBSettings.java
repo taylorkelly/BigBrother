@@ -130,9 +130,9 @@ public class BBSettings {
 				watchList.add(player);
 			}
 		} catch (FileNotFoundException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Cannot read file " + file.getName());
+			BBLogging.severe("Cannot read file " + file.getName());
 		} catch (IOException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName() + "");
+			BBLogging.severe("IO Exception with file " + file.getName());
 		}
 
 		file = new File(dataFolder, "SeenPlayers.txt");
@@ -152,9 +152,9 @@ public class BBSettings {
 				seenList.add(player);
 			}
 		} catch (FileNotFoundException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Cannot read file " + file.getName());
+			BBLogging.severe("Cannot read file " + file.getName());
 		} catch (IOException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName() + "");
+			BBLogging.severe("IO Exception with file " + file.getName());
 		}
 
 	}

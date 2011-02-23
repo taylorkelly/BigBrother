@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -37,7 +36,7 @@ public class Stats {
             //System.out.println("rollback: " + num);
             return num;
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
+            BBLogging.severe("Find SQL Exception", ex);
             return 0;
         } finally {
             try {
@@ -48,7 +47,7 @@ public class Stats {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
+                BBLogging.severe("Find SQL Exception (on close)");
             }
         }
     }
@@ -67,7 +66,7 @@ public class Stats {
             //System.out.println("num: " + num);
             return num;
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception", ex);
+            BBLogging.severe("Find SQL Exception", ex);
             return 0;
         } finally {
             try {
@@ -78,7 +77,7 @@ public class Stats {
                 if (conn != null)
                     conn.close();
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Find SQL Exception (on close)");
+                BBLogging.severe("Find SQL Exception (on close)");
             }
         }
     }

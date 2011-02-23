@@ -4,11 +4,9 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
-import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 public class Fix14 extends Fix {
@@ -25,10 +23,10 @@ public class Fix14 extends Fix {
             "INSERT INTO bbdata SELECT id, date, player, action, world, x, y, z, type, data, rbacked FROM bbdata_backup;", "DROP TABLE bbdata_backup;" };
     public static final String UPDATE_MYSQL = "ALTER TABLE bbdata MODIFY y tinyint UNSIGNED";
 
+    @Override
     public void apply() {
         if (needsUpdate(version)) {
-            Logger log = Logger.getLogger("Minecraft");
-            log.info("[BBROTHER] Updating table for 1.4");
+            BBLogging.info("Updating table for 1.4");
             boolean sqlite = !BBSettings.mysql;
 
             if (updateTable(sqlite)) {
@@ -53,14 +51,14 @@ public class Fix14 extends Fix {
             conn.commit();
             return true;
         } catch (SQLException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.4 Fail " + ((sqlite) ? " sqlite" : " mysql"), e);
+            BBLogging.severe("Update Table 1.4 Fail " + ((sqlite) ? " sqlite" : " mysql"), e);
             return false;
         } finally {
             try {
                 if (st != null)
                     st.close();
             } catch (SQLException e) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Update Table 1.4 Fail (on close)");
+                BBLogging.severe("Update Table 1.4 Fail (on close)");
             }
         }
     }

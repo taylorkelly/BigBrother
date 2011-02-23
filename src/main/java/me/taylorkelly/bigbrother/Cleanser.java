@@ -27,10 +27,10 @@ class Cleanser {
             conn = ConnectionManager.getConnection();
             stmt = conn.createStatement();
             int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge)) + ";");
-            BigBrother.info("Cleaned out " + Integer.valueOf(amount) + " records because of age", null);
+            BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because of age");
             conn.commit();
         } catch (SQLException ex) {
-            BigBrother.severe("Cleanse SQL exception (by age)", ex);
+            BBLogging.severe("Cleanse SQL exception (by age)", ex);
         } finally {
             try {
                 if (stmt != null) {
@@ -40,7 +40,7 @@ class Cleanser {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.severe("Cleanse SQL exception (by age) (on close)", ex);
+                BBLogging.severe("Cleanse SQL exception (by age) (on close)", ex);
             }
         }
     }
@@ -59,7 +59,7 @@ class Cleanser {
                 id = set.getInt("id");
             }
         } catch (SQLException ex) {
-            BigBrother.severe("Cleanse SQL Exception (on # inspect)", ex);
+            BBLogging.severe("Cleanse SQL Exception (on # inspect)", ex);
         } finally {
             try {
                 if (statement != null) {
@@ -72,7 +72,7 @@ class Cleanser {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
+                BBLogging.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
             }
         }
 
@@ -83,10 +83,10 @@ class Cleanser {
                 conn = ConnectionManager.getConnection();
                 stmt = conn.createStatement();
                 int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
-                BigBrother.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many", null);
+                BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
                 conn.commit();
             } catch (SQLException ex) {
-                BigBrother.severe("Cleanse SQL exception (by #)", ex);
+                BBLogging.severe("Cleanse SQL exception (by #)", ex);
             } finally {
                 try {
                     if (stmt != null) {
@@ -96,7 +96,7 @@ class Cleanser {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    BigBrother.severe("Cleanse SQL exception (by #) (on close)", ex);
+                    BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
                 }
             }
         }
@@ -117,7 +117,7 @@ class Cleanser {
             player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because of age");
             conn.commit();
         } catch (SQLException ex) {
-            BigBrother.severe("Cleanse SQL exception (by age)", ex);
+            BBLogging.severe("Cleanse SQL exception (by age)", ex);
         } finally {
             try {
                 if (stmt != null) {
@@ -127,7 +127,7 @@ class Cleanser {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.severe("Cleanse SQL exception (by age) (on close)", ex);
+                BBLogging.severe("Cleanse SQL exception (by age) (on close)", ex);
             }
         }
     }
@@ -146,7 +146,7 @@ class Cleanser {
                 id = set.getInt("id");
             }
         } catch (SQLException ex) {
-            BigBrother.severe("Cleanse SQL Exception (on # inspect)", ex);
+            BBLogging.severe("Cleanse SQL Exception (on # inspect)", ex);
         } finally {
             try {
                 if (statement != null) {
@@ -159,7 +159,7 @@ class Cleanser {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
+                BBLogging.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
             }
         }
 
@@ -173,7 +173,7 @@ class Cleanser {
                 player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
                 conn.commit();
             } catch (SQLException ex) {
-                BigBrother.severe("Cleanse SQL exception (by #)", ex);
+                BBLogging.severe("Cleanse SQL exception (by #)", ex);
             } finally {
                 try {
                     if (stmt != null) {
@@ -183,7 +183,7 @@ class Cleanser {
                         conn.close();
                     }
                 } catch (SQLException ex) {
-                    BigBrother.severe("Cleanse SQL exception (by #) (on close)", ex);
+                    BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
                 }
             }
         }

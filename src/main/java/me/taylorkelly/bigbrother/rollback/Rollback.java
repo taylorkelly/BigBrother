@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.logging.Level;
+import me.taylorkelly.bigbrother.BBLogging;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
@@ -193,15 +194,15 @@ public class Rollback {
             set = ps.executeQuery();
             conn.commit();
 
-            int size = 0;
+            int rollbackSize = 0;
             while (set.next()) {
                 listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), Action.values()[set.getInt("action")], set.getString("world"), set.getInt("x"),
                         set.getInt("y"), set.getInt("z"), set.getInt("type"), set.getString("data")));
-                size++;
+                rollbackSize++;
             }
-            if (size > 0) {
+            if (rollbackSize > 0) {
                 for (Player player : recievers) {
-                    player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
+                    player.sendMessage(BigBrother.premessage + "Rolling back " + rollbackSize + " edits.");
                     String playersString = (rollbackAll) ? "All Players" : getSimpleString(this.players);
                     player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + playersString);
                     if (blockTypes.size() > 0) {
@@ -231,7 +232,7 @@ public class Rollback {
                     }
                     undoRollback = RollbackPreparedStatement.undoStatement(this, manager);
                 } catch (SQLException ex) {
-                    BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception", ex);
+                    BBLogging.severe("Rollback edit SQL Exception", ex);
                 }
             } else {
                 for (Player player : recievers) {
@@ -239,7 +240,7 @@ public class Rollback {
                 }
             }
         } catch (SQLException ex) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception", ex);
+            BBLogging.severe("Rollback get SQL Exception", ex);
         } finally {
             try {
                 if (set != null) {
@@ -252,7 +253,7 @@ public class Rollback {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception (on close)");
+                BBLogging.severe("Rollback get SQL Exception (on close)");
             }
         }
     }
@@ -285,18 +286,19 @@ public class Rollback {
     }
 
     private void rollbackBlocks() {
+        //TODO Threading
         lastRollback.clear();
-        long size = 0;
+        long rollbackSize = 0;
         while (listBlocks.size() > 0) {
             BBDataBlock dataBlock = listBlocks.removeFirst();
             if (dataBlock != null) {
                 lastRollback.addFirst(dataBlock);
                 dataBlock.rollback(server);
-                size++;
+                rollbackSize++;
             }
         }
 
-        Stats.logRollback(size);
+        Stats.logRollback(rollbackSize);
 
     }
 
@@ -337,7 +339,7 @@ public class Rollback {
                 undoRollback = null;
                 player.sendMessage(ChatColor.AQUA + "Successfully undid a rollback of " + i + " edits");
             } catch (SQLException ex) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback undo SQL Exception", ex);
+                BBLogging.severe("Rollback undo SQL Exception", ex);
             } finally {
                 try {
                     if (set != null) {
@@ -347,7 +349,7 @@ public class Rollback {
                         ps.close();
                     }
                 } catch (SQLException ex) {
-                    BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback undo (on close)");
+                    BBLogging.severe("Rollback undo (on close)");
                 }
             }
         }

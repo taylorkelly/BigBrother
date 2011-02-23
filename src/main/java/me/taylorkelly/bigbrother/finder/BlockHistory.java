@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import me.taylorkelly.bigbrother.BBLogging;
 
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
@@ -52,7 +53,7 @@ public class BlockHistory {
                 blockList.add(newBlock);
             }
         } catch (SQLException ex) {
-            BigBrother.severe("Find SQL Exception", ex);
+            BBLogging.severe("Find SQL Exception", ex);
         } finally {
             try {
                 if (rs != null) {
@@ -65,7 +66,7 @@ public class BlockHistory {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                BigBrother.severe("Find SQL Exception (on close)", ex);
+                BBLogging.severe("Find SQL Exception (on close)", ex);
             }
         }
         return blockList;

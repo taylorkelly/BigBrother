@@ -104,7 +104,7 @@ public class Watcher {
 			}
 			bwriter.flush();
 		} catch (IOException e) {
-			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception (" + fileName + ")");
+			BBLogging.severe("IO Exception (" + fileName + ")");
 		} finally {
 			try {
 				if (bwriter != null) {
@@ -114,7 +114,7 @@ public class Watcher {
 				if (fwriter != null)
 					fwriter.close();
 			} catch (IOException e) {
-				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception (on close) (" + fileName + ")");
+				BBLogging.severe("IO Exception (on close) (" + fileName + ")");
 			}
 		}
 	}

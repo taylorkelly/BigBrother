@@ -1,8 +1,6 @@
 package me.taylorkelly.bigbrother.datablock;
 
-import java.util.logging.Level;
-
-import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.BBLogging;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -35,6 +33,7 @@ public class DestroySignText extends BBDataBlock {
         super(player, Action.DESTROY_SIGN_TEXT, world, x, y, z, type, data);
     }
 
+    @Override
     public void rollback(Server server) {
         World currWorld = server.getWorld(world);
         if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
@@ -51,10 +50,11 @@ public class DestroySignText extends BBDataBlock {
                 sign.setLine(i, lines[i]);
             }
         } else {
-            BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring sign");
+            BBLogging.warning("Error when restoring sign");
         }
     }
 
+    @Override
     public void redo(Server server) {
         World currWorld = server.getWorld(world);
         if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
@@ -68,7 +68,7 @@ public class DestroySignText extends BBDataBlock {
                 sign.setLine(i, "");
             }
         } else {
-            BigBrother.log.log(Level.WARNING, "[BBROTHER]: Error when restoring sign");
+            BBLogging.warning("Error when restoring sign");
         }
     }
 }

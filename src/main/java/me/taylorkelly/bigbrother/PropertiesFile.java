@@ -44,9 +44,9 @@ public class PropertiesFile {
                 map.put(key, new PropertiesEntry(value, comment));
             }
         } catch (FileNotFoundException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Cannot read file " + file.getName());
+            BBLogging.severe("Cannot read file " + file.getName());
         } catch (IOException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Cannot create file " + file.getName());
+            BBLogging.severe("Cannot create file " + file.getName());
         }
     }
 
@@ -75,8 +75,8 @@ public class PropertiesFile {
             try {
                 return Integer.parseInt(map.get(key).value);
             } catch (Exception e) {
-                BigBrother.log.log(Level.WARNING, "[BBROTHER]: Trying to get Integer from " + key + ": " + map.get(key).value);
-                return 0;
+                BBLogging.warning("Trying to get Integer from " + key + ": " + map.get(key).value);
+                return defaultValue;
             }
         } else {
             map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
@@ -90,8 +90,8 @@ public class PropertiesFile {
             try {
                 return Long.parseLong(map.get(key).value);
             } catch (Exception e) {
-                BigBrother.log.log(Level.WARNING, "[BBROTHER]: Trying to get Long from " + key + ": " + map.get(key).value);
-                return 0;
+                BBLogging.warning("Trying to get Long from " + key + ": " + map.get(key).value);
+                return defaultValue;
             }
         } else {
             map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
@@ -105,8 +105,8 @@ public class PropertiesFile {
             try {
                 return Double.parseDouble(map.get(key).value);
             } catch (Exception e) {
-                BigBrother.log.log(Level.WARNING, "[BBROTHER]: Trying to get Double from " + key + ": " + map.get(key).value);
-                return 0;
+                BBLogging.warning("Trying to get Double from " + key + ": " + map.get(key).value);
+                return defaultValue;
             }
         } else {
             map.put(key, new PropertiesEntry(defaultValue.toString(), defaultComment));
@@ -149,7 +149,7 @@ public class PropertiesFile {
             }
             bwriter.flush();
         } catch (IOException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName());
+            BBLogging.severe("IO Exception with file " + file.getName());
         } finally {
             try {
                 if (bwriter != null) {
@@ -160,7 +160,7 @@ public class PropertiesFile {
                     fwriter.close();
                 }
             } catch (IOException e) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName() + " (on close)");
+                BBLogging.severe("IO Exception with file " + file.getName() + " (on close)");
             }
         }
 

@@ -6,9 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Level;
-
-import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.BBLogging;
 
 public abstract class Fix {
     protected int currVersion = -1;
@@ -61,7 +59,7 @@ public abstract class Fix {
             bwriter.write(version + "");
             bwriter.flush();
         } catch (IOException e) {
-            BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName());
+            BBLogging.severe("IO Exception with file " + file.getName());
         } finally {
             try {
                 if (bwriter != null) {
@@ -72,7 +70,7 @@ public abstract class Fix {
                     fwriter.close();
                 }
             } catch (IOException e) {
-                BigBrother.log.log(Level.SEVERE, "[BBROTHER]: IO Exception with file " + file.getName() + " (on close)");
+                BBLogging.severe("IO Exception with file " + file.getName() + " (on close)");
             }
         }
     }
