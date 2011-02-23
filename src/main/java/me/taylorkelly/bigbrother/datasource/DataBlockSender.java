@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
+import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.BBLogging;
 
 import me.taylorkelly.bigbrother.BBSettings;
@@ -67,7 +68,7 @@ public class DataBlockSender {
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("INSERT INTO " + BBDataBlock.BBDATA_NAME
+            ps = conn.prepareStatement("INSERT INTO " + BBDataTable.BBDATA_NAME
                     + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);

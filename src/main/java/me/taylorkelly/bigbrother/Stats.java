@@ -28,12 +28,11 @@ public class Stats {
         Connection conn = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT count(*) AS `num` FROM " + BBDataBlock.BBDATA_NAME + " WHERE rbacked = '1';");
+            ps = conn.prepareStatement("SELECT count(*) AS `num` FROM " + BBDataTable.BBDATA_NAME + " WHERE rbacked = '1';");
             rs = ps.executeQuery();
             conn.commit();
             rs.next();
             long num = rs.getLong("num");
-            //System.out.println("rollback: " + num);
             return num;
         } catch (SQLException ex) {
             BBLogging.severe("Find SQL Exception", ex);
@@ -58,12 +57,11 @@ public class Stats {
         Connection conn = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT count(*) AS `num` FROM " + BBDataBlock.BBDATA_NAME + " WHERE rbacked = '0';");
+            ps = conn.prepareStatement("SELECT count(*) AS `num` FROM " + BBDataTable.BBDATA_NAME + " WHERE rbacked = '0';");
             rs = ps.executeQuery();
             conn.commit();
             rs.next();
             long num = rs.getLong("num");
-            //System.out.println("num: " + num);
             return num;
         } catch (SQLException ex) {
             BBLogging.severe("Find SQL Exception", ex);

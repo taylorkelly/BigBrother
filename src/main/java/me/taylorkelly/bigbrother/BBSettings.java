@@ -103,7 +103,7 @@ public class BBSettings {
 		mysqlUser = pf.getString("mysqlUser", "root", "Username for MySQL db (if applicable)");
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL db (if applicable)");
 		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "DB for MySQL (if applicable)");
-		BBDataBlock.BBDATA_TABLE_MYSQL = BBDataBlock.BBDATA_TABLE_MYSQL + " ENGINE=" + pf.getString("engine", "INNODB", "Engine for the Database (INNODB is recommended)") + ";";
+		BBDataTable.BBDATA_TABLE_MYSQL = BBDataTable.BBDATA_TABLE_MYSQL + " ENGINE=" + pf.getString("engine", "INNODB", "Engine for the Database (INNODB is recommended)") + ";";
 
 		sendDelay = pf.getInt("sendDelay", 4, "Delay in seconds to batch send updates to database (4-5 recommended)");
                 //Disabled until we can get a way to not break rollbacks

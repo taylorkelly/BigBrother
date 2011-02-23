@@ -1,9 +1,9 @@
 package me.taylorkelly.bigbrother.rollback;
 
 import java.util.ArrayList;
+import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.WorldManager;
 
-import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 
 public class RollbackPreparedStatement {
@@ -12,7 +12,7 @@ public class RollbackPreparedStatement {
         // TODO More variable prepared statements
         StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
         statement.append(" FROM ");
-        statement.append(BBDataBlock.BBDATA_NAME);
+        statement.append(BBDataTable.BBDATA_NAME);
         statement.append(" INNER JOIN bbworlds ON bbworlds.id = bbdata.world");
         statement.append(" WHERE ");
         statement.append(getActionString());
@@ -131,7 +131,7 @@ public class RollbackPreparedStatement {
 
     public static String update(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(BBDataBlock.BBDATA_NAME);
+        statement.append(BBDataTable.BBDATA_NAME);
         statement.append(" SET rbacked = '1'");
         statement.append(" WHERE ");
         statement.append(getActionString());
@@ -197,7 +197,7 @@ public class RollbackPreparedStatement {
 
     public static String undoStatement(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(BBDataBlock.BBDATA_NAME);
+        statement.append(BBDataTable.BBDATA_NAME);
         statement.append(" SET rbacked = '0'");
         statement.append(" WHERE ");
         statement.append(getActionString());

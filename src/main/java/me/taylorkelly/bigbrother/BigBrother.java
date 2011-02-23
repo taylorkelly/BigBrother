@@ -108,8 +108,7 @@ public class BigBrother extends JavaPlugin {
         }
 
         // Initialize tables
-        // TODO Move this out of BBDataBlock
-        BBDataBlock.initialize();
+        BBDataTable.initialize();
         worldManager = new WorldManager();
 
         //Check for old records
