@@ -123,6 +123,8 @@ public class RollbackPreparedStatement {
         ret.append(Action.MISC_EXPLOSION.ordinal());
         ret.append("','");
         ret.append(Action.BLOCK_BURN.ordinal());
+        ret.append("','");
+        ret.append(Action.LAVA_FLOW.ordinal());
         ret.append("')");
         return ret;
     }
