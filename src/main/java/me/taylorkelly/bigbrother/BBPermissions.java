@@ -47,4 +47,12 @@ public class BBPermissions {
             return player.isOp();
         }
     }
+
+    public static boolean cleanse(Player player) {
+        if (permissionsEnabled) {
+            return permission(player, "bb.admin.cleanse");
+        } else {
+            return player.isOp();
+        }
+    }
 }

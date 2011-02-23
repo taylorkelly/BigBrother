@@ -141,7 +141,7 @@ public class BigBrother extends JavaPlugin {
             }
         }
         //Check for old records
-        if(Cleanser.needsCleaning()) {
+        if (Cleanser.needsCleaning()) {
             Cleanser.clean();
         }
 
@@ -231,11 +231,9 @@ public class BigBrother extends JavaPlugin {
         return watcher.toggleWatch(player);
     }
 
-
     /**
      * On ANY event we can get our grubby little hands on, try and process a chunk of rollbacks at a time.
      */
-
     //Disabled until we can get a better way
 //    public void processPsuedotick() {
 //        // Anything in queue?
@@ -249,10 +247,6 @@ public class BigBrother extends JavaPlugin {
 //            }
 //        }
 //    }
-
-
-
-
     public String getWatchedPlayers() {
         return watcher.getWatchedPlayers();
     }
@@ -323,6 +317,12 @@ public class BigBrother extends JavaPlugin {
                             player.sendMessage(BigBrother.premessage + "Currently not watching:");
                             player.sendMessage(unwatchedPlayers);
                         }
+                    } else if (split[0].equalsIgnoreCase("cleanse") && BBPermissions.cleanse(player)) {
+                        if (Cleanser.needsCleaning()) {
+                            Cleanser.clean(player);
+                        } else {
+                            player.sendMessage(ChatColor.RED + "No need to cleanse. Check your settings.");
+                        }
                     } else if (split[0].equalsIgnoreCase("rollback") && BBPermissions.rollback(player)) {
                         if (split.length > 1) {
                             RollbackInterpreter interpreter = new RollbackInterpreter(player, split, getServer(), worldManager);
@@ -339,10 +339,10 @@ public class BigBrother extends JavaPlugin {
                                     //if (currentRollback != null) {
                                     //    player.sendMessage(BigBrother.premessage + "Rollback already in progress, please wait for it to complete!");
                                     //} else {
-                                        player.sendMessage(BigBrother.premessage + ChatColor.RED + "Warning: " + ChatColor.WHITE + "You are rolling back without a time or radius argument.");
-                                        player.sendMessage("Use " + ChatColor.RED + "/bb confirm" + ChatColor.WHITE + " to confirm the rollback.");
-                                        player.sendMessage("Use " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " to delete it.");
-                                        RollbackConfirmation.setRI(player, interpreter);
+                                    player.sendMessage(BigBrother.premessage + ChatColor.RED + "Warning: " + ChatColor.WHITE + "You are rolling back without a time or radius argument.");
+                                    player.sendMessage("Use " + ChatColor.RED + "/bb confirm" + ChatColor.WHITE + " to confirm the rollback.");
+                                    player.sendMessage("Use " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " to delete it.");
+                                    RollbackConfirmation.setRI(player, interpreter);
                                     //}
                                 }
                             }

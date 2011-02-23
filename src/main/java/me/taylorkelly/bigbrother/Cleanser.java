@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.util.Time;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 class Cleanser {
 
@@ -82,6 +84,93 @@ class Cleanser {
                 stmt = conn.createStatement();
                 int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
                 BigBrother.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many", null);
+                conn.commit();
+            } catch (SQLException ex) {
+                BigBrother.severe("Cleanse SQL exception (by #)", ex);
+            } finally {
+                try {
+                    if (stmt != null) {
+                        stmt.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    BigBrother.severe("Cleanse SQL exception (by #) (on close)", ex);
+                }
+            }
+        }
+    }
+
+    static void clean(Player player) {
+        cleanByAge(player);
+        cleanByNumber(player);
+    }
+
+    private static void cleanByAge(Player player) {
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.createStatement();
+            int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge)) + ";");
+            player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because of age");
+            conn.commit();
+        } catch (SQLException ex) {
+            BigBrother.severe("Cleanse SQL exception (by age)", ex);
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                BigBrother.severe("Cleanse SQL exception (by age) (on close)", ex);
+            }
+        }
+    }
+
+    private static void cleanByNumber(Player player) {
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet set = null;
+        int id = -1;
+        try {
+            conn = ConnectionManager.getConnection();
+            statement = conn.createStatement();
+            set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT " + Long.valueOf(BBSettings.maxRecords) + ";");
+            set.afterLast();
+            if (set.previous()) {
+                id = set.getInt("id");
+            }
+        } catch (SQLException ex) {
+            BigBrother.severe("Cleanse SQL Exception (on # inspect)", ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (set != null) {
+                    set.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                BigBrother.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
+            }
+        }
+
+        if (id != -1) {
+            conn = null;
+            Statement stmt = null;
+            try {
+                conn = ConnectionManager.getConnection();
+                stmt = conn.createStatement();
+                int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
+                player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
                 conn.commit();
             } catch (SQLException ex) {
                 BigBrother.severe("Cleanse SQL exception (by #)", ex);
