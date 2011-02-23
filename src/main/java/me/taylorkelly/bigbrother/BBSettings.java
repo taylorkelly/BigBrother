@@ -47,6 +47,7 @@ public class BBSettings {
 	public static int sendDelay;
 	public static long stickItem;
         public static long cleanseAge;
+        public static long maxRecords;
 
 
 
@@ -88,8 +89,9 @@ public class BBSettings {
 		pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
-                cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "1d12h", "The maximum age of items in the database (can be mixture of #d,h,m,s"));
-		stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");
+                cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "1d12h", "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
+                maxRecords = pf.getLong("maxRecords", 10000000l, "The maximum number of records that you want in your database (-1 to disable)");
+                stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");
 		restoreFire = pf.getBoolean("restoreFire", false, "Restore fire when rolling back");
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
 		defaultSearchRadius = pf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind");
