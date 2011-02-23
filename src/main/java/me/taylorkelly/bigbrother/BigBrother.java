@@ -140,15 +140,17 @@ public class BigBrother extends JavaPlugin {
                 BigBrother.severe("Could not close connection", e);
             }
         }
-        //Check for old records
-        if (Cleanser.needsCleaning()) {
-            Cleanser.clean();
-        }
 
         // Initialize tables
         // TODO Move this out of BBDataBlock
         BBDataBlock.initialize();
         worldManager = new WorldManager();
+
+        //Check for old records
+        if (Cleanser.needsCleaning()) {
+            Cleanser.clean();
+        }
+
 
         // Initialize Listeners
         playerListener = new BBPlayerListener(this);

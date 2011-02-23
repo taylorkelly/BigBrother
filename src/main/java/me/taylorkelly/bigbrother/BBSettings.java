@@ -66,6 +66,9 @@ public class BBSettings {
 	}
 
 	private static void loadPropertiesFiles(File dataFolder) {
+                if(!dataFolder.exists()) {
+                    dataFolder.mkdirs();
+                }
 		//TODO: Use Configuration once it's finished.
 		PropertiesFile pf = new PropertiesFile(new File(dataFolder, "watching.properties"));
 		blockBreak = pf.getBoolean("blockBreak", true, "Watch when players break blocks");
