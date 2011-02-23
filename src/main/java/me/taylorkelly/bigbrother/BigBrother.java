@@ -39,6 +39,7 @@ import me.taylorkelly.bigbrother.listeners.BBPlayerListener;
 import me.taylorkelly.bigbrother.rollback.Rollback;
 import me.taylorkelly.bigbrother.rollback.RollbackConfirmation;
 import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
+import me.taylorkelly.util.Numbers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -392,7 +393,7 @@ public class BigBrother extends JavaPlugin {
                             sticker.setMode(player, 1);
                             player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
                             player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
-                        } else if (split.length == 2 && isInteger(split[1])) {
+                        } else if (split.length == 2 && Numbers.isInteger(split[1])) {
                             sticker.setMode(player, Integer.parseInt(split[1]));
                             if (Integer.parseInt(split[1]) > 0) {
                                 player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
@@ -406,7 +407,7 @@ public class BigBrother extends JavaPlugin {
                             Finder finder = new Finder(player.getLocation(), getServer().getWorlds(), worldManager);
                             finder.addReciever(player);
                             finder.find();
-                        } else if (isNumber(split[1]) && split.length == 2) {
+                        } else if (Numbers.isNumber(split[1]) && split.length == 2) {
                             Finder finder = new Finder(player.getLocation(), getServer().getWorlds(), worldManager);
                             finder.setRadius(Double.parseDouble(split[1]));
                             finder.addReciever(player);
@@ -420,7 +421,7 @@ public class BigBrother extends JavaPlugin {
                                 findee = targets.get(0);
                             }
                             finder.find((findee == null) ? split[1] : findee.getName());
-                        } else if (isNumber(split[2]) && split.length == 3) {
+                        } else if (Numbers.isNumber(split[2]) && split.length == 3) {
                             Finder finder = new Finder(player.getLocation(), getServer().getWorlds(), worldManager);
                             finder.setRadius(Double.parseDouble(split[2]));
                             finder.addReciever(player);
@@ -437,20 +438,20 @@ public class BigBrother extends JavaPlugin {
                             player.sendMessage("or " + ChatColor.RED + "/bb here <name> <radius>");
                         }
                     } else if (split[0].equalsIgnoreCase("find") && BBPermissions.info(player)) {
-                        if (split.length == 4 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3])) {
+                        if (split.length == 4 && Numbers.isNumber(split[1]) && Numbers.isNumber(split[2]) && Numbers.isNumber(split[3])) {
                             World currentWorld = player.getWorld();
                             Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
                             Finder finder = new Finder(loc, getServer().getWorlds(), worldManager);
                             finder.addReciever(player);
                             finder.find();
-                        } else if (split.length == 5 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[4])) {
+                        } else if (split.length == 5 && Numbers.isNumber(split[1]) && Numbers.isNumber(split[2]) && Numbers.isNumber(split[3]) && Numbers.isNumber(split[4])) {
                             World currentWorld = player.getWorld();
                             Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
                             Finder finder = new Finder(loc, getServer().getWorlds(), worldManager);
                             finder.setRadius(Double.parseDouble(split[4]));
                             finder.addReciever(player);
                             finder.find();
-                        } else if (split.length == 5 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3])) {
+                        } else if (split.length == 5 && Numbers.isNumber(split[1]) && Numbers.isNumber(split[2]) && Numbers.isNumber(split[3])) {
                             World currentWorld = player.getWorld();
                             Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
                             Finder finder = new Finder(loc, getServer().getWorlds(), worldManager);
@@ -461,7 +462,7 @@ public class BigBrother extends JavaPlugin {
                                 findee = targets.get(0);
                             }
                             finder.find((findee == null) ? split[4] : findee.getName());
-                        } else if (split.length == 6 && isNumber(split[1]) && isNumber(split[2]) && isNumber(split[3]) && isNumber(split[5])) {
+                        } else if (split.length == 6 && Numbers.isNumber(split[1]) && Numbers.isNumber(split[2]) && Numbers.isNumber(split[3]) && Numbers.isNumber(split[5])) {
                             World currentWorld = player.getWorld();
                             Location loc = new Location(currentWorld, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
                             Finder finder = new Finder(loc, getServer().getWorlds(), worldManager);
@@ -499,24 +500,6 @@ public class BigBrother extends JavaPlugin {
             ex.printStackTrace();
             return true;
         }
-    }
-
-    public static boolean isInteger(String string) {
-        try {
-            Integer.parseInt(string);
-        } catch (Throwable e) {
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean isNumber(String string) {
-        try {
-            Double.parseDouble(string);
-        } catch (Throwable e) {
-            return false;
-        }
-        return true;
     }
 
     public boolean hasStick(Player player, ItemStack itemStack) {
