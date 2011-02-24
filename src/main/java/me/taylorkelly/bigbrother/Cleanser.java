@@ -16,8 +16,13 @@ class Cleanser {
     }
 
     static void clean() {
-        cleanByAge();
-        cleanByNumber();
+        if (BBSettings.cleanseAge != -1) {
+            cleanByAge();
+        }
+        
+        //if(BBSettings.maxRecords != -1) {
+        //    cleanByNumber();
+        //}
     }
 
     private static void cleanByAge() {
@@ -107,8 +112,12 @@ class Cleanser {
     }
 
     static void clean(Player player) {
-        cleanByAge(player);
-        cleanByNumber(player);
+        if (BBSettings.cleanseAge != -1) {
+            cleanByAge(player);
+        }
+        //cleanByNumber(player);
+
+
     }
 
     private static void cleanByAge(Player player) {
