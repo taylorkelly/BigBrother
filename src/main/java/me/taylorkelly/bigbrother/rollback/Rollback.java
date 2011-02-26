@@ -185,77 +185,9 @@ public class Rollback {
 //
 
     private void mysqlRollback(boolean sqlite) {
-        PreparedStatement ps = null;
-        ResultSet set = null;
-        Connection conn = null;
-        try {
-            conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement(RollbackPreparedStatement.create(this, manager));
-            set = ps.executeQuery();
-            conn.commit();
-
-            int rollbackSize = 0;
-            while (set.next()) {
-                listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), Action.values()[set.getInt("action")], set.getString("world"), set.getInt("x"),
-                        set.getInt("y"), set.getInt("z"), set.getInt("type"), set.getString("data")));
-                rollbackSize++;
-            }
-            if (rollbackSize > 0) {
-                for (Player player : recievers) {
-                    player.sendMessage(BigBrother.premessage + "Rolling back " + rollbackSize + " edits.");
-                    String playersString = (rollbackAll) ? "All Players" : getSimpleString(this.players);
-                    player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + playersString);
-                    if (blockTypes.size() > 0) {
-                        player.sendMessage(ChatColor.BLUE + "Block Type(s): " + ChatColor.WHITE + getSimpleString(this.blockTypes));
-                    }
-                    if (time != 0) {
-                        Calendar cal = Calendar.getInstance();
-                        String DATE_FORMAT = "kk:mm:ss 'on' MMM d";
-                        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-                        cal.setTimeInMillis(time * 1000);
-                        player.sendMessage(ChatColor.BLUE + "Since: " + ChatColor.WHITE + sdf.format(cal.getTime()));
-                    }
-                    if (radius != 0) {
-                        player.sendMessage(ChatColor.BLUE + "Radius: " + ChatColor.WHITE + radius + " blocks");
-                    }
-
-                }
-                try {
-                    ps.close();
-                    rollbackBlocks();
-                    ps = conn.prepareStatement(RollbackPreparedStatement.update(this, manager));
-                    ps.execute();
-                    conn.commit();
-
-                    for (Player player : recievers) {
-                        player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
-                    }
-                    undoRollback = RollbackPreparedStatement.undoStatement(this, manager);
-                } catch (SQLException ex) {
-                    BBLogging.severe("Rollback edit SQL Exception", ex);
-                }
-            } else {
-                for (Player player : recievers) {
-                    player.sendMessage(BigBrother.premessage + "Nothing to rollback.");
-                }
-            }
-        } catch (SQLException ex) {
-            BBLogging.severe("Rollback get SQL Exception", ex);
-        } finally {
-            try {
-                if (set != null) {
-                    set.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("Rollback get SQL Exception (on close)");
-            }
-        }
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        Thread rollbacker = new Rollbacker();
+        rollbacker.start();
     }
 
     private String getSimpleString(ArrayList<?> list) {
@@ -358,5 +290,82 @@ public class Rollback {
     public void setRadius(int radius, Location center) {
         this.radius = radius;
         this.center = center;
+    }
+
+    private class Rollbacker extends Thread {
+
+        public void run() {
+            PreparedStatement ps = null;
+            ResultSet set = null;
+            Connection conn = null;
+            try {
+                conn = ConnectionManager.getConnection();
+                ps = conn.prepareStatement(RollbackPreparedStatement.create(Rollback.this, manager));
+                set = ps.executeQuery();
+                conn.commit();
+
+                int rollbackSize = 0;
+                while (set.next()) {
+                    listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), Action.values()[set.getInt("action")], set.getString("world"), set.getInt("x"),
+                            set.getInt("y"), set.getInt("z"), set.getInt("type"), set.getString("data")));
+                    rollbackSize++;
+                }
+                if (rollbackSize > 0) {
+                    for (Player player : recievers) {
+                        player.sendMessage(BigBrother.premessage + "Rolling back " + rollbackSize + " edits.");
+                        String playersString = (rollbackAll) ? "All Players" : getSimpleString(players);
+                        player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + playersString);
+                        if (blockTypes.size() > 0) {
+                            player.sendMessage(ChatColor.BLUE + "Block Type(s): " + ChatColor.WHITE + getSimpleString(blockTypes));
+                        }
+                        if (time != 0) {
+                            Calendar cal = Calendar.getInstance();
+                            String DATE_FORMAT = "kk:mm:ss 'on' MMM d";
+                            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+                            cal.setTimeInMillis(time * 1000);
+                            player.sendMessage(ChatColor.BLUE + "Since: " + ChatColor.WHITE + sdf.format(cal.getTime()));
+                        }
+                        if (radius != 0) {
+                            player.sendMessage(ChatColor.BLUE + "Radius: " + ChatColor.WHITE + radius + " blocks");
+                        }
+
+                    }
+                    try {
+                        ps.close();
+                        rollbackBlocks();
+                        ps = conn.prepareStatement(RollbackPreparedStatement.update(Rollback.this, manager));
+                        ps.execute();
+                        conn.commit();
+
+                        for (Player player : recievers) {
+                            player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
+                        }
+                        undoRollback = RollbackPreparedStatement.undoStatement(Rollback.this, manager);
+                    } catch (SQLException ex) {
+                        BBLogging.severe("Rollback edit SQL Exception", ex);
+                    }
+                } else {
+                    for (Player player : recievers) {
+                        player.sendMessage(BigBrother.premessage + "Nothing to rollback.");
+                    }
+                }
+            } catch (SQLException ex) {
+                BBLogging.severe("Rollback get SQL Exception", ex);
+            } finally {
+                try {
+                    if (set != null) {
+                        set.close();
+                    }
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    BBLogging.severe("Rollback get SQL Exception (on close)");
+                }
+            }
+        }
     }
 }

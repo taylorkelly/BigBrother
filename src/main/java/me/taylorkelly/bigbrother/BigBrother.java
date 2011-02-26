@@ -133,7 +133,7 @@ public class BigBrother extends JavaPlugin {
         fix.apply();
         Fix fix2 = new Fix14(getDataFolder());
         fix2.apply();
-        Fix fix3 = new Fix3(getDataFolder());
+        Fix fix3 = new Fix3(getDataFolder()); // 26 Feb
         fix3.apply();
 
         // Initialize Permissions, Stats
