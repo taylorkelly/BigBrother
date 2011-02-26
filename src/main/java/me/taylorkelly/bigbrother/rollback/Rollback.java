@@ -189,8 +189,9 @@ public class Rollback {
 //
 
     private void mysqlRollback(boolean sqlite) {
-        BukkitScheduler scheduler = server.getScheduler();
-        scheduler.scheduleSyncDelayedTask(plugin, new Rollbacker());
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        Thread rollbacker = new Rollbacker(plugin, server.getScheduler());
+        rollbacker.start();
     }
 
     private String getSimpleString(ArrayList<?> list) {
@@ -295,7 +296,15 @@ public class Rollback {
         this.center = center;
     }
 
-    private class Rollbacker implements Runnable {
+    private class Rollbacker extends Thread {
+
+        private final Plugin plugin;
+        private final BukkitScheduler scheduler;
+
+        private Rollbacker(Plugin plugin, BukkitScheduler scheduler) {
+            this.plugin = plugin;
+            this.scheduler = scheduler;
+        }
 
         public void run() {
             PreparedStatement ps = null;
@@ -335,14 +344,10 @@ public class Rollback {
                     }
                     try {
                         ps.close();
-                        rollbackBlocks();
+                        scheduler.scheduleSyncDelayedTask(plugin, new RollbackTask());
                         ps = conn.prepareStatement(RollbackPreparedStatement.update(Rollback.this, manager));
                         ps.execute();
                         conn.commit();
-
-                        for (Player player : recievers) {
-                            player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
-                        }
                         undoRollback = RollbackPreparedStatement.undoStatement(Rollback.this, manager);
                     } catch (SQLException ex) {
                         BBLogging.severe("Rollback edit SQL Exception", ex);
@@ -368,6 +373,16 @@ public class Rollback {
                 } catch (SQLException ex) {
                     BBLogging.severe("Rollback get SQL Exception (on close)");
                 }
+            }
+        }
+    }
+
+    private class RollbackTask implements Runnable {
+
+        public void run() {
+            rollbackBlocks();
+            for (Player player : recievers) {
+                player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
             }
         }
     }
