@@ -9,6 +9,7 @@ import me.taylorkelly.util.TimeParser;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.Server;
+import org.bukkit.plugin.Plugin;
 
 public class RollbackInterpreter {
 
@@ -21,11 +22,13 @@ public class RollbackInterpreter {
     private Player player;
     private WorldManager manager;
     private int radius = 0;
+    private Plugin plugin;
 
-    public RollbackInterpreter(Player player, String[] split, Server server, WorldManager manager) {
+    public RollbackInterpreter(Player player, String[] split, Server server, WorldManager manager, Plugin plugin) {
         this.manager = manager;
         this.player = player;
         this.server = server;
+        this.plugin = plugin;
         playerList = new ArrayList<String>();
         blockTypes = new ArrayList<Integer>();
         for (int i = 1; i < split.length; i++) {
@@ -88,7 +91,7 @@ public class RollbackInterpreter {
     }
 
     public Boolean interpret() {
-        rollback = new Rollback(server, manager);
+        rollback = new Rollback(server, manager, plugin);
         rollback.addReciever(player);
         if (all) {
             rollback.rollbackAll();

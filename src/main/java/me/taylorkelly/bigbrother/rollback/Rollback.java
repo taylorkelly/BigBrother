@@ -23,6 +23,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class Rollback {
 
@@ -39,11 +41,13 @@ public class Rollback {
     private static String undoRollback = null;
     private WorldManager manager;
     private int size; // Number of items to roll back
+    private Plugin plugin;
 
-    public Rollback(Server server, WorldManager manager) {
+    public Rollback(Server server, WorldManager manager, Plugin plugin) {
         this.manager = manager;
         this.rollbackAll = false;
         this.server = server;
+        this.plugin = plugin;
         this.time = 0;
         blockTypes = new ArrayList<Integer>();
         players = new ArrayList<String>();
@@ -185,9 +189,8 @@ public class Rollback {
 //
 
     private void mysqlRollback(boolean sqlite) {
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-        Thread rollbacker = new Rollbacker();
-        rollbacker.start();
+        BukkitScheduler scheduler = server.getScheduler();
+        scheduler.scheduleSyncDelayedTask(plugin, new Rollbacker());
     }
 
     private String getSimpleString(ArrayList<?> list) {
@@ -292,7 +295,7 @@ public class Rollback {
         this.center = center;
     }
 
-    private class Rollbacker extends Thread {
+    private class Rollbacker implements Runnable {
 
         public void run() {
             PreparedStatement ps = null;

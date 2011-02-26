@@ -289,7 +289,7 @@ public class BigBrother extends JavaPlugin {
                         }
                     } else if (split[0].equalsIgnoreCase("rollback") && BBPermissions.rollback(player)) {
                         if (split.length > 1) {
-                            RollbackInterpreter interpreter = new RollbackInterpreter(player, split, getServer(), worldManager);
+                            RollbackInterpreter interpreter = new RollbackInterpreter(player, split, getServer(), worldManager, this);
                             Boolean passed = interpreter.interpret();
                             if (passed != null) {
                                 if (passed) {
