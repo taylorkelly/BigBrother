@@ -63,6 +63,13 @@ public class DataBlockSender {
     }
 
     private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection, WorldManager manager) {
+        //SQLite fix...
+        if(!BBSettings.mysql) {
+            for(BBDataBlock block : collection) {
+                manager.getWorld(block.world);
+            }
+        }
+
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
