@@ -30,6 +30,7 @@ import me.taylorkelly.bigbrother.finder.Sticker;
 import me.taylorkelly.bigbrother.fixes.Fix;
 import me.taylorkelly.bigbrother.fixes.Fix13;
 import me.taylorkelly.bigbrother.fixes.Fix14;
+import me.taylorkelly.bigbrother.fixes.Fix3;
 import me.taylorkelly.bigbrother.griefcraft.util.Updater;
 import me.taylorkelly.bigbrother.listeners.BBBlockListener;
 import me.taylorkelly.bigbrother.listeners.BBEntityListener;
@@ -132,6 +133,8 @@ public class BigBrother extends JavaPlugin {
         fix.apply();
         Fix fix2 = new Fix14(getDataFolder());
         fix2.apply();
+        Fix fix3 = new Fix3(getDataFolder());
+        fix3.apply();
 
         // Initialize Permissions, Stats
         BBPermissions.initialize(getServer());

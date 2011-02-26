@@ -33,44 +33,48 @@ public class DeltaChest extends BBDataBlock {
             Inventory inv = chest.getInventory();
             for (int i = 0; i < changes.length; i++) {
                 String change = changes[i];
-                if (change.equals("")) {
-                    continue;
-                }
-                String[] pieces = change.split(",");
-                if (pieces.length != 2) {
-                    continue;
-                }
-                int id = 0;
-                int itemData = 0;
-                if (pieces[0].contains(":")) {
-                    String[] subPieces = pieces[0].split(":");
-                    id = Integer.parseInt(subPieces[0]);
-                    itemData = Integer.parseInt(subPieces[1]);
-                } else {
-                    id = Integer.parseInt(pieces[0]);
-                }
-                int amount = -1 * Integer.parseInt(pieces[1]);
-                ItemStack stack = inv.getItem(i);
-                if (stack == null || stack.getAmount() == 0) {
-                    if (amount > 0) {
-                        ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) itemData);
-                        inv.setItem(i, newStack);
-                    } else {
-                        BBLogging.warning("Chest restore conflict. Trying to remove from a empty slot");
+                try {
+                    if (change.equals("")) {
+                        continue;
                     }
-                } else {
-                    if (stack.getTypeId() != id) {
-                        BBLogging.warning("Chest restore conflict. Different types.");
+                    String[] pieces = change.split(",");
+                    if (pieces.length != 2) {
+                        continue;
+                    }
+                    int id = 0;
+                    int itemData = 0;
+                    if (pieces[0].contains(":")) {
+                        String[] subPieces = pieces[0].split(":");
+                        id = Integer.parseInt(subPieces[0]);
+                        itemData = Integer.parseInt(subPieces[1]);
                     } else {
-                        amount = stack.getAmount() + amount;
-                        int damage = stack.getDurability();
-                        if (amount < 0) {
-                            inv.clear(i);
-                        } else {
-                            ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) itemData);
+                        id = Integer.parseInt(pieces[0]);
+                    }
+                    int amount = -1 * Integer.parseInt(pieces[1]);
+                    ItemStack stack = inv.getItem(i);
+                    if (stack == null || stack.getAmount() == 0) {
+                        if (amount > 0) {
+                            ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) itemData);
                             inv.setItem(i, newStack);
+                        } else {
+                            BBLogging.warning("Chest restore conflict. Trying to remove from a empty slot");
+                        }
+                    } else {
+                        if (stack.getTypeId() != id) {
+                            BBLogging.warning("Chest restore conflict. Different types.");
+                        } else {
+                            amount = stack.getAmount() + amount;
+                            int damage = stack.getDurability();
+                            if (amount < 0) {
+                                inv.clear(i);
+                            } else {
+                                ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) itemData);
+                                inv.setItem(i, newStack);
+                            }
                         }
                     }
+                } catch (NumberFormatException e) {
+                    BBLogging.warning("Broken Chest Log with piece: " + change);
                 }
             }
         } else {
@@ -92,44 +96,48 @@ public class DeltaChest extends BBDataBlock {
             Inventory inv = chest.getInventory();
             for (int i = 0; i < changes.length; i++) {
                 String change = changes[i];
-                if (change.equals("")) {
-                    continue;
-                }
-                String[] pieces = change.split(",");
-                if (pieces.length != 2) {
-                    continue;
-                }
-                int id = 0;
-                int itemData = 0;
-                if (pieces[0].contains(":")) {
-                    String[] subPieces = pieces[0].split(":");
-                    id = Integer.parseInt(subPieces[0]);
-                    itemData = Integer.parseInt(subPieces[1]);
-                } else {
-                    id = Integer.parseInt(pieces[0]);
-                }
-                int amount = Integer.parseInt(pieces[1]);
-                ItemStack stack = inv.getItem(i);
-                if (stack == null || stack.getAmount() == 0) {
-                    if (amount > 0) {
-                        ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) itemData);
-                        inv.setItem(i, newStack);
-                    } else {
-                        BBLogging.warning("Chest restore conflict. Trying to remove from a empty slot");
+                try {
+                    if (change.equals("")) {
+                        continue;
                     }
-                } else {
-                    if (stack.getTypeId() != id) {
-                        BBLogging.warning("Chest restore conflict. Different types.");
+                    String[] pieces = change.split(",");
+                    if (pieces.length != 2) {
+                        continue;
+                    }
+                    int id = 0;
+                    int itemData = 0;
+                    if (pieces[0].contains(":")) {
+                        String[] subPieces = pieces[0].split(":");
+                        id = Integer.parseInt(subPieces[0]);
+                        itemData = Integer.parseInt(subPieces[1]);
                     } else {
-                        amount = stack.getAmount() + amount;
-                        int damage = stack.getDurability();
-                        if (amount < 0) {
-                            inv.clear(i);
-                        } else {
-                            ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) itemData);
+                        id = Integer.parseInt(pieces[0]);
+                    }
+                    int amount = Integer.parseInt(pieces[1]);
+                    ItemStack stack = inv.getItem(i);
+                    if (stack == null || stack.getAmount() == 0) {
+                        if (amount > 0) {
+                            ItemStack newStack = new ItemStack(id, amount, (byte) 0x01, (byte) itemData);
                             inv.setItem(i, newStack);
+                        } else {
+                            BBLogging.warning("Chest restore conflict. Trying to remove from a empty slot");
+                        }
+                    } else {
+                        if (stack.getTypeId() != id) {
+                            BBLogging.warning("Chest restore conflict. Different types.");
+                        } else {
+                            amount = stack.getAmount() + amount;
+                            int damage = stack.getDurability();
+                            if (amount < 0) {
+                                inv.clear(i);
+                            } else {
+                                ItemStack newStack = new ItemStack(id, amount, (byte) damage, (byte) itemData);
+                                inv.setItem(i, newStack);
+                            }
                         }
                     }
+                } catch (NumberFormatException e) {
+                    BBLogging.warning("Broken Chest Log with piece: " + change);
                 }
             }
         } else {
