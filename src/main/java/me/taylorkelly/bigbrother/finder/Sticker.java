@@ -115,7 +115,9 @@ public class Sticker {
      * @param block The block that the stick is interacting with
      */
     public void stick(Player player, Block block) {
-        blockInfo(player, block);
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        Thread stickThread = new StickThread(player, block);
+        stickThread.start();
         if(playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             mode.update(player);
@@ -135,4 +137,17 @@ public class Sticker {
         return false;
     }
 
+    private class StickThread extends Thread {
+        private Player player;
+        private Block block;
+
+
+        public StickThread(Player player, Block block) {
+            this.player = player;
+            this.block = block;
+        }
+        public void run() {
+            blockInfo(player, block);
+        }
+    }
 }

@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.logging.Level;
 import me.taylorkelly.bigbrother.BBLogging;
 
 import me.taylorkelly.bigbrother.BBSettings;
