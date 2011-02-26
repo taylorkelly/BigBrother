@@ -26,7 +26,7 @@ public class HistoryStick extends StickMode {
         if(oldItem != null && oldItem.getAmount() > 0) {
             player.sendMessage(ChatColor.AQUA + "Saving your " + oldItem.getType() + ".");
         }
-        player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
+        player.getInventory().setItem(slot, new ItemStack((int)BBSettings.stickItem, 1));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class HistoryStick extends StickMode {
 
     @Override
     public void update(Player player) {
-        player.getInventory().setItem(slot, new ItemStack(Material.STICK, 1));
+        player.getInventory().setItem(slot, new ItemStack((int)BBSettings.stickItem, 1));
     }
 
     @Override
