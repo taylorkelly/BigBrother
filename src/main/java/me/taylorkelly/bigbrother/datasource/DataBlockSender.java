@@ -23,12 +23,14 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 
 public class DataBlockSender {
+
     public static final LinkedBlockingQueue<BBDataBlock> SENDING = new LinkedBlockingQueue<BBDataBlock>();
     private static Timer sendTimer;
 
     public static void disable() {
-        if (sendTimer != null)
+        if (sendTimer != null) {
             sendTimer.cancel();
+        }
     }
 
     public static void initialize(File dataFolder, WorldManager manager) {
@@ -41,31 +43,19 @@ public class DataBlockSender {
     }
 
     private static void sendBlocks(File dataFolder, WorldManager manager) {
-        if (SENDING.size() == 0)
+        if (SENDING.size() == 0) {
             return;
-
-        //TODO Threading
-
-        Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
-        SENDING.drainTo(collection);
-
-        boolean worked = sendBlocksMySQL(collection, manager);
-        if (BBSettings.flatLog) {
-            sendBlocksFlatFile(dataFolder, collection);
         }
 
-        if (!worked) {
-            SENDING.addAll(collection);
-            BBLogging.warning("SQL send failed. Keeping data for later send.");
-        } else {
-            Stats.logBlocks(collection.size());
-        }
+        Thread.currentThread().setContextClassLoader(DataBlockSender.class.getClassLoader());
+        Thread sender = new Sender(manager, dataFolder);
+        sender.start();
     }
 
     private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection, WorldManager manager) {
         //SQLite fix...
-        if(!BBSettings.mysql) {
-            for(BBDataBlock block : collection) {
+        if (!BBSettings.mysql) {
+            for (BBDataBlock block : collection) {
                 manager.getWorld(block.world);
             }
         }
@@ -83,10 +73,12 @@ public class DataBlockSender {
                 ps.setInt(3, block.action.ordinal());
                 ps.setInt(4, manager.getWorld(block.world));
                 ps.setInt(5, block.x);
-                if (block.y < 0)
+                if (block.y < 0) {
                     block.y = 0;
-                if (block.y > 127)
+                }
+                if (block.y > 127) {
                     block.y = 127;
+                }
                 ps.setInt(6, block.y);
                 ps.setInt(7, block.z);
                 ps.setInt(8, block.type);
@@ -111,8 +103,9 @@ public class DataBlockSender {
                 if (rs != null) {
                     rs.close();
                 }
-                if (conn != null)
+                if (conn != null) {
                     conn.close();
+                }
             } catch (SQLException ex) {
                 BBLogging.severe("Data Insert SQL Exception when sending blocks (on close)", ex);
             }
@@ -121,8 +114,9 @@ public class DataBlockSender {
 
     private static void sendBlocksFlatFile(File dataFolder, Collection<BBDataBlock> collection) {
         File dir = new File(dataFolder, "logs");
-        if (!dir.exists())
+        if (!dir.exists()) {
             dir.mkdir();
+        }
         BufferedWriter bwriter = null;
         FileWriter fwriter = null;
         try {
@@ -159,8 +153,9 @@ public class DataBlockSender {
                 if (bwriter != null) {
                     bwriter.close();
                 }
-                if (fwriter != null)
+                if (fwriter != null) {
                     fwriter.close();
+                }
             } catch (IOException e) {
                 BBLogging.severe("Data Insert IO Exception (on close)", e);
             }
@@ -169,59 +164,59 @@ public class DataBlockSender {
 
     public static String getAction(Action action) {
         switch (action) {
-        case BLOCK_BROKEN:
-            return "broke block";
-        case BLOCK_PLACED:
-            return "placed block";
-        case DESTROY_SIGN_TEXT:
-            return "destroyed sign text";
-        case TELEPORT:
-            return "teleport";
-        case DELTA_CHEST:
-            return "changed chest";
-        case COMMAND:
-            return "command";
-        case CHAT:
-            return "chat";
-        case DISCONNECT:
-            return "disconnect";
-        case LOGIN:
-            return "login";
-        case DOOR_OPEN:
-            return "door";
-        case BUTTON_PRESS:
-            return "button";
-        case LEVER_SWITCH:
-            return "lever";
-        case CREATE_SIGN_TEXT:
-            return "created sign text";
-        case LEAF_DECAY:
-            return "decayed leafe";
-        case FLINT_AND_STEEL:
-            return "flint'd";
-        case TNT_EXPLOSION:
-            return "TNT-exploded";
-        case CREEPER_EXPLOSION:
-            return "Creeper-exploded";
-        case MISC_EXPLOSION:
-            return "Misc-exploded";
-        case OPEN_CHEST:
-            return "opened chest";
-        case BLOCK_BURN:
-            return "burned block";
-        case LAVA_FLOW:
-            return "flowed lava";
-        default:
-            return action.name();
+            case BLOCK_BROKEN:
+                return "broke block";
+            case BLOCK_PLACED:
+                return "placed block";
+            case DESTROY_SIGN_TEXT:
+                return "destroyed sign text";
+            case TELEPORT:
+                return "teleport";
+            case DELTA_CHEST:
+                return "changed chest";
+            case COMMAND:
+                return "command";
+            case CHAT:
+                return "chat";
+            case DISCONNECT:
+                return "disconnect";
+            case LOGIN:
+                return "login";
+            case DOOR_OPEN:
+                return "door";
+            case BUTTON_PRESS:
+                return "button";
+            case LEVER_SWITCH:
+                return "lever";
+            case CREATE_SIGN_TEXT:
+                return "created sign text";
+            case LEAF_DECAY:
+                return "decayed leafe";
+            case FLINT_AND_STEEL:
+                return "flint'd";
+            case TNT_EXPLOSION:
+                return "TNT-exploded";
+            case CREEPER_EXPLOSION:
+                return "Creeper-exploded";
+            case MISC_EXPLOSION:
+                return "Misc-exploded";
+            case OPEN_CHEST:
+                return "opened chest";
+            case BLOCK_BURN:
+                return "burned block";
+            case LAVA_FLOW:
+                return "flowed lava";
+            default:
+                return action.name();
         }
     }
 
     public static String fixName(String player) {
-        return player.replace(".", "").replace(":", "").replace("<", "").replace(">", "").replace("*", "").replace("\\", "").replace("/", "").replace("?", "")
-                .replace("\"", "").replace("|", "");
+        return player.replace(".", "").replace(":", "").replace("<", "").replace(">", "").replace("*", "").replace("\\", "").replace("/", "").replace("?", "").replace("\"", "").replace("|", "");
     }
 
     private static class SendingTask extends TimerTask {
+
         private File dataFolder;
         private WorldManager manager;
 
@@ -233,6 +228,34 @@ public class DataBlockSender {
         @Override
         public void run() {
             sendBlocks(dataFolder, manager);
+        }
+    }
+
+    private static class Sender extends Thread {
+
+        private WorldManager manager;
+        private File dataFolder;
+
+        public Sender(WorldManager manager, File dataFolder) {
+            this.manager = manager;
+            this.dataFolder = dataFolder;
+        }
+
+        public void run() {
+            Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
+            SENDING.drainTo(collection);
+
+            boolean worked = sendBlocksMySQL(collection, manager);
+            if (BBSettings.flatLog) {
+                sendBlocksFlatFile(dataFolder, collection);
+            }
+
+            if (!worked) {
+                SENDING.addAll(collection);
+                BBLogging.warning("SQL send failed. Keeping data for later send.");
+            } else {
+                Stats.logBlocks(collection.size());
+            }
         }
     }
 }
