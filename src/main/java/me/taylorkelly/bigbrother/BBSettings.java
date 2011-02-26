@@ -33,6 +33,7 @@ public class BBSettings {
 
 	public static boolean restoreFire;
 	public static boolean autoWatch;
+	public static boolean mysqlLowPrioInserts;
 	public static int defaultSearchRadius;
 	public static boolean mysql;
 	public static boolean flatLog;
@@ -102,7 +103,10 @@ public class BBSettings {
 		mysqlPass = pf.getString("mysqlPass", "root", "Password for MySQL db (if applicable)");
 		mysqlDB = pf.getString("mysqlDB", "jdbc:mysql://localhost:3306/minecraft", "DB for MySQL (if applicable)");
 		BBDataTable.BBDATA_TABLE_MYSQL = BBDataTable.BBDATA_TABLE_MYSQL + " ENGINE=" + pf.getString("engine", "INNODB", "Engine for the Database (INNODB is recommended)") + ";";
-
+		mysqlLowPrioInserts = pf.getBoolean("mysqlLowPriorityInserts", true, "All INSERTS should be run with LOW_PRIORITY");
+		if (!mysql) {
+			mysqlLowPrioInserts = false;
+		}
 		sendDelay = pf.getInt("sendDelay", 4, "Delay in seconds to batch send updates to database (4-5 recommended)");
                 //Disabled until we can get a way to not break rollbacks
                 //maxRollbackRadius = pf.getInt("maxRollbackRadius", 15, "Maximum radius of rollbacks before confirmation is required.");
@@ -159,5 +163,18 @@ public class BBSettings {
 
 	public static Watcher getWatcher(Server server, File dataFolder) {
 		return new Watcher(watchList, seenList, server, dataFolder);
+	}
+	
+	/**
+	 * Returns "LOW_PRIORITY" for MySQL when mysqlLowPrioInserts is set. 
+	 * @return LOW_PRIORTY | ""
+	 */
+	public static String getMySQLIgnore() {
+		// Don't really need to check mysql, but going to anyway to be safe. 
+		if (mysqlLowPrioInserts && mysql) {
+			return " LOW_PRIORITY ";
+		} else{
+			return " ";
+		}
 	}
 }

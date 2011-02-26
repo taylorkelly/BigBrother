@@ -65,7 +65,7 @@ public class DataBlockSender {
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("INSERT INTO " + BBDataTable.BBDATA_NAME
+            ps = conn.prepareStatement("INSERT " + BBSettings.getMySQLIgnore() + " INTO " + BBDataTable.BBDATA_NAME
                     + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);
