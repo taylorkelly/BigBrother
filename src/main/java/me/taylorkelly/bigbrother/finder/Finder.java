@@ -11,7 +11,6 @@ import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
-import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
@@ -43,11 +42,15 @@ public class Finder {
     }
 
     public void find() {
-        mysqlFind(!BBSettings.mysql);
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        Thread finder = new FinderThread();
+        finder.start();
     }
 
     public void find(String player) {
-        mysqlFind(!BBSettings.mysql, player);
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        Thread finder = new FindPlayerThread(player);
+        finder.start();
     }
 
     public void find(ArrayList<String> players) {
@@ -55,7 +58,7 @@ public class Finder {
     }
 
     // TODO use IN(1,2,3)
-    private void mysqlFind(boolean sqlite) {
+    private void mysqlFind() {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -123,7 +126,7 @@ public class Finder {
         }
     }
 
-    private void mysqlFind(boolean sqlite, String playerName) {
+    private void mysqlFind(String playerName) {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -300,6 +303,26 @@ public class Finder {
             } catch (SQLException ex) {
                 BBLogging.severe("Find SQL Exception (on close)");
             }
+        }
+    }
+
+    private class FinderThread extends Thread {
+        public void run() {
+            mysqlFind();
+        }
+    }
+
+    private class FindPlayerThread extends Thread {
+
+        private String player;
+
+        public FindPlayerThread(String player) {
+            this.player = player;
+        }
+
+        @Override
+        public void run() {
+            mysqlFind(player);
         }
     }
 }
