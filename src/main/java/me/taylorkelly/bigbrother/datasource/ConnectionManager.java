@@ -34,12 +34,32 @@ public class ConnectionManager {
                 return ret;
             }
         } catch (ClassNotFoundException e) {
+            if (BBSettings.mysql) {
+                BBLogging.severe("Could not find MySQL Library");
+            } else {
+                BBLogging.severe("Could not find SQLite Library");
+            }
             return null;
         } catch (SQLException e) {
+            if (BBSettings.mysql) {
+                BBLogging.severe("MySQL SQLException on Creation", e);
+            } else {
+                BBLogging.severe("SQLite SQLException on Creation", e);
+            }
             return null;
         } catch (InstantiationException e) {
+            if (BBSettings.mysql) {
+                BBLogging.severe("InstantiationException", e);
+            } else {
+                BBLogging.severe("InstantiationException", e);
+            }
             return null;
         } catch (IllegalAccessException e) {
+            if (BBSettings.mysql) {
+                BBLogging.severe("IllegalAccessException", e);
+            } else {
+                BBLogging.severe("IllegalAccessException", e);
+            }
             return null;
         }
     }

@@ -15,7 +15,7 @@ public class BBPermissions {
             permissionsEnabled = true;
             BBLogging.info("Permissions enabled.");
         } else {
-            BBLogging.severe("Permissions isn't loaded, there are no restrictions.");
+            BBLogging.severe("Permissions isn't loaded, only OPs can use commands");
         }
     }
 
