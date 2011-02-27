@@ -50,8 +50,15 @@ class Cleanser {
         }
     }
 
-    private static void cleanByNumber() {
+    @SuppressWarnings("unused") // Unused
+	private static void cleanByNumber() {
         if (BBSettings.mysql) {
+        	if(BBSettings.maxRecords<0)
+        	{
+        		// Fix exception caused when trying to delete -1 records.
+        		BBLogging.info("Skipping; max-records is negative.");
+        		return;
+        	}
             Connection conn = null;
             Statement statement = null;
             ResultSet set = null;
@@ -59,6 +66,7 @@ class Cleanser {
             try {
                 conn = ConnectionManager.getConnection();
                 statement = conn.createStatement();
+                // Probably should do a COUNT, then delete maxrecords - count.
                 set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT " + Long.valueOf(BBSettings.maxRecords) + ";");
                 set.afterLast();
                 if (set.previous()) {
@@ -145,8 +153,15 @@ class Cleanser {
         }
     }
 
-    private static void cleanByNumber(Player player) {
+    @SuppressWarnings("unused")
+	private static void cleanByNumber(Player player) {
         if (BBSettings.mysql) {
+        	if(BBSettings.maxRecords<0)
+        	{
+        		// Fix exception caused when trying to delete -1 records.
+        		BBLogging.info("Skipping; max-records is negative.");
+        		return;
+        	}
             Connection conn = null;
             Statement statement = null;
             ResultSet set = null;

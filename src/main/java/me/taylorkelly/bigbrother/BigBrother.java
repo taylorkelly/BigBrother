@@ -22,7 +22,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.finder.Finder;
@@ -200,6 +199,7 @@ public class BigBrother extends JavaPlugin {
      * On ANY event we can get our grubby little hands on, try and process a chunk of rollbacks at a time.
      */
     //Disabled until we can get a better way
+    // TODO: Convert to Scheduler.
 //    public void processPsuedotick() {
 //        // Anything in queue?
 //        if (currentRollback != null) {
@@ -338,6 +338,7 @@ public class BigBrother extends JavaPlugin {
                         } else {
                             player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb delete");
                         }
+                    // Undo rollback.
                     } else if (split[0].equalsIgnoreCase("undo") && BBPermissions.rollback(player)) {
                         if (split.length == 1) {
                             if (Rollback.canUndo()) {
@@ -349,21 +350,28 @@ public class BigBrother extends JavaPlugin {
                                 player.sendMessage(BigBrother.premessage + "No rollback to undo");
                             }
                         } else {
-                            player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb undo");
+                            player.sendMessage(BigBrother.premessage + "Usage is " + ChatColor.RED + "/bb undo");
                         }
+                    // Report changes made to solid block.
+                    // /bb stick [1]
                     } else if (split[0].equalsIgnoreCase("stick") && BBPermissions.info(player)) {
                         if (split.length == 1) {
                             sticker.setMode(player, 1);
-                            player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
-                            player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
+                            reportStickMode(player, 1);
                         } else if (split.length == 2 && Numbers.isInteger(split[1])) {
                             sticker.setMode(player, Integer.parseInt(split[1]));
-                            if (Integer.parseInt(split[1]) > 0) {
-                                player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
-                                player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
-                            }
+                            reportStickMode(player,Integer.parseInt(split[1]));
                         } else {
-                            player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb stick (#)");
+                            player.sendMessage(BigBrother.premessage + "Usage is " + ChatColor.RED + "/bb stick [#]");
+                        }
+                    // Report changes made to non-solid block
+                    // /bb log == /bb stick 2
+                    } else if (split[0].equalsIgnoreCase("log") && BBPermissions.info(player)) {
+                        if (split.length == 1) {
+                            sticker.setMode(player, 2);
+                            reportStickMode(player, 2);
+                        } else {
+                            player.sendMessage(BigBrother.premessage + "Usage is " + ChatColor.RED + "/bb log");
                         }
                     } else if (split[0].equalsIgnoreCase("here") && BBPermissions.info(player)) {
                         if (split.length == 1) {
@@ -468,8 +476,22 @@ public class BigBrother extends JavaPlugin {
             return true;
         }
     }
+    /**
+     * Tell the user what mode their stick is.
+     * 
+     * Better than having this copypasted 8 times
+     * @param player Player to talk to about their stick/log
+     * @author N3X15
+     */
+    private void reportStickMode(Player player, int stickLevel) {
+    	if(stickLevel>0)
+    	{
+    		player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
+    		player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
+    	}
+	}
 
-    public boolean hasStick(Player player, ItemStack itemStack) {
+	public boolean hasStick(Player player, ItemStack itemStack) {
         return sticker.hasStick(player, itemStack);
     }
 

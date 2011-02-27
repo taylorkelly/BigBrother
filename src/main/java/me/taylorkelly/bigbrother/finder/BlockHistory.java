@@ -5,10 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.BBLogging;
-
-import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;

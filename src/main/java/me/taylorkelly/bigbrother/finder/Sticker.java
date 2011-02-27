@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
  * @author taylor
  */
 public class Sticker {
-    private Server server;
+    //private Server server;
     private HashMap<String, StickMode> playerModes;
     private ArrayList<Class<? extends StickMode>> modes;
     private WorldManager manager;
@@ -28,7 +28,7 @@ public class Sticker {
      */
     public Sticker(Server server, WorldManager manager) {
         this.manager = manager;
-        this.server = server;
+        //this.server = server;
         playerModes = new HashMap<String, StickMode>();
         modes = new ArrayList<Class<? extends StickMode>>();
         

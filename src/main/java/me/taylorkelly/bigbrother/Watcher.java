@@ -2,8 +2,6 @@ package me.taylorkelly.bigbrother;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
