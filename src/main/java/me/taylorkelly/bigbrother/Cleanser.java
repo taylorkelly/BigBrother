@@ -50,7 +50,6 @@ class Cleanser {
         }
     }
 
-    @SuppressWarnings("unused") // Unused
 	private static void cleanByNumber() {
         if (BBSettings.mysql) {
         	if(BBSettings.maxRecords<0)
@@ -65,7 +64,7 @@ class Cleanser {
             try {
             	conn = ConnectionManager.getConnection();
             	stmt = conn.createStatement();
-            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT TOP "+Long.valueOf(BBSettings.maxRecords)+" id FROM `bbdata`);");
+            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0,"+Long.valueOf(BBSettings.maxRecords)+");");
             	BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
             	conn.commit();
             } catch (SQLException ex) {
@@ -122,7 +121,6 @@ class Cleanser {
         }
     }
 
-    @SuppressWarnings("unused")
 	private static void cleanByNumber(Player player) {
         if (BBSettings.mysql) {
         	if(BBSettings.maxRecords<0)
@@ -137,8 +135,7 @@ class Cleanser {
             try {
             	conn = ConnectionManager.getConnection();
             	stmt = conn.createStatement();
-            	// TOP is ANSI SQL I think.  Works in MySQL, anyway - N3X
-            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT TOP "+Long.valueOf(BBSettings.maxRecords)+" id FROM `bbdata`);");
+            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0,"+Long.valueOf(BBSettings.maxRecords)+");");
             	player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
             	conn.commit();
             } catch (SQLException ex) {
