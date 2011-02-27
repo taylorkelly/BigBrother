@@ -1,7 +1,6 @@
 package me.taylorkelly.bigbrother;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -9,6 +8,7 @@ import me.taylorkelly.util.Time;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+// Rule 1 - If you end up using ResultSet, you're doing it wrong.
 class Cleanser {
 
     static boolean needsCleaning() {
@@ -61,59 +61,28 @@ class Cleanser {
         	}
             Connection conn = null;
             Statement statement = null;
-            ResultSet set = null;
-            int id = -1;
+            Statement stmt = null;
             try {
-                conn = ConnectionManager.getConnection();
-                statement = conn.createStatement();
-                // Probably should do a COUNT, then delete maxrecords - count.
-                set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT " + Long.valueOf(BBSettings.maxRecords) + ";");
-                set.afterLast();
-                if (set.previous()) {
-                    id = set.getInt("id");
-                }
+            	conn = ConnectionManager.getConnection();
+            	stmt = conn.createStatement();
+            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT TOP "+Long.valueOf(BBSettings.maxRecords)+" id FROM `bbdata`);");
+            	BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
+            	conn.commit();
             } catch (SQLException ex) {
-                BBLogging.severe("Cleanse SQL Exception (on # inspect)", ex);
+            	BBLogging.severe("Cleanse SQL exception (by #)", ex);
             } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if (set != null) {
-                        set.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
-                }
+            	try {
+            		if (stmt != null) {
+            			stmt.close();
+            		}
+            		if (conn != null) {
+            			conn.close();
+            		}
+            	} catch (SQLException ex) {
+            		BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
+            	}
             }
 
-            if (id != -1) {
-                conn = null;
-                Statement stmt = null;
-                try {
-                    conn = ConnectionManager.getConnection();
-                    stmt = conn.createStatement();
-                    int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
-                    BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
-                    conn.commit();
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL exception (by #)", ex);
-                } finally {
-                    try {
-                        if (stmt != null) {
-                            stmt.close();
-                        }
-                        if (conn != null) {
-                            conn.close();
-                        }
-                    } catch (SQLException ex) {
-                        BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
-                    }
-                }
-            }
         } else {
             BBLogging.info("SQLite can't cleanse by # of records.");
         }
@@ -164,58 +133,29 @@ class Cleanser {
         	}
             Connection conn = null;
             Statement statement = null;
-            ResultSet set = null;
-            int id = -1;
+            Statement stmt = null;
             try {
-                conn = ConnectionManager.getConnection();
-                statement = conn.createStatement();
-                set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT " + Long.valueOf(BBSettings.maxRecords) + ";");
-                set.afterLast();
-                if (set.previous()) {
-                    id = set.getInt("id");
-                }
+            	conn = ConnectionManager.getConnection();
+            	stmt = conn.createStatement();
+            	// TOP is ANSI SQL I think.  Works in MySQL, anyway - N3X
+            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT TOP "+Long.valueOf(BBSettings.maxRecords)+" id FROM `bbdata`);");
+            	player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
+            	conn.commit();
             } catch (SQLException ex) {
-                BBLogging.severe("Cleanse SQL Exception (on # inspect)", ex);
+            	BBLogging.severe("Cleanse SQL exception (by #)", ex);
             } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if (set != null) {
-                        set.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
-                }
+            	try {
+            		if (stmt != null) {
+            			stmt.close();
+            		}
+            		if (conn != null) {
+            			conn.close();
+            		}
+            	} catch (SQLException ex) {
+            		BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
+            	}
             }
-
-            if (id != -1) {
-                conn = null;
-                Statement stmt = null;
-                try {
-                    conn = ConnectionManager.getConnection();
-                    stmt = conn.createStatement();
-                    int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
-                    player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
-                    conn.commit();
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL exception (by #)", ex);
-                } finally {
-                    try {
-                        if (stmt != null) {
-                            stmt.close();
-                        }
-                        if (conn != null) {
-                            conn.close();
-                        }
-                    } catch (SQLException ex) {
-                        BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
-                    }
-                }
-            }
+            
         } else {
             player.sendMessage(ChatColor.RED + "SQLite can't cleanse by # of records.");
         }
