@@ -3,3 +3,5 @@
 .settings/
 lib/
 target/
+/Permissions.jar
+/BigBrother - Mvn Clean Install.launch
