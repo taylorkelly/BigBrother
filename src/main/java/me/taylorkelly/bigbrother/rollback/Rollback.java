@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.logging.Level;
 import me.taylorkelly.bigbrother.BBLogging;
 
 import me.taylorkelly.bigbrother.BBSettings;
@@ -40,7 +39,7 @@ public class Rollback {
     private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
     private static String undoRollback = null;
     private WorldManager manager;
-    private int size; // Number of items to roll back
+    //private int size; // Number of items to roll back
     private Plugin plugin;
 
     public Rollback(Server server, WorldManager manager, Plugin plugin) {

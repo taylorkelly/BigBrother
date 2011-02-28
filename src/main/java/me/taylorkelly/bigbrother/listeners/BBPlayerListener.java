@@ -37,7 +37,7 @@ public class BBPlayerListener extends PlayerListener {
 //    }
 
     @Override
-    public void onPlayerCommand(PlayerChatEvent event) {
+    public void onPlayerCommandPreprocess(PlayerChatEvent event) {
         //plugin.processPsuedotick();
         Player player = event.getPlayer();
         if (BBSettings.commands && plugin.watching(player)) {
@@ -45,6 +45,7 @@ public class BBPlayerListener extends PlayerListener {
             dataBlock.send();
         }
     }
+
 
     @Override
     public void onPlayerJoin(PlayerEvent event) {

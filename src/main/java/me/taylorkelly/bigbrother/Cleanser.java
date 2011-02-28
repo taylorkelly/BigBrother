@@ -1,7 +1,6 @@
 package me.taylorkelly.bigbrother;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -9,6 +8,7 @@ import me.taylorkelly.util.Time;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+// Rule 1 - If you end up using ResultSet, you're doing it wrong.
 class Cleanser {
 
     static boolean needsCleaning() {
@@ -19,10 +19,12 @@ class Cleanser {
         if (BBSettings.cleanseAge != -1) {
             cleanByAge();
         }
-        
-        //if(BBSettings.maxRecords != -1) {
-        //    cleanByNumber();
-        //}
+        // Broken until MySQL support SELECT TOP.
+        /*
+        if(BBSettings.maxRecords != -1) {
+            cleanByNumber();
+        }
+        */
     }
 
     private static void cleanByAge() {
@@ -50,62 +52,60 @@ class Cleanser {
         }
     }
 
-    private static void cleanByNumber() {
+	private static void cleanByNumber() {
         if (BBSettings.mysql) {
+        	if(BBSettings.maxRecords<0)
+        	{
+        		// Fix exception caused when trying to delete -1 records.
+        		BBLogging.info("Skipping; max-records is negative.");
+        		return;
+        	}
             Connection conn = null;
-            Statement statement = null;
-            ResultSet set = null;
-            int id = -1;
+            Statement stmt = null;
+            // Now we can pretend to use LIMIT.
             try {
-                conn = ConnectionManager.getConnection();
-                statement = conn.createStatement();
-                set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT " + Long.valueOf(BBSettings.maxRecords) + ";");
-                set.afterLast();
-                if (set.previous()) {
-                    id = set.getInt("id");
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("Cleanse SQL Exception (on # inspect)", ex);
+            	conn = ConnectionManager.getConnection();
+            	stmt = conn.createStatement();
+
+                // Since MYSQL doesn't support LIMIT in subqueries, we have to create a variable.
+                // I hate MySQL.
+                stmt.executeUpdate("SET @i = 0;");
+            } catch(SQLException e) {
+            	BBLogging.severe("MySQL won't let us create a variable for faking the use of LIMIT in a subquery. :<", e);
             } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if (set != null) {
-                        set.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
-                }
+            	try {
+            		if (stmt != null) {
+            			stmt.close();
+            		}
+            		if (conn != null) {
+            			conn.close();
+            		}
+            		return;
+            	} catch (SQLException ex) {
+            		BBLogging.severe("Cleanse SQL exception (by #) (on var close)", ex);
+            	}
+            }
+            try {
+            	conn = ConnectionManager.getConnection();
+            	stmt = conn.createStatement();
+            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT `id` FROM `bbdata` WHERE ( @i := ( @i +1 ) ) <= "+Long.valueOf(BBSettings.maxRecords)+" ORDER BY `id` DESC );");
+            	BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
+            	conn.commit();
+            } catch (SQLException ex) {
+            	BBLogging.severe("Cleanse SQL exception (by #)", ex);
+            } finally {
+            	try {
+            		if (stmt != null) {
+            			stmt.close();
+            		}
+            		if (conn != null) {
+            			conn.close();
+            		}
+            	} catch (SQLException ex) {
+            		BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
+            	}
             }
 
-            if (id != -1) {
-                conn = null;
-                Statement stmt = null;
-                try {
-                    conn = ConnectionManager.getConnection();
-                    stmt = conn.createStatement();
-                    int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
-                    BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
-                    conn.commit();
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL exception (by #)", ex);
-                } finally {
-                    try {
-                        if (stmt != null) {
-                            stmt.close();
-                        }
-                        if (conn != null) {
-                            conn.close();
-                        }
-                    } catch (SQLException ex) {
-                        BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
-                    }
-                }
-            }
         } else {
             BBLogging.info("SQLite can't cleanse by # of records.");
         }
@@ -115,6 +115,7 @@ class Cleanser {
         if (BBSettings.cleanseAge != -1) {
             cleanByAge(player);
         }
+        // Broken until MySQL supports SELECT TOP.
         //cleanByNumber(player);
 
 
@@ -145,62 +146,60 @@ class Cleanser {
         }
     }
 
-    private static void cleanByNumber(Player player) {
+	private static void cleanByNumber(Player player) {
         if (BBSettings.mysql) {
+        	if(BBSettings.maxRecords<0)
+        	{
+        		// Fix exception caused when trying to delete -1 records.
+        		BBLogging.info("Skipping; max-records is negative.");
+        		return;
+        	}
             Connection conn = null;
-            Statement statement = null;
-            ResultSet set = null;
-            int id = -1;
+            Statement stmt = null;
+            // Now we can pretend to use LIMIT.
             try {
-                conn = ConnectionManager.getConnection();
-                statement = conn.createStatement();
-                set = statement.executeQuery("SELECT * FROM `bbdata` ORDER BY `id` DESC LIMIT " + Long.valueOf(BBSettings.maxRecords) + ";");
-                set.afterLast();
-                if (set.previous()) {
-                    id = set.getInt("id");
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("Cleanse SQL Exception (on # inspect)", ex);
-            } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if (set != null) {
-                        set.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL Exception (on # inspect) (on close)", ex);
-                }
-            }
+            	conn = ConnectionManager.getConnection();
+            	stmt = conn.createStatement();
 
-            if (id != -1) {
-                conn = null;
-                Statement stmt = null;
-                try {
-                    conn = ConnectionManager.getConnection();
-                    stmt = conn.createStatement();
-                    int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id < " + Integer.valueOf(id) + ";");
-                    player.sendMessage(ChatColor.BLUE + "Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
-                    conn.commit();
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL exception (by #)", ex);
-                } finally {
-                    try {
-                        if (stmt != null) {
-                            stmt.close();
-                        }
-                        if (conn != null) {
-                            conn.close();
-                        }
-                    } catch (SQLException ex) {
-                        BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
-                    }
-                }
+                // Since MYSQL doesn't support LIMIT in subqueries, we have to create a variable.
+                // I hate MySQL.
+                stmt.executeUpdate("SET @i = 0;");
+            } catch(SQLException e) {
+            	BBLogging.severe("MySQL won't let us create a variable for faking the use of LIMIT in a subquery. :<", e);
+            } finally {
+            	try {
+            		if (stmt != null) {
+            			stmt.close();
+            		}
+            		if (conn != null) {
+            			conn.close();
+            		}
+            		return;
+            	} catch (SQLException ex) {
+            		BBLogging.severe("Cleanse SQL exception (by #) (on var close)", ex);
+            	}
             }
+            try {
+            	conn = ConnectionManager.getConnection();
+            	stmt = conn.createStatement();
+            	int amount = stmt.executeUpdate("DELETE FROM `bbdata` WHERE id NOT IN(SELECT `id` FROM `bbdata` WHERE ( @i := ( @i +1 ) ) <= "+Long.valueOf(BBSettings.maxRecords)+" ORDER BY `id` DESC );");
+            	BBLogging.info("Cleaned out " + Integer.valueOf(amount) + " records because there are too many");
+            	conn.commit();
+            } catch (SQLException ex) {
+            	BBLogging.severe("Cleanse SQL exception (by #)", ex);
+            } finally {
+            	try {
+            		if (stmt != null) {
+            			stmt.close();
+            		}
+            		if (conn != null) {
+            			conn.close();
+            		}
+            	} catch (SQLException ex) {
+            		BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
+            	}
+            }
+            
         } else {
             player.sendMessage(ChatColor.RED + "SQLite can't cleanse by # of records.");
         }

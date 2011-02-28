@@ -1,7 +1,7 @@
 name: BigBrother
-version: 1.6.2
+version: 1.6.3
 main: me.taylorkelly.bigbrother.BigBrother
 commands:
   bb:
     description: All of the BigBrother commands
-    usage: Command unrecognised by BigBrother. See documenation or use /bb help.
+    usage: Command unrecognised by BigBrother. See documentation or use /bb help.

@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
  * @author taylor
  */
 public class Sticker {
-    private Server server;
+    //private Server server;
     private HashMap<String, StickMode> playerModes;
     private ArrayList<Class<? extends StickMode>> modes;
     private WorldManager manager;
@@ -28,7 +28,7 @@ public class Sticker {
      */
     public Sticker(Server server, WorldManager manager) {
         this.manager = manager;
-        this.server = server;
+        //this.server = server;
         playerModes = new HashMap<String, StickMode>();
         modes = new ArrayList<Class<? extends StickMode>>();
         
@@ -115,7 +115,9 @@ public class Sticker {
      * @param block The block that the stick is interacting with
      */
     public void stick(Player player, Block block) {
-        blockInfo(player, block);
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        Thread stickThread = new StickThread(player, block);
+        stickThread.start();
         if(playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             mode.update(player);
@@ -135,4 +137,17 @@ public class Sticker {
         return false;
     }
 
+    private class StickThread extends Thread {
+        private Player player;
+        private Block block;
+
+
+        public StickThread(Player player, Block block) {
+            this.player = player;
+            this.block = block;
+        }
+        public void run() {
+            blockInfo(player, block);
+        }
+    }
 }

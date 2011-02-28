@@ -7,7 +7,6 @@ import me.taylorkelly.bigbrother.BBSettings;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
 public class PlacedBlock extends BBDataBlock {
 
