@@ -135,8 +135,9 @@ public class BigBrother extends JavaPlugin {
         Fix fix3 = new Fix3(getDataFolder()); // 26 Feb
         fix3.apply();
 
-        // Initialize Permissions, Stats
+        // Initialize Permissions, Help, Stats
         BBPermissions.initialize(getServer());
+        BBHelp.initialize(this);
         Stats.initialize();
 
         // Register Events
