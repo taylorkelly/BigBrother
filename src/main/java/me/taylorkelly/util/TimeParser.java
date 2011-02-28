@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class TimeParser {
+
     /**
      * Returns the Calendar of the date represented by now subtracted by
      * a given time formatted with:
@@ -91,51 +92,55 @@ public class TimeParser {
 
         int lastIndex = 0;
         int currIndex = 1;
-        while (currIndex <= strTime.length()) {
-            while (Numbers.isInteger(strTime.substring(lastIndex, currIndex)) && currIndex <= strTime.length()) {
-                currIndex++;
-            }
-            if (currIndex - 1 == lastIndex) {
-                System.out.println("Invalid time quanitifier, all items will be kept");
-                return -1;
-            } else {
-                if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("d")) {
-                    if (days != 0) {
-                        System.out.println("Two day keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
-                    } else {
-                        days = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
-                    }
-                } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("h")) {
-                    if (hours != 0) {
-                        System.out.println("Two hour keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
-                    } else {
-                        hours = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
-                    }
-                } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("m")) {
-                    if (minutes != 0) {
-                        System.out.println("Two minute keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
-                    } else {
-                        minutes = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
-                    }
-                } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("s")) {
-                    if (seconds != 0) {
-                        System.out.println("Two second keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
-                    } else {
-                        seconds = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
-                    }
-                } else {
-                    System.out.println("Ignoring invalid key time: " + strTime.substring(currIndex - 1, currIndex));
+        try {
+            while (currIndex <= strTime.length()) {
+                while (Numbers.isInteger(strTime.substring(lastIndex, currIndex)) && currIndex <= strTime.length()) {
+                    currIndex++;
                 }
+                if (currIndex - 1 == lastIndex) {
+                    System.out.println("Invalid time quanitifier, all items will be kept");
+                    return -1;
+                } else {
+                    if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("d")) {
+                        if (days != 0) {
+                            System.out.println("Two day keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        } else {
+                            days = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
+                        }
+                    } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("h")) {
+                        if (hours != 0) {
+                            System.out.println("Two hour keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        } else {
+                            hours = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
+                        }
+                    } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("m")) {
+                        if (minutes != 0) {
+                            System.out.println("Two minute keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        } else {
+                            minutes = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
+                        }
+                    } else if (strTime.substring(currIndex - 1, currIndex).equalsIgnoreCase("s")) {
+                        if (seconds != 0) {
+                            System.out.println("Two second keys have been set. Ignoring: " + strTime.substring(lastIndex, currIndex));
+                        } else {
+                            seconds = Integer.parseInt(strTime.substring(lastIndex, currIndex - 1));
+                        }
+                    } else {
+                        System.out.println("Ignoring invalid key time: " + strTime.substring(currIndex - 1, currIndex));
+                    }
+                }
+                lastIndex = currIndex;
+                currIndex += 1;
             }
-            lastIndex = currIndex;
-            currIndex += 1;
+        } catch (Exception e) {
+            return -1;
         }
 
         if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
             System.out.println("All items will be kept");
             return -1;
         } else {
-            return seconds + (((days*24+hours)*60)+minutes)*60;
+            return seconds + (((days * 24 + hours) * 60) + minutes) * 60;
         }
     }
 }
