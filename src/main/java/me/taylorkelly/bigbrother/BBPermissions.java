@@ -1,62 +1,66 @@
-
 package me.taylorkelly.bigbrother;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.nijikokun.bukkit.Permissions.Permissions;
+import org.anjocaido.groupmanager.GroupManager;
 
 public class BBPermissions {
-    private static boolean permissionsEnabled = false;
+
+    private enum PermissionHandler {
+
+        PERMISSIONS, GROUP_MANAGER, NONE
+    }
+    private static PermissionHandler handler;
+    private static Plugin permissionPlugin;
 
     public static void initialize(Server server) {
-        Plugin test = server.getPluginManager().getPlugin("Permissions");
-        if (test != null) {
-            permissionsEnabled = true;
-            BBLogging.info("Permissions enabled.");
+        Plugin groupManager = server.getPluginManager().getPlugin("GroupManager");
+        Plugin permissions = server.getPluginManager().getPlugin("Permissions");
+
+        if (groupManager != null) {
+            permissionPlugin = groupManager;
+            handler = PermissionHandler.GROUP_MANAGER;
+            String version = groupManager.getDescription().getVersion();
+            BBLogging.info("Permissions enabled using: GroupManager v" + version);
+        } else if (permissions != null) {
+            permissionPlugin = permissions;
+            handler = PermissionHandler.PERMISSIONS;
+            String version = permissions.getDescription().getVersion();
+            BBLogging.info("Permissions enabled using: Permissions v" + version);
         } else {
-            BBLogging.severe("Permissions isn't loaded, only OPs can use commands");
+            BBLogging.severe("A permission plugin isn't loaded, only OPs can use commands");
         }
     }
 
-
     private static boolean permission(Player player, String string) {
-        return Permissions.Security.permission(player, string);
-    }
-
-    public static boolean permissionsActuallyEnabled() {
-        return permissionsEnabled && Permissions.Security != null;
+        switch (handler) {
+            case PERMISSIONS:
+                return ((Permissions)permissionPlugin).getHandler().permission(player, string);
+            case GROUP_MANAGER:
+                return ((GroupManager)permissionPlugin).getHandler().permission(player, string);
+            case NONE:
+                return player.isOp();
+            default:
+                return player.isOp();
+        }
     }
 
     public static boolean info(Player player) {
-        if (permissionsActuallyEnabled()) {
-            return permission(player, "bb.admin.info");
-        } else {
-            return player.isOp();
-        }
+        return permission(player, "bb.admin.info");
     }
-    
+
     public static boolean rollback(Player player) {
-        if (permissionsActuallyEnabled()) {
-            return permission(player, "bb.admin.rollback");
-        } else {
-            return player.isOp();
-        }
+        return permission(player, "bb.admin.rollback");
     }
-    
+
     public static boolean watch(Player player) {
-        if (permissionsActuallyEnabled()) {
-            return permission(player, "bb.admin.watch");
-        } else {
-            return player.isOp();
-        }
+        return permission(player, "bb.admin.watch");
     }
 
     public static boolean cleanse(Player player) {
-        if (permissionsActuallyEnabled()) {
-            return permission(player, "bb.admin.cleanse");
-        } else {
-            return player.isOp();
-        }
+        return permission(player, "bb.admin.cleanse");
     }
 }

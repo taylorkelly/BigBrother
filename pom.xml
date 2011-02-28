@@ -34,6 +34,20 @@
         <type>jar</type>
 	<scope>compile</scope>
     </dependency>
+    <dependency>
+        <groupId>me.taylorkelly</groupId>
+        <artifactId>help</artifactId>
+        <version>1.0</version>
+        <type>jar</type>
+	<scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.anjocaido</groupId>
+        <artifactId>groupmanager</artifactId>
+        <version>0.99</version>
+        <type>jar</type>
+	<scope>compile</scope>
+    </dependency>
   </dependencies>
   <build>
     <finalName>${project.name}</finalName>
