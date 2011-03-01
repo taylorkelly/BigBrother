@@ -9,9 +9,11 @@ import org.anjocaido.groupmanager.GroupManager;
 
 public class BBPermissions {
 
-    private enum PermissionHandler {
-
-        PERMISSIONS, GROUP_MANAGER, NONE
+    private enum PermissionHandler 
+    {
+        PERMISSIONS,
+        GROUP_MANAGER, 
+        NONE
     }
     private static PermissionHandler handler;
     private static Plugin permissionPlugin;

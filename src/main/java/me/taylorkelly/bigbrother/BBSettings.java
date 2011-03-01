@@ -28,7 +28,7 @@ public class BBSettings {
 	public static boolean creeperExplosions;
 	public static boolean miscExplosions;
 	public static boolean ipPlayer;
-        public static boolean lavaFlow;
+	public static boolean lavaFlow;
 
 
 	public static boolean restoreFire;
@@ -37,7 +37,7 @@ public class BBSettings {
 	public static int defaultSearchRadius;
 	public static boolean mysql;
 	public static boolean flatLog;
-        //Disabled until we can get a way for it to not break rollbacks - tkelly
+	//TODO: Disabled until we can get a way for it to not break rollbacks - tkelly
 	//public static int maxRollbackRadius; // Maximum rollback radius. - N3X
 	//public static int maxBlocksRolledBackPerPass; // Maximum blocks rolled back per "pass".
 	public static String mysqlUser = "root";
@@ -45,8 +45,11 @@ public class BBSettings {
 	public static String mysqlDB = "jdbc:mysql://localhost:3306/minecraft";
 	public static int sendDelay;
 	public static long stickItem;
-        public static long cleanseAge;
-        public static long maxRecords;
+	public static long cleanseAge;
+	public static long maxRecords;
+
+	// Maximum records deleted per cleanBy*().
+	public static long deletesPerCleansing;
 
 
 
@@ -65,9 +68,9 @@ public class BBSettings {
 	}
 
 	private static void loadPropertiesFiles(File dataFolder) {
-                if(!dataFolder.exists()) {
-                    dataFolder.mkdirs();
-                }
+		if(!dataFolder.exists()) {
+			dataFolder.mkdirs();
+		}
 		//TODO: Use Configuration once it's finished.
 		PropertiesFile pf = new PropertiesFile(new File(dataFolder, "watching.properties"));
 		blockBreak = pf.getBoolean("blockBreak", true, "Watch when players break blocks");
@@ -86,14 +89,15 @@ public class BBSettings {
 		tntExplosions = pf.getBoolean("tntExplosions", true, "Watch for when TNT explodes");
 		creeperExplosions = pf.getBoolean("creeperExplosions", true, "Watch for when Creepers explodes");
 		miscExplosions = pf.getBoolean("miscExplosions", true, "Watch for miscellaneous explosions");
-                ipPlayer = pf.getBoolean("ipPlayer", true, "Add player's IP when login");
-                lavaFlow = pf.getBoolean("lavaFlow", true, "Log lava flow (useful for rolling-back lava)");
+		ipPlayer = pf.getBoolean("ipPlayer", true, "Add player's IP when login");
+		lavaFlow = pf.getBoolean("lavaFlow", true, "Log lava flow (useful for rolling-back lava)");
 		pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
-                cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "1d12h", "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
-                maxRecords = pf.getLong("maxRecords", 10000000l, "The maximum number of records that you want in your database (-1 to disable)");
-                stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");
+		deletesPerCleansing = TimeParser.parseInterval(pf.getString("deletesPerCleansing", "10000", "The maximum number of DELETE operations performed per cleansing."));
+		cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "1d12h", "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
+		maxRecords = pf.getLong("maxRecords", 10000000l, "The maximum number of records that you want in your database (-1 to disable)");
+		stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");
 		restoreFire = pf.getBoolean("restoreFire", false, "Restore fire when rolling back");
 		autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
 		defaultSearchRadius = pf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind");
@@ -108,8 +112,8 @@ public class BBSettings {
 			mysqlLowPrioInserts = false;
 		}
 		sendDelay = pf.getInt("sendDelay", 4, "Delay in seconds to batch send updates to database (4-5 recommended)");
-                //Disabled until we can get a way to not break rollbacks
-                //maxRollbackRadius = pf.getInt("maxRollbackRadius", 15, "Maximum radius of rollbacks before confirmation is required.");
+		//TODO: Disabled until we can get a way to not break rollbacks
+		//maxRollbackRadius = pf.getInt("maxRollbackRadius", 15, "Maximum radius of rollbacks before confirmation is required.");
 		//maxBlocksRolledBackPerPass=pf.getInt("maxBlocksRolledBackPerPass", 100, "Maximum blocks rolled back per \"tick\".");
 		pf.save();
 	}
@@ -164,10 +168,10 @@ public class BBSettings {
 	public static Watcher getWatcher(Server server, File dataFolder) {
 		return new Watcher(watchList, seenList, server, dataFolder);
 	}
-	
+
 	/**
 	 * Returns "LOW_PRIORITY" for MySQL when mysqlLowPrioInserts is set. 
-	 * @return LOW_PRIORTY | ""
+	 * @return LOW_PRIORITY | ""
 	 */
 	public static String getMySQLIgnore() {
 		// Don't really need to check mysql, but going to anyway to be safe. 
