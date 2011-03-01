@@ -33,7 +33,7 @@ class Cleanser {
 	
 	/**
 	 * Cleanser thread, to avoid blocking the main app when cleaning crap.
-	 * @author Rob
+	 * @author N3X15 <nexis@7chan.org>
 	 *
 	 */
 	private static class CleanupThread extends Thread {
@@ -132,6 +132,11 @@ class Cleanser {
 					conn.commit();
 				} catch (SQLException ex) {
 					BBLogging.severe("Cleanse SQL exception (by #)", ex);
+					if(player!=null) {
+						synchronized(player) {
+							player.sendMessage(ChatColor.RED + "Action failed, read server log for the gory details.");
+						}
+					}
 				} finally {
 					try {
 						if (stmt != null) {
@@ -146,7 +151,15 @@ class Cleanser {
 				}
 
 			} else {
-				player.sendMessage(ChatColor.RED + "SQLite can't cleanse by # of records.");
+				String words = "SQLite can't cleanse by # of records.";
+				if(player==null)
+					BBLogging.info(words);
+				else
+				{
+					synchronized(player) {
+						player.sendMessage(ChatColor.RED + words);
+					}
+				}
 			}
 		}
 	}
