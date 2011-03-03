@@ -91,7 +91,7 @@ public class BigBrother extends JavaPlugin {
         }
 
         // Create Connection
-        Connection conn = ConnectionManager.createConnection();
+        Connection conn = ConnectionManager.createConnection(this);
         if (conn == null) {
             BBLogging.severe("Could not establish SQL connection. Disabling BigBrother");
             getServer().getPluginManager().disablePlugin(this);
@@ -147,7 +147,7 @@ public class BigBrother extends JavaPlugin {
         watcher = BBSettings.getWatcher(getServer(), getDataFolder());
 
         // Initialize DataBlockSender
-        DataBlockSender.initialize(getDataFolder(), worldManager);
+        DataBlockSender.initialize(this, getDataFolder(), worldManager);
 
         // Done!
         BBLogging.info(name + " " + version + " enabled");

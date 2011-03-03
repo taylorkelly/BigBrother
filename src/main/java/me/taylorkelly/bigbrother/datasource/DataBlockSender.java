@@ -10,13 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.Cleanser;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
@@ -25,18 +24,32 @@ import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 
 public class DataBlockSender {
 
-    public static final LinkedBlockingQueue<BBDataBlock> SENDING = new LinkedBlockingQueue<BBDataBlock>();
-    private static Timer sendTimer;
+	public static class SendingTask implements Runnable {
 
+		private File dataFolder;
+		private WorldManager manager;
+
+		public SendingTask(File dataFolder, WorldManager manager) {
+			this.dataFolder=dataFolder;
+			this.manager=manager;
+		}
+
+		@Override
+		public void run() {
+			sendBlocks(dataFolder, manager);
+			Cleanser.clean(null);
+		}
+
+	}
+
+	public static final LinkedBlockingQueue<BBDataBlock> SENDING = new LinkedBlockingQueue<BBDataBlock>();
+    public static BigBrother bb;
     public static void disable() {
-        if (sendTimer != null) {
-            sendTimer.cancel();
-        }
+        bb.getServer().getScheduler().cancelTasks(bb);
     }
 
-    public static void initialize(File dataFolder, WorldManager manager) {
-        sendTimer = new Timer();
-        sendTimer.schedule(new SendingTask(dataFolder, manager), BBSettings.sendDelay * 1000L, BBSettings.sendDelay * 1000L);
+    public static void initialize(BigBrother bb, File dataFolder, WorldManager manager) {
+        bb.getServer().getScheduler().scheduleAsyncRepeatingTask(bb, new SendingTask(dataFolder, manager), BBSettings.sendDelay * 1000L, BBSettings.sendDelay * 1000L);
     }
 
     public static void offer(BBDataBlock dataBlock) {
@@ -67,8 +80,6 @@ public class DataBlockSender {
         try {
             conn = ConnectionManager.getConnection();
             if(conn==null) {
-            	BBLogging.severe("Connection failure.  BigBrother shutting down. (Datablock send, mysql)");
-            	DataBlockSender.disable();
             	return false;
             }
             ps = conn.prepareStatement("INSERT " + BBSettings.getMySQLIgnore() + " INTO " + BBDataTable.BBDATA_NAME
@@ -219,23 +230,6 @@ public class DataBlockSender {
 
     public static String fixName(String player) {
         return player.replace(".", "").replace(":", "").replace("<", "").replace(">", "").replace("*", "").replace("\\", "").replace("/", "").replace("?", "").replace("\"", "").replace("|", "");
-    }
-
-    private static class SendingTask extends TimerTask {
-
-        private File dataFolder;
-        private WorldManager manager;
-
-        public SendingTask(File dataFolder, WorldManager manager) {
-            this.dataFolder = dataFolder;
-            this.manager = manager;
-        }
-
-        @Override
-        public void run() {
-            sendBlocks(dataFolder, manager);
-            Cleanser.clean(null);
-        }
     }
 
     private static class Sender extends Thread {

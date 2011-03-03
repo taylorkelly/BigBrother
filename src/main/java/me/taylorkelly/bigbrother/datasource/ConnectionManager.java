@@ -4,23 +4,29 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BigBrother;
 
 import me.taylorkelly.bigbrother.BBSettings;
 
 public class ConnectionManager {
 
-    public static Connection getConnection() {
+    private static BigBrother plugin;
+
+	public static Connection getConnection() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:jdc:jdcpool");
             conn.setAutoCommit(false);
             return conn;
         } catch (SQLException e) {
             BBLogging.severe("Error getting connection", e);
+        	plugin.getServer().getPluginManager().disablePlugin(plugin);
+        	plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
             return null;
         }
     }
 
-    public static Connection createConnection() {
+    public static Connection createConnection(BigBrother bb) {
+    	plugin=bb;
         try {
             if (BBSettings.mysql) {
                 new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
