@@ -10,7 +10,7 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.util.Time;
 
 // Rule 1 - If you end up using ResultSet, you're doing it wrong.
-class Cleanser {
+public class Cleanser {
 	private static CleanupThread cleanupThread=null;
 
 	static boolean needsCleaning() {
@@ -21,7 +21,7 @@ class Cleanser {
 	 * Start the cleaner thread and pray to God it finishes.
 	 * @param player Person to blame for the lag. Or null.
 	 */
-	static void clean(Player player) {
+	public static void clean(Player player) {
 		if(cleanupThread==null || !cleanupThread.isAlive()) {
 			cleanupThread = new CleanupThread(player);
 			cleanupThread.start();
@@ -48,6 +48,7 @@ class Cleanser {
 		public CleanupThread(Player p) {
 			// Constructor.
 			player=p;
+			this.setName("Cleanser");
 		}
 
 		@Override
@@ -68,11 +69,13 @@ class Cleanser {
 				conn = ConnectionManager.getConnection();
 				stmt = conn.createStatement();
 				long start = System.currentTimeMillis()/1000;
-				cleanedSoFarAge = stmt.executeUpdate("DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge)) + ";");
-				//cleanedSoFarAge += stmt.executeUpdate("DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge)) + " LIMIT "+Long.valueOf(BBSettings.deletesPerCleansing)+";");
+				
+				String cleansql = "DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge));
+				if(BBSettings.deletesPerCleansing>0)
+					cleansql+=" LIMIT "+Long.valueOf(BBSettings.deletesPerCleansing);
+				cleansql+=";";
+				cleanedSoFarAge=stmt.executeUpdate(cleansql);
 				String timespent = Time.formatDuration(System.currentTimeMillis()/1000 - start);
-
-
 
 				String words=String.format("Cleaned out %d records because of age in %s.",cleanedSoFarAge,timespent);
 				if(player==null)
@@ -115,7 +118,13 @@ class Cleanser {
 					conn = ConnectionManager.getConnection();
 					stmt = conn.createStatement();
 					long start = System.currentTimeMillis()/1000;
-					cleanedSoFarNumber = stmt.executeUpdate("DELETE FROM `bbdata` as b LEFT OUTER JOIN (SELECT `id` FROM `bbdata`  ORDER BY `id` DESC LIMIT 0,"+Long.valueOf(BBSettings.maxRecords)+") as j on j.id=b.id where j.id is null;");
+					
+					String cleansql="DELETE FROM `bbdata` as b LEFT OUTER JOIN (SELECT `id` FROM `bbdata`  ORDER BY `id` DESC LIMIT 0,"+Long.valueOf(BBSettings.maxRecords)+") as j on j.id=b.id where j.id is null";
+					if(BBSettings.deletesPerCleansing>0)
+						cleansql+=" LIMIT "+Long.valueOf(BBSettings.deletesPerCleansing);
+					cleansql+=";";
+					cleanedSoFarNumber = stmt.executeUpdate(cleansql);
+					
 					//cleanedSoFarNumber += stmt.executeUpdate("DELETE FROM `bbdata` as b LEFT OUTER JOIN (SELECT `id` FROM `bbdata`  ORDER BY `id` DESC LIMIT 0,"+Long.valueOf(BBSettings.maxRecords)+") as j on j.id=b.id where j.id is null LIMIT "+Long.valueOf(BBSettings.deletesPerCleansing)+";");
 					String timespent = Time.formatDuration(System.currentTimeMillis()/1000 - start);
 

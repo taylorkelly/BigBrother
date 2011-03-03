@@ -17,6 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.Cleanser;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -233,6 +234,7 @@ public class DataBlockSender {
         @Override
         public void run() {
             sendBlocks(dataFolder, manager);
+            Cleanser.clean(null);
         }
     }
 
