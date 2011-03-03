@@ -13,9 +13,9 @@ import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.BBLogging;
-
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
@@ -65,6 +65,11 @@ public class DataBlockSender {
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) {
+            	BBLogging.severe("Connection failure.  BigBrother shutting down. (Datablock send, mysql)");
+            	DataBlockSender.disable();
+            	return false;
+            }
             ps = conn.prepareStatement("INSERT " + BBSettings.getMySQLIgnore() + " INTO " + BBDataTable.BBDATA_NAME
                     + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
             for (BBDataBlock block : collection) {
