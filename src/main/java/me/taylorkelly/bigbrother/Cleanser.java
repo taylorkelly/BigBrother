@@ -63,7 +63,7 @@ public class Cleanser {
 			}
 
 			if(BBSettings.maxRecords != -1) {
-				cleanByNumber();
+				//cleanByNumber(); -- Broken again.
 			}
 			BBLogging.info("Ending Cleanser thread...");
 			done=true; // Wait for cleanup
@@ -111,6 +111,7 @@ public class Cleanser {
 			}
 		}
 
+		@SuppressWarnings("unused")
 		private void cleanByNumber() {
 			if (BBSettings.mysql) {
 				if(BBSettings.maxRecords<0)
@@ -132,7 +133,6 @@ public class Cleanser {
 					cleansql+=";";
 					cleanedSoFarNumber = stmt.executeUpdate(cleansql);
 					
-					//cleanedSoFarNumber += stmt.executeUpdate("DELETE FROM `bbdata` as b LEFT OUTER JOIN (SELECT `id` FROM `bbdata`  ORDER BY `id` DESC LIMIT 0,"+Long.valueOf(BBSettings.maxRecords)+") as j on j.id=b.id where j.id is null LIMIT "+Long.valueOf(BBSettings.deletesPerCleansing)+";");
 					String timespent = Time.formatDuration(System.currentTimeMillis()/1000 - start);
 
 
