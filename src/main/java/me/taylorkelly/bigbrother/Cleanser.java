@@ -22,6 +22,9 @@ public class Cleanser {
 	 * @param player Person to blame for the lag. Or null.
 	 */
 	public static void clean(Player player) {
+		if(cleanupThread!=null && cleanupThread.done) {
+			cleanupThread=null;
+		}
 		if(cleanupThread==null || !cleanupThread.isAlive()) {
 			cleanupThread = new CleanupThread(player);
 			cleanupThread.start();
@@ -39,6 +42,7 @@ public class Cleanser {
 	private static class CleanupThread extends Thread {
 		private long cleanedSoFarAge=0;
 		private long cleanedSoFarNumber=0;
+		private boolean done=false;
 		private Player player;
 
 		/**
@@ -49,11 +53,11 @@ public class Cleanser {
 			// Constructor.
 			player=p;
 			this.setName("Cleanser");
-			BBLogging.info("Starting Cleanser thread...");
 		}
 
 		@Override
 		public void run() {
+			BBLogging.info("Starting Cleanser thread...");
 			if (BBSettings.cleanseAge != -1) {
 				cleanByAge();
 			}
@@ -61,6 +65,8 @@ public class Cleanser {
 			if(BBSettings.maxRecords != -1) {
 				cleanByNumber();
 			}
+			BBLogging.info("Ending Cleanser thread...");
+			done=true; // Wait for cleanup
 		}
 
 		private void cleanByAge() {
