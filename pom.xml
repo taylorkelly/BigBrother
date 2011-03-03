@@ -51,7 +51,24 @@
   </dependencies>
   <build>
     <finalName>${project.name}</finalName>
-    <plugins>
+    <plugins>      
+      <plugin>
+        <groupId>com.lukegb.mojo</groupId>
+        <artifactId>gitdescribe-maven-plugin</artifactId>
+        <version>1.3</version>
+        <configuration>
+          <outputPrefix>BigBrother-</outputPrefix>
+          <outputPostfix></outputPostfix>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>gitdescribe</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -59,7 +76,15 @@
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
-	  <encoding>UTF-8</encoding>
+	      <encoding>UTF-8</encoding>
+          <archive>
+            <manifestEntries>
+              <Implementation-Title>BigBrother</Implementation-Title>
+              <Implementation-Version>${describe}</Implementation-Version>
+              <Implementation-Vendor>Taylor Kelly</Implementation-Vendor>
+              <Sealed>false</Sealed>
+            </manifestEntries>
+           </archive>
         </configuration>
       </plugin>
       <plugin>

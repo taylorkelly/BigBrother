@@ -94,7 +94,7 @@ public class BBSettings {
 		pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
-		deletesPerCleansing = TimeParser.parseInterval(pf.getString("deletesPerCleansing", "10000", "The maximum number of DELETE operations performed per cleansing."));
+		deletesPerCleansing = pf.getLong("deletesPerCleansing", 1000L, "The maximum number of records to delete per cleansing (0 to disable).");
 		cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "1d12h", "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
 		maxRecords = pf.getLong("maxRecords", 10000000l, "The maximum number of records that you want in your database (-1 to disable)");
 		stickItem = pf.getLong("stickItem", 280l, "The item used for /bb stick");

@@ -49,6 +49,7 @@ public class Cleanser {
 			// Constructor.
 			player=p;
 			this.setName("Cleanser");
+			BBLogging.info("Starting Cleanser thread...");
 		}
 
 		@Override
