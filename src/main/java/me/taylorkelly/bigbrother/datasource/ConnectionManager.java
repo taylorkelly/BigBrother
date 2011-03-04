@@ -18,7 +18,7 @@ public class ConnectionManager {
             conn.setAutoCommit(false);
             return conn;
         } catch (SQLException e) {
-            BBLogging.severe("Error getting connection", e);
+            BBLogging.severe("Error getting a connection, disabling BigBrother...", e);
         	plugin.getServer().getPluginManager().disablePlugin(plugin);
         	plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
             return null;
