@@ -52,8 +52,9 @@ public class BBDataTable {
      */
     private static void checkDBEngine(String tableName, String requiredEngine, boolean optional) {
     	String engine = getEngine(tableName);
-    	if(engine==null) return; // Error.
-        if(engine!=requiredEngine) {
+    	if(engine==null) 
+    		return; // Error.
+        if(!engine.equalsIgnoreCase(requiredEngine)) {
         	if(!optional) {
 	        	BBLogging.warning("Changing "+tableName+" so that it uses "+requiredEngine+" instead of "+engine+". THIS MAY TAKE A WHILE!");
 	        	setEngine(tableName,requiredEngine);
