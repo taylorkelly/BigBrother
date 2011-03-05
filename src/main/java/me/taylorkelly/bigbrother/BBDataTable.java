@@ -102,14 +102,9 @@ public class BBDataTable {
 			} else {
 				BBLogging.warning("Table " + tableName
 						+ " uses the MySQL storage engine " + engine + ".");
-				BBLogging
-						.info("For optimal performance, we suggest changing to "
-								+ requiredEngine
-								+ " via the following SQL statement:");
-				BBLogging.info("  ALTER TABLE " + tableName + " ENGINE = "
-						+ engine + ";");
-				BBLogging
-						.info("Please note that, on many tables, this could take a very long time.");
+				BBLogging.info("For optimal performance, we suggest changing to "+requiredEngine+" via the following SQL statement:");
+				BBLogging.info("  ALTER TABLE "+tableName+" ENGINE = "+requiredEngine+";");
+				BBLogging.info("Please note that, on many tables, this could take a very long time.");
 			}
 		}
 	}
