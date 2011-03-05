@@ -9,8 +9,8 @@ import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
-public class Fix14 extends Fix {
-    public Fix14(File dataFolder) {
+public class Fix2 extends Fix {
+    public Fix2(File dataFolder) {
         super(dataFolder);
     }
 

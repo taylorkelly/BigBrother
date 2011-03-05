@@ -27,9 +27,10 @@ import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.finder.Finder;
 import me.taylorkelly.bigbrother.finder.Sticker;
 import me.taylorkelly.bigbrother.fixes.Fix;
+import me.taylorkelly.bigbrother.fixes.Fix1;
+import me.taylorkelly.bigbrother.fixes.Fix2;
 import me.taylorkelly.bigbrother.fixes.Fix3;
-import me.taylorkelly.bigbrother.fixes.Fix13;
-import me.taylorkelly.bigbrother.fixes.Fix14;
+import me.taylorkelly.bigbrother.fixes.Fix4;
 import me.taylorkelly.bigbrother.griefcraft.util.Updater;
 import me.taylorkelly.bigbrother.listeners.BBBlockListener;
 import me.taylorkelly.bigbrother.listeners.BBEntityListener;
@@ -128,12 +129,14 @@ public class BigBrother extends JavaPlugin {
         }
 
         // Apply fixes to DB for old BB
-        Fix fix = new Fix13(getDataFolder());
+        Fix fix = new Fix1(getDataFolder());
         fix.apply();
-        Fix fix2 = new Fix14(getDataFolder());
+        Fix fix2 = new Fix2(getDataFolder());
         fix2.apply();
         Fix fix3 = new Fix3(getDataFolder()); // 26 Feb
         fix3.apply();
+        Fix fix4 = new Fix4(getDataFolder()); // 26 Feb
+        fix4.apply();
 
         // Initialize Permissions, Help, Stats
         BBPermissions.initialize(getServer());
