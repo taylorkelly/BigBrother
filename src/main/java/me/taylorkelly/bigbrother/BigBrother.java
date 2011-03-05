@@ -135,7 +135,7 @@ public class BigBrother extends JavaPlugin {
         fix2.apply();
         Fix fix3 = new Fix3(getDataFolder()); // 26 Feb
         fix3.apply();
-        Fix fix4 = new Fix4(getDataFolder()); // 26 Feb
+        Fix fix4 = new Fix4(getDataFolder()); // 5 March, 2011 - N3X
         fix4.apply();
 
         // Initialize Permissions, Help, Stats
