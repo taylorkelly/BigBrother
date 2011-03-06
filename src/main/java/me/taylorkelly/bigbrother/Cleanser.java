@@ -33,7 +33,18 @@ public class Cleanser {
 				player.chat(BigBrother.premessage+" Cleaner already busy.  Try again later.");
 		}
 	}
-	
+
+        public static void initialize(BigBrother bigbrother) {
+            bigbrother.getServer().getScheduler().scheduleAsyncRepeatingTask(bigbrother, new CleanupTask(), 26000, 26000);
+        }
+
+        private static class CleanupTask implements Runnable {
+            public void run() {
+                clean(null);
+            }
+        }
+
+
 	/**
 	 * Cleanser thread, to avoid blocking the main app when cleaning crap.
 	 * @author N3X15 <nexis@7chan.org>

@@ -70,7 +70,7 @@ public class BigBrother extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        DataBlockSender.disable();
+        DataBlockSender.disable(this);
     }
 
     @Override
@@ -108,11 +108,6 @@ public class BigBrother extends JavaPlugin {
         // Initialize tables
         BBDataTable.initialize();
         worldManager = new WorldManager();
-
-        //Check for old records - Disabled until can be optimized
-        //if (Cleanser.needsCleaning()) {
-        //    Cleanser.clean();
-        //}
 
         // Initialize Listeners
         playerListener = new BBPlayerListener(this);
