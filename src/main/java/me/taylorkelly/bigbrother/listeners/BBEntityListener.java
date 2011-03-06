@@ -5,8 +5,8 @@ import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.explosions.CreeperExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.MiscExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
+import org.bukkit.entity.LivingEntity;
 
-import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
@@ -26,7 +26,7 @@ public class BBEntityListener extends EntityListener {
             if (BBSettings.tntExplosions) {
                 TNTLogger.createTNTDataBlock(event.blockList(), event.getLocation().getWorld().getName());
             }
-        } else if (event.getEntity() instanceof CraftLivingEntity) {
+        } else if (event.getEntity() instanceof LivingEntity) {
             if (BBSettings.creeperExplosions) {
                 CreeperExplosion.create(event.getEntity().getLocation(), event.blockList(), event.getLocation().getWorld().getName());
             }

@@ -85,7 +85,7 @@ public class BBSettings {
 		buttonPress = pf.getBoolean("buttonPress", false, "Watch for when player pushes buttons");
 		leverSwitch = pf.getBoolean("leverSwitch", false, "Watch for when player switches levers");
 		fire = pf.getBoolean("fireLogging", true, "Watch for when players start fires");
-		leafDrops = pf.getBoolean("leafDrops", true, "Watch for when leaves drop");
+		leafDrops = pf.getBoolean("leafDrops", false, "Watch for when leaves drop");
 		tntExplosions = pf.getBoolean("tntExplosions", true, "Watch for when TNT explodes");
 		creeperExplosions = pf.getBoolean("creeperExplosions", true, "Watch for when Creepers explodes");
 		miscExplosions = pf.getBoolean("miscExplosions", true, "Watch for miscellaneous explosions");

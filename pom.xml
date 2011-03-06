@@ -21,30 +21,23 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>craftbukkit</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
         <groupId>org.bukkit</groupId>
         <artifactId>permissions</artifactId>
-        <version>2.4</version>
+        <version>2.5.2</version>
         <type>jar</type>
 	<scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>me.taylorkelly</groupId>
         <artifactId>help</artifactId>
-        <version>1.0</version>
+        <version>0.1.1</version>
         <type>jar</type>
 	<scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>org.anjocaido</groupId>
         <artifactId>groupmanager</artifactId>
-        <version>0.99</version>
+        <version>1.0</version>
         <type>jar</type>
 	<scope>compile</scope>
     </dependency>

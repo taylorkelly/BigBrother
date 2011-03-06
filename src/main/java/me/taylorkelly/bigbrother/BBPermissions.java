@@ -42,7 +42,7 @@ public class BBPermissions {
             case PERMISSIONS:
                 return ((Permissions)permissionPlugin).getHandler().permission(player, string);
             case GROUP_MANAGER:
-                return ((GroupManager)permissionPlugin).getHandler().permission(player, string);
+                return ((GroupManager)permissionPlugin).getWorldsHolder().getWorldPermissions(player).has(player, string);
             case NONE:
                 return player.isOp();
             default:
