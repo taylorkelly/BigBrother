@@ -60,7 +60,7 @@ public class BBDataTable {
 			+ "`rbacked` boolean NOT NULL DEFAULT '0'," + "PRIMARY KEY (`id`),"
 			+ "INDEX(`world`)," + "INDEX(`x`,`y`,`z`),"
 			+ "INDEX(`player`(10))," + "INDEX(`action`)," + "INDEX(`date`),"
-			+ "INDEX(`type`)," + "INDEX(`rbacked`)" + ") ENGINE=MyISAM";
+			+ "INDEX(`type`)," + "INDEX(`rbacked`)" + ")";
 
 	// GoMySQL suggested partitioning. Currently, I like the following modifier,
 	// but it doesn't work on MySQL < 5.1. So we need to add a setting for
