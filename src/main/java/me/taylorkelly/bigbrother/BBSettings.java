@@ -90,7 +90,7 @@ public class BBSettings {
 		creeperExplosions = pf.getBoolean("creeperExplosions", true, "Watch for when Creepers explodes");
 		miscExplosions = pf.getBoolean("miscExplosions", true, "Watch for miscellaneous explosions");
 		ipPlayer = pf.getBoolean("ipPlayer", true, "Add player's IP when login");
-		lavaFlow = pf.getBoolean("lavaFlow", true, "Log lava flow (useful for rolling-back lava)");
+		lavaFlow = pf.getBoolean("lavaFlow", false, "Log lava flow (useful for rolling-back lava)");
 		pf.save();
 
 		pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
