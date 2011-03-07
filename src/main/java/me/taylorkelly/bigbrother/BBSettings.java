@@ -153,15 +153,14 @@ public class BBSettings {
         sendDelay = yml.getInt("bigbrother:database:sendDelay", sendDelay);// "Delay in seconds to batch send updates to database (4-5 recommended)");
         
         if (databaseSystem == DBMS.mysql) {
-            final ConfigurationNode mysqlConfig = yml.getNode("bigbrother:database:mysql");
-            mysqlUser = mysqlConfig.getString("username", mysqlUser);
-            mysqlPass = mysqlConfig.getString("password", mysqlPass);
-            mysqlHost = mysqlConfig.getString("hostname", mysqlHost);
-            mysqlDatabase = mysqlConfig.getString("database", mysqlDatabase);
-            mysqlPort = mysqlConfig.getInt("port", mysqlPort);
-            mysqlEngine = mysqlConfig.getString("engine", mysqlEngine);
-            mysqlPrefix = mysqlConfig.getString("username", mysqlPrefix);
-            mysqlLowPrioInserts = mysqlConfig.getBoolean("low-priority-insert", mysqlLowPrioInserts);
+            mysqlUser = yml.getString("bigbrother:database:mysql:username", mysqlUser);
+            mysqlPass = yml.getString("bigbrother:database:mysql:password", mysqlPass);
+            mysqlHost = yml.getString("bigbrother:database:mysql:hostname", mysqlHost);
+            mysqlDatabase = yml.getString("bigbrother:database:mysql:database", mysqlDatabase);
+            mysqlPort = yml.getInt("bigbrother:database:mysql:port", mysqlPort);
+            mysqlEngine = yml.getString("bigbrother:database:mysql:engine", mysqlEngine);
+            mysqlPrefix = yml.getString("bigbrother:database:mysql:username", mysqlPrefix);
+            mysqlLowPrioInserts = yml.getBoolean("lbigbrother:database:mysql:low-priority-insert", mysqlLowPrioInserts);
         } else if (databaseSystem == DBMS.sqlite) {
             // SQLite stuff here
         }
