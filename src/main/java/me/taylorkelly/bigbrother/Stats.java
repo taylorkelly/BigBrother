@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

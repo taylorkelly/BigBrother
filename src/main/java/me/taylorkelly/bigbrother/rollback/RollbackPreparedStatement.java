@@ -1,10 +1,10 @@
 package me.taylorkelly.bigbrother.rollback;
 
 import java.util.ArrayList;
-import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.WorldManager;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 public class RollbackPreparedStatement {
 

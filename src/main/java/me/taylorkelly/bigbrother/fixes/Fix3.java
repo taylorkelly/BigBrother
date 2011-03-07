@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 public class Fix3 extends Fix {
@@ -21,7 +22,7 @@ public class Fix3 extends Fix {
     public void apply() {
         if (needsUpdate(version)) {
             BBLogging.info("Updating table for 1.6.2");
-            boolean sqlite = !BBSettings.mysql;
+            boolean sqlite = BBSettings.databaseSystem == DBMS.sqlite;
 
             if (updateTable(sqlite)) {
                 updateVersion(version);
@@ -30,7 +31,7 @@ public class Fix3 extends Fix {
     }
 
     private static boolean updateTable(boolean sqlite) {
-        if (BBSettings.mysql) {
+        if (BBSettings.usingDBMS(DBMS.mysql)) {
             Connection conn = null;
             Statement st = null;
             try {

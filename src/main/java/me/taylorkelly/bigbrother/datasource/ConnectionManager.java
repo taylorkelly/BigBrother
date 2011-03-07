@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.BigBrother;
 
 import me.taylorkelly.bigbrother.BBSettings;
@@ -25,48 +26,40 @@ public class ConnectionManager {
         }
     }
 
-    public static Connection createConnection(BigBrother bb) {
+    public static boolean createConnection(BigBrother bb) {
     	plugin=bb;
         try {
-            if (BBSettings.mysql) {
-                new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.mysqlDB, BBSettings.mysqlUser, BBSettings.mysqlPass);
-                Connection ret = DriverManager.getConnection("jdbc:jdc:jdcpool");
-                ret.setAutoCommit(false);
-                return ret;
+            if (BBSettings.usingDBMS(DBMS.mysql)) {
+                new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
             } else {
-                new JDCConnectionDriver("org.sqlite.JDBC", BBSettings.liteDb, BBSettings.mysqlUser, BBSettings.mysqlPass);
-                Connection ret = DriverManager.getConnection("jdbc:jdc:jdcpool");
-                ret.setAutoCommit(false);
-                return ret;
+                new JDCConnectionDriver("org.sqlite.JDBC", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
             }
+            return true;
         } catch (ClassNotFoundException e) {
-            if (BBSettings.mysql) {
-                BBLogging.severe("Could not find MySQL Library");
+            if (BBSettings.usingDBMS(DBMS.mysql)) {
+                BBLogging.severe("Could not find lib/mysql.jar!  Please make sure it is present and readable.");
             } else {
-                BBLogging.severe("Could not find SQLite Library");
+                BBLogging.severe("Could not find lib/sqlite.jar!  Please make sure it is present and readable.");
             }
-            return null;
         } catch (SQLException e) {
-            if (BBSettings.mysql) {
-                BBLogging.severe("MySQL SQLException on Creation", e);
+            if (BBSettings.usingDBMS(DBMS.mysql)) {
+                BBLogging.severe("MySQL error during connection:", e);
             } else {
-                BBLogging.severe("SQLite SQLException on Creation", e);
+                BBLogging.severe("SQLite error during connection:", e);
             }
-            return null;
         } catch (InstantiationException e) {
-            if (BBSettings.mysql) {
+            if (BBSettings.usingDBMS(DBMS.mysql)) {
                 BBLogging.severe("InstantiationException", e);
             } else {
                 BBLogging.severe("InstantiationException", e);
             }
-            return null;
         } catch (IllegalAccessException e) {
-            if (BBSettings.mysql) {
+            if (BBSettings.usingDBMS(DBMS.mysql)) {
                 BBLogging.severe("IllegalAccessException", e);
             } else {
                 BBLogging.severe("IllegalAccessException", e);
             }
-            return null;
         }
+        return false;
     }
 }
