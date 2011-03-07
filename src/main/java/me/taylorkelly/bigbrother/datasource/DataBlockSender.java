@@ -16,7 +16,6 @@ import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.BigBrother;
-import me.taylorkelly.bigbrother.Cleanser;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
@@ -25,46 +24,21 @@ import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 public class DataBlockSender {
 
-	public static class SendingTask implements Runnable {
+    public static final LinkedBlockingQueue<BBDataBlock> SENDING = new LinkedBlockingQueue<BBDataBlock>();
 
-		private File dataFolder;
-		private WorldManager manager;
-
-		public SendingTask(File dataFolder, WorldManager manager) {
-			this.dataFolder=dataFolder;
-			this.manager=manager;
-		}
-
-		@Override
-		public void run() {
-			sendBlocks(dataFolder, manager);
-			Cleanser.clean(null);
-		}
-
-	}
-
-	public static final LinkedBlockingQueue<BBDataBlock> SENDING = new LinkedBlockingQueue<BBDataBlock>();
-    public static BigBrother bb;
-    public static void disable() {
+    public static void disable(BigBrother bb) {
         bb.getServer().getScheduler().cancelTasks(bb);
     }
 
     public static void initialize(BigBrother bb, File dataFolder, WorldManager manager) {
-        bb.getServer().getScheduler().scheduleAsyncRepeatingTask(bb, new SendingTask(dataFolder, manager), BBSettings.sendDelay * 1000L, BBSettings.sendDelay * 1000L);
+        int result = bb.getServer().getScheduler().scheduleAsyncRepeatingTask(bb, new SendingTask(dataFolder, manager), BBSettings.sendDelay * 30, BBSettings.sendDelay * 30);
+        if (result < 0) {
+            BBLogging.severe("Unable to schedule sending of blocks");
+        }
     }
 
     public static void offer(BBDataBlock dataBlock) {
         SENDING.add(dataBlock);
-    }
-
-    private static void sendBlocks(File dataFolder, WorldManager manager) {
-        if (SENDING.size() == 0) {
-            return;
-        }
-
-        Thread.currentThread().setContextClassLoader(DataBlockSender.class.getClassLoader());
-        Thread sender = new Sender(manager, dataFolder);
-        sender.start();
     }
 
     private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection, WorldManager manager) {
@@ -80,8 +54,8 @@ public class DataBlockSender {
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
-            if(conn==null) {
-            	return false;
+            if (conn == null) {
+                return false;
             }
             ps = conn.prepareStatement("INSERT " + BBSettings.getMySQLIgnore() + " INTO " + BBDataTable.BBDATA_NAME
                     + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
@@ -233,17 +207,21 @@ public class DataBlockSender {
         return player.replace(".", "").replace(":", "").replace("<", "").replace(">", "").replace("*", "").replace("\\", "").replace("/", "").replace("?", "").replace("\"", "").replace("|", "");
     }
 
-    private static class Sender extends Thread {
+    private static class SendingTask implements Runnable {
 
-        private WorldManager manager;
         private File dataFolder;
+        private WorldManager manager;
 
-        public Sender(WorldManager manager, File dataFolder) {
-            this.manager = manager;
+        public SendingTask(File dataFolder, WorldManager manager) {
             this.dataFolder = dataFolder;
+            this.manager = manager;
         }
 
+        @Override
         public void run() {
+            if (SENDING.size() == 0) {
+                return;
+            }
             Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
             SENDING.drainTo(collection);
 

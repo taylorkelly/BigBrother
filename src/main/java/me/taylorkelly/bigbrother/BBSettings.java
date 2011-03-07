@@ -133,12 +133,12 @@ public class BBSettings {
         buttonPress = watched.getBoolean("buttonPress", false);// "Watch for when player pushes buttons");
         leverSwitch = watched.getBoolean("leverSwitch", false);// "Watch for when player switches levers");
         fire = watched.getBoolean("fireLogging", true);// "Watch for when players start fires");
-        leafDrops = watched.getBoolean("leafDrops", true);// "Watch for when leaves drop");
+        leafDrops = watched.getBoolean("leafDrops", false);// "Watch for when leaves drop");
         tntExplosions = watched.getBoolean("tntExplosions", true);// "Watch for when TNT explodes");
         creeperExplosions = watched.getBoolean("creeperExplosions", true);// "Watch for when Creepers explodes");
         miscExplosions = watched.getBoolean("miscExplosions", true);// "Watch for miscellaneous explosions");
         ipPlayer = watched.getBoolean("ipPlayer", true);// "Add player's IP when login");
-        lavaFlow = watched.getBoolean("lavaFlow", true);// "Log lava flow (useful for rolling-back lava)");
+        lavaFlow = watched.getBoolean("lavaFlow", false);// "Log lava flow (useful for rolling-back lava)");
     }
     
     // Database configuration
@@ -171,6 +171,7 @@ public class BBSettings {
         databaseSystem = DBMS.valueOf(name.toLowerCase());
     }
     
+    //@Deprecated
     private static void loadPropertiesFiles(File dataFolder) {
         PropertiesFile pf = new PropertiesFile(new File(dataFolder, "watching.properties"));
         blockBreak = pf.getBoolean("blockBreak", true, "Watch when players break blocks");
@@ -220,6 +221,10 @@ public class BBSettings {
         // pf.save();
     }
     
+    /**
+     * @todo Move to SQL tables.
+     * @param dataFolder
+     */
     private static void loadLists(File dataFolder) {
         File file = new File(dataFolder, "WatchedPlayers.txt");
         try {
@@ -284,10 +289,19 @@ public class BBSettings {
             return " ";
     }
     
+    /**
+     * Are we using a certain Database Management System?
+     * @param system The database system to check against.
+     * @return 
+     */
     public static boolean usingDBMS(DBMS system) {
         return databaseSystem == system;
     }
     
+    /**
+     * Get the JDBC DSN for a specific database system, with included database-specific settings.
+     * @return The DSN we want.
+     */
     public static String getDSN() {
         if (mysqlDSN != null)
             return mysqlDSN;

@@ -71,7 +71,7 @@ public class BigBrother extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        DataBlockSender.disable();
+        DataBlockSender.disable(this);
     }
 
     @Override

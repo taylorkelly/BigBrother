@@ -22,7 +22,7 @@ public class Fix1 extends Fix {
             "DROP TABLE bbdata;",
             "CREATE TABLE `bbdata` (`id` INTEGER PRIMARY KEY,`date` INT UNSIGNED NOT NULL DEFAULT '0',`player` varchar(32) NOT NULL DEFAULT 'Player',`action` tinyint NOT NULL DEFAULT '0',`world` tinyint NOT NULL DEFAULT '0',`x` int NOT NULL DEFAULT '0',`y` tinyint NOT NULL DEFAULT '0',`z` int NOT NULL DEFAULT '0',`type` smallint NOT NULL DEFAULT '0',`data` varchar(150) NOT NULL DEFAULT '',`rbacked` boolean NOT NULL DEFAULT '0');",
             "INSERT INTO bbdata SELECT id, date, player, action, world, x, y, z, type, data, rbacked FROM bbdata_backup;", "DROP TABLE bbdata_backup;" };
-    public static final String UPDATE_MYSQL = "ALTER TABLE bbdata MODIFY type smallint";
+    public static final String UPDATE_MYSQL = "ALTER TABLE bbdata MODIFY type smallint;";
 
     @Override
     public void apply() {
