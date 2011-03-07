@@ -10,25 +10,25 @@ import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 /**
- * Drop ungrouped x, y, and z indices and then create idxPosition index.
+ * Drop ungrouped x, y, and z indices and then create posIndex index.
  * @author Rob
  *
  */
 public class Fix4 extends Fix {
+
     public Fix4(File dataFolder) {
         super(dataFolder);
     }
-
     protected int version = 4;
-    
     /**
-     * Check if this works on SQLite.
+     * TODO MySQL if statement? On new tables this crashes because they have no
+     * `x`, `y`, or `z` INDEXES to drop.
      */
     public static final String UPDATE_SQL[] = {
-    	"ALTER TABLE `bbdata` DROP INDEX `x`;",
-    	"ALTER TABLE `bbdata` DROP INDEX `y`;",
-    	"ALTER TABLE `bbdata` DROP INDEX `z`;",
-    	"ALTER TABLE `bbdata` ADD INDEX `idxPosition` (`x`, `y`, `z`);"
+        "ALTER TABLE `bbdata` DROP INDEX `x`;",
+        "ALTER TABLE `bbdata` DROP INDEX `y`;",
+        "ALTER TABLE `bbdata` DROP INDEX `z`;",
+        "ALTER TABLE `bbdata` ADD INDEX `posIndex` (`x`, `y`, `z`);"
     };
 
     @Override
@@ -44,27 +44,32 @@ public class Fix4 extends Fix {
     }
 
     private static boolean updateTable(boolean sqlite) {
-        Connection conn = null;
-        Statement st = null;
-        try {
-            conn = ConnectionManager.getConnection();
-            st = conn.createStatement();
-            for(String update : UPDATE_SQL) {
-            	st.executeUpdate(update);
-            }
-            conn.commit();
+        // SQLite sucks, just skip it.
+        if (sqlite) {
             return true;
-        } catch (SQLException e) {
-            BBLogging.severe("[Fix4] Unable to remove/create new indices.", e);
-            return false;
-        } finally {
+        } else {
+            Connection conn = null;
+            Statement st = null;
             try {
-                if (st != null)
-                    st.close();
+                conn = ConnectionManager.getConnection();
+                st = conn.createStatement();
+                for (String update : UPDATE_SQL) {
+                    st.executeUpdate(update);
+                }
+                conn.commit();
+                return true;
             } catch (SQLException e) {
-                BBLogging.severe("Fix 4 failed.");
+                BBLogging.severe("[Fix4] Unable to remove/create new indices.", e);
+                return false;
+            } finally {
+                try {
+                    if (st != null) {
+                        st.close();
+                    }
+                } catch (SQLException e) {
+                    BBLogging.severe("Fix 4 failed.");
+                }
             }
         }
     }
-
 }
