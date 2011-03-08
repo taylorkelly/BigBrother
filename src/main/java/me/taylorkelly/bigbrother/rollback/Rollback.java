@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import me.taylorkelly.bigbrother.BBLogging;
 
-import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
@@ -60,14 +59,16 @@ public class Rollback {
     }
 
     public void rollback() {
-        mysqlRollback(!BBSettings.mysql);
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        Thread rollbacker = new Rollbacker(plugin, server.getScheduler());
+        rollbacker.start();
     }
 //	/**
 //	 * Rollback stuff.
 //	 * @return Rollback done
 //	 */
 //	public boolean nextPass() {
-//		return doRollback(!BBSettings.mysql);
+//		return doRollback(BBSettings.databaseSystem != DBMS.mysql);
 //	}
 //
 //	private int rollbackBlocks() {
@@ -186,12 +187,6 @@ public class Rollback {
 //
 //
 //
-
-    private void mysqlRollback(boolean sqlite) {
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-        Thread rollbacker = new Rollbacker(plugin, server.getScheduler());
-        rollbacker.start();
-    }
 
     private String getSimpleString(ArrayList<?> list) {
         StringBuilder builder = new StringBuilder();

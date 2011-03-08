@@ -6,6 +6,7 @@ import java.sql.Statement;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.util.Time;
 
@@ -124,7 +125,7 @@ public class Cleanser {
 
 		@SuppressWarnings("unused")
 		private void cleanByNumber() {
-			if (BBSettings.mysql) {
+			if (BBSettings.usingDBMS(DBMS.mysql)) {
 				if(BBSettings.maxRecords<0)
 				{
 					// Fix exception caused when trying to delete -1 records.

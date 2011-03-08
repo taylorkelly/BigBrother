@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import me.taylorkelly.bigbrother.BBDataTable;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
@@ -13,6 +12,7 @@ import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;

@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 /**
@@ -35,7 +36,7 @@ public class Fix4 extends Fix {
     public void apply() {
         if (needsUpdate(version)) {
             BBLogging.info("Updating table for 1.6.4");
-            boolean sqlite = !BBSettings.mysql;
+            boolean sqlite = BBSettings.databaseSystem == DBMS.sqlite;
 
             if (updateTable(sqlite)) {
                 updateVersion(version);
@@ -59,7 +60,7 @@ public class Fix4 extends Fix {
                 conn.commit();
                 return true;
             } catch (SQLException e) {
-                BBLogging.severe("[Fix4] Unable to remove/create new indices.", e);
+                BBLogging.severe("[Fix4] Unable to remove/create new indices.  However, this shouldn't be a problem except performance-wise.");
                 return false;
             } finally {
                 try {

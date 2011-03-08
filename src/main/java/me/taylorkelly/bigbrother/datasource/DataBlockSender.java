@@ -12,15 +12,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import me.taylorkelly.bigbrother.BBDataTable;
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.BigBrother;
-import me.taylorkelly.bigbrother.Cleanser;
 import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 public class DataBlockSender {
 
@@ -43,7 +43,7 @@ public class DataBlockSender {
 
     private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection, WorldManager manager) {
         //SQLite fix...
-        if (!BBSettings.mysql) {
+        if (BBSettings.databaseSystem == DBMS.sqlite) {
             for (BBDataBlock block : collection) {
                 manager.getWorld(block.world);
             }

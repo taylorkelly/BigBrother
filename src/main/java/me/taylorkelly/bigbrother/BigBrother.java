@@ -38,6 +38,7 @@ import me.taylorkelly.bigbrother.listeners.BBPlayerListener;
 import me.taylorkelly.bigbrother.rollback.Rollback;
 import me.taylorkelly.bigbrother.rollback.RollbackConfirmation;
 import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 import me.taylorkelly.util.Numbers;
 
 import org.bukkit.ChatColor;
@@ -92,7 +93,12 @@ public class BigBrother extends JavaPlugin {
         }
 
         // Create Connection
-        Connection conn = ConnectionManager.createConnection(this);
+        if(!ConnectionManager.createConnection(this)) {
+            BBLogging.severe("Error getting a connection, disabling BigBrother...");
+        	getServer().getPluginManager().disablePlugin(this);
+        	return;
+        }
+        Connection conn = ConnectionManager.getConnection();
         if (conn == null) {
             BBLogging.severe("Could not establish SQL connection. Disabling BigBrother");
             getServer().getPluginManager().disablePlugin(this);
