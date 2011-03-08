@@ -19,20 +19,22 @@ public class BBEntityListener extends EntityListener {
         //this.worlds = plugin.getServer().getWorlds();
     }
 
+    @Override
     public void onEntityExplode(EntityExplodeEvent event) {
         // Err... why is this null when it's a TNT?
         // Need a fix to get location.
-        if (event.getEntity() == null) {
-            if (BBSettings.tntExplosions) {
-                TNTLogger.createTNTDataBlock(event.blockList(), event.getLocation().getWorld().getName());
+        if (!event.isCancelled()) {
+            if (event.getEntity() == null) {
+                if (BBSettings.tntExplosions) {
+                    TNTLogger.createTNTDataBlock(event.blockList(), event.getLocation().getWorld().getName());
+                }
+            } else if (event.getEntity() instanceof LivingEntity) {
+                if (BBSettings.creeperExplosions) {
+                    CreeperExplosion.create(event.getEntity().getLocation(), event.blockList(), event.getLocation().getWorld().getName());
+                }
+            } else if (BBSettings.miscExplosions) {
+                MiscExplosion.create(event.getEntity().getLocation(), event.blockList(), event.getLocation().getWorld().getName());
             }
-        } else if (event.getEntity() instanceof LivingEntity) {
-            if (BBSettings.creeperExplosions) {
-                CreeperExplosion.create(event.getEntity().getLocation(), event.blockList(), event.getLocation().getWorld().getName());
-            }
-        } else if (BBSettings.miscExplosions) {
-            MiscExplosion.create(event.getEntity().getLocation(), event.blockList(), event.getLocation().getWorld().getName());
         }
-
     }
 }
