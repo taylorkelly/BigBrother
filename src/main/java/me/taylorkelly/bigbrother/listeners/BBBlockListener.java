@@ -20,6 +20,7 @@ import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockDamageLevel;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -153,6 +154,12 @@ public class BBBlockListener extends BlockListener {
 
     @Override
     public void onSignChange(SignChangeEvent event) {
+        if(event.getBlock().getState() instanceof Sign) {
+            Sign sign = (Sign)event.getBlock().getState();
+            for(String line: sign.getLines()) {
+                System.out.println("Line: " + line);
+            }
+        }
         if(!event.isCancelled() && BBSettings.blockPlace) {
             CreateSignText dataBlock = new CreateSignText(event.getPlayer().getName(), event.getLines(), event.getBlock());
             dataBlock.send();

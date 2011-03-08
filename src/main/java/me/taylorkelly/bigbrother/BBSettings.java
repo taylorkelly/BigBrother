@@ -91,15 +91,15 @@ public class BBSettings {
         }
         final File yml = new File(dataFolder, "BigBrother.yml");
         final File bbprops = new File(dataFolder, "BigBrother.properties");
-        if (!yml.exists() && bbprops.exists()) {
-            BBLogging.info("Importing properties files to new configuration file!");
+        //if (!yml.exists() && bbprops.exists()) {
+        //    BBLogging.info("Importing properties files to new configuration file!");
             loadPropertiesFiles(dataFolder);
             // Until we're sure this works.
             // bbprops.deleteOnExit();
             // (new File(dataFolder, "watching.properties")).deleteOnExit();
-        }
-        loadLists(dataFolder);
-        loadYaml(yml);
+        //}
+        //loadLists(dataFolder);
+        //loadYaml(yml);
     }
     
     private static void loadYaml(File yamlfile) {
