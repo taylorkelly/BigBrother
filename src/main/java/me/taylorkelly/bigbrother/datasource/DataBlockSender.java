@@ -61,7 +61,11 @@ public class DataBlockSender {
                     + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);
-                ps.setString(2, block.player);
+                if (block.player.length() > 32) {
+                    ps.setString(2, block.player.substring(0, 32));
+                } else {
+                    ps.setString(2, block.player);
+                }
                 ps.setInt(3, block.action.ordinal());
                 ps.setInt(4, manager.getWorld(block.world));
                 ps.setInt(5, block.x);
