@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import java.util.ArrayList;
 
 import me.taylorkelly.bigbrother.BBSettings;
+import org.bukkit.Material;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -16,13 +17,20 @@ public class BrokenBlock extends BBDataBlock {
     private ArrayList<BBDataBlock> bystanders;
 
     public BrokenBlock(String player, Block block, String world) {
+        this(player, block, world, true);
+    }
+
+    public BrokenBlock(String player, Block block, String world, boolean checks) {
         super(player, Action.BLOCK_BROKEN, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), Byte.toString(block.getData()));
         bystanders = new ArrayList<BBDataBlock>();
-        torchCheck(player, block);
-        surroundingSignChecks(player, block);
-        signCheck(player, block);
-        chestCheck(player, block);
-        checkGnomesLivingOnTop(player, block);
+        if (checks) {
+            torchCheck(player, block);
+            surroundingSignChecks(player, block);
+            signCheck(player, block);
+            chestCheck(player, block);
+            checkGnomesLivingOnTop(player, block);
+            bedCheck(player, block);
+        }
     }
 
     private void chestCheck(String player, Block block) {
@@ -184,6 +192,52 @@ public class BrokenBlock extends BBDataBlock {
 
         if (gnomes.contains(mrGnome.getTypeId())) {
             bystanders.add(new BrokenBlock(player, mrGnome, world));
+        }
+    }
+
+    private void bedCheck(String player, Block bed) {
+        if (bed.getType() == Material.BED_BLOCK) {
+            if (bed.getData() >= 8) { // Head of bed
+                Block foot = null;
+                switch (bed.getData() - 8) {
+                    case (0): // Head is pointing West
+                        foot = bed.getWorld().getBlockAt(x, y, z - 1);
+                        bystanders.add(new BrokenBlock(player, foot, world, false));
+                        break;
+                    case (1): // Head is pointing North
+                        foot = bed.getWorld().getBlockAt(x + 1, y, z);
+                        bystanders.add(new BrokenBlock(player, foot, world, false));
+                        break;
+                    case (2): // Head is pointing East
+                        foot = bed.getWorld().getBlockAt(x, y, z + 1);
+                        bystanders.add(new BrokenBlock(player, foot, world, false));
+                        break;
+                    case (3): // Head is pointing South
+                        foot = bed.getWorld().getBlockAt(x - 1, y, z);
+                        bystanders.add(new BrokenBlock(player, foot, world, false));
+                        break;
+                }
+            } else { // Foot of bed
+                Block head = null;
+                switch (bed.getData()) {
+                    case (0): // Head is pointing West
+                        head = bed.getWorld().getBlockAt(x, y, z + 1);
+                        bystanders.add(new BrokenBlock(player, head, world, false));
+                        break;
+                    case (1): // Head is pointing North
+                        head = bed.getWorld().getBlockAt(x - 1, y, z);
+                        bystanders.add(new BrokenBlock(player, head, world, false));
+                        break;
+                    case (2): // Head is pointing East
+                        head = bed.getWorld().getBlockAt(x, y, z - 1);
+                        bystanders.add(new BrokenBlock(player, head, world, false));
+                        break;
+                    case (3): // Head is pointing South
+                        head = bed.getWorld().getBlockAt(x + 1, y, z);
+                        bystanders.add(new BrokenBlock(player, head, world, false));
+                        break;
+                }
+            }
         }
     }
 }
