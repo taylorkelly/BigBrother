@@ -9,6 +9,7 @@ import me.taylorkelly.bigbrother.datablock.BrokenBlock;
 import me.taylorkelly.bigbrother.datablock.ButtonPress;
 import me.taylorkelly.bigbrother.datablock.ChestOpen;
 import me.taylorkelly.bigbrother.datablock.CreateSignText;
+import me.taylorkelly.bigbrother.datablock.DestroySignText;
 import me.taylorkelly.bigbrother.datablock.DoorOpen;
 import me.taylorkelly.bigbrother.datablock.FlintAndSteel;
 import me.taylorkelly.bigbrother.datablock.LavaFlow;
@@ -36,6 +37,7 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 public class BBBlockListener extends BlockListener {
+
     private BigBrother plugin;
     //private List<World> worlds; // Not used - N3X
 
@@ -84,30 +86,30 @@ public class BBBlockListener extends BlockListener {
             Player player = (Player) entity;
             if (plugin.watching(player) && !event.isCancelled()) {
                 switch (block.getType()) {
-                case WOODEN_DOOR:
-                    if (BBSettings.doorOpen) {
-                        DoorOpen doorDataBlock = new DoorOpen(player.getName(), block, block.getWorld().getName());
-                        doorDataBlock.send();
-                    }
-                    break;
-                case LEVER:
-                    if (BBSettings.leverSwitch) {
-                        LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block, block.getWorld().getName());
-                        leverDataBlock.send();
-                    }
-                    break;
-                case STONE_BUTTON:
-                    if (BBSettings.buttonPress) {
-                        ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block, block.getWorld().getName());
-                        buttonDataBlock.send();
-                    }
-                    break;
-                case CHEST:
-                    if (BBSettings.chestChanges) {
-                        BBDataBlock chestDataBlock = new ChestOpen(player.getName(), block, block.getWorld().getName());
-                        chestDataBlock.send();
-                    }
-                    break;
+                    case WOODEN_DOOR:
+                        if (BBSettings.doorOpen) {
+                            DoorOpen doorDataBlock = new DoorOpen(player.getName(), block, block.getWorld().getName());
+                            doorDataBlock.send();
+                        }
+                        break;
+                    case LEVER:
+                        if (BBSettings.leverSwitch) {
+                            LeverSwitch leverDataBlock = new LeverSwitch(player.getName(), block, block.getWorld().getName());
+                            leverDataBlock.send();
+                        }
+                        break;
+                    case STONE_BUTTON:
+                        if (BBSettings.buttonPress) {
+                            ButtonPress buttonDataBlock = new ButtonPress(player.getName(), block, block.getWorld().getName());
+                            buttonDataBlock.send();
+                        }
+                        break;
+                    case CHEST:
+                        if (BBSettings.chestChanges) {
+                            BBDataBlock chestDataBlock = new ChestOpen(player.getName(), block, block.getWorld().getName());
+                            chestDataBlock.send();
+                        }
+                        break;
                 }
             }
         }
@@ -154,13 +156,20 @@ public class BBBlockListener extends BlockListener {
 
     @Override
     public void onSignChange(SignChangeEvent event) {
-        if(event.getBlock().getState() instanceof Sign) {
-            Sign sign = (Sign)event.getBlock().getState();
-            for(String line: sign.getLines()) {
-                System.out.println("Line: " + line);
+        if (event.getBlock().getState() instanceof Sign) {
+            Sign sign = (Sign) event.getBlock().getState();
+            boolean oldText = false;
+            for (String line : sign.getLines()) {
+                if (!line.equals("")) {
+                    oldText = true;
+                }
+            }
+            if (oldText) {
+                DestroySignText dataBlock = new DestroySignText(event.getPlayer().getName(), (Sign) event.getBlock().getState(), event.getBlock().getWorld().getName());
+                dataBlock.send();
             }
         }
-        if(!event.isCancelled() && BBSettings.blockPlace) {
+        if (!event.isCancelled() && BBSettings.blockPlace) {
             CreateSignText dataBlock = new CreateSignText(event.getPlayer().getName(), event.getLines(), event.getBlock());
             dataBlock.send();
         }

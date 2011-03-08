@@ -70,10 +70,9 @@ public class BBSettings {
     public static long stickItem = 280L;
     
     // TODO: Get long version of this
-    public static long cleanseAge = TimeParser.parseInterval("1d12h");
+    public static long cleanseAge = TimeParser.parseInterval("3d");
     
-    // 100 million?!
-    public static long maxRecords = 100000001L;
+    public static long maxRecords = 3000001L;
     // Maximum records deleted per cleanBy*().
     // Tested with this value, 10000rows = 1-2s on a
     // Pentium 4 MySQL server with 1GB RAM and a SATA MySQL HDD
@@ -195,8 +194,8 @@ public class BBSettings {
         
         pf = new PropertiesFile(new File(dataFolder, "BigBrother.properties"));
         deletesPerCleansing = pf.getLong("deletesPerCleansing", 1000L, "The maximum number of records to delete per cleansing (0 to disable).");
-        cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "1d12h", "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
-        maxRecords = pf.getLong("maxRecords", 10000000l, "The maximum number of records that you want in your database (-1 to disable)");
+        cleanseAge = TimeParser.parseInterval(pf.getString("cleanseAge", "3d", "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
+        maxRecords = pf.getLong("maxRecords", 3000000l, "The maximum number of records that you want in your database (-1 to disable)");
         stickItem = pf.getLong("stickItem", 280L, "The item used for /bb stick");
         restoreFire = pf.getBoolean("restoreFire", false, "Restore fire when rolling back");
         autoWatch = pf.getBoolean("autoWatch", true, "Automatically start watching players");
