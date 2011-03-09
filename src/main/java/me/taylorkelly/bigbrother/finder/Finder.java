@@ -42,15 +42,11 @@ public class Finder {
     }
 
     public void find() {
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-        Thread finder = new FinderThread();
-        finder.start();
+        mysqlFind();
     }
 
     public void find(String player) {
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-        Thread finder = new FindPlayerThread(player);
-        finder.start();
+        mysqlFind(player);
     }
 
     public void find(ArrayList<String> players) {
@@ -303,26 +299,6 @@ public class Finder {
             } catch (SQLException ex) {
                 BBLogging.severe("Find SQL Exception (on close)");
             }
-        }
-    }
-
-    private class FinderThread extends Thread {
-        public void run() {
-            mysqlFind();
-        }
-    }
-
-    private class FindPlayerThread extends Thread {
-
-        private String player;
-
-        public FindPlayerThread(String player) {
-            this.player = player;
-        }
-
-        @Override
-        public void run() {
-            mysqlFind(player);
         }
     }
 }

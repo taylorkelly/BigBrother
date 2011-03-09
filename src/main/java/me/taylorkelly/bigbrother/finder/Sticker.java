@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Sticker {
     //private Server server;
+
     private HashMap<String, StickMode> playerModes;
     private ArrayList<Class<? extends StickMode>> modes;
     private WorldManager manager;
@@ -31,7 +32,7 @@ public class Sticker {
         //this.server = server;
         playerModes = new HashMap<String, StickMode>();
         modes = new ArrayList<Class<? extends StickMode>>();
-        
+
         // Add any new SuperSticks here
         modes.add(HistoryStick.class); // SS 1
         modes.add(HistoryLog.class); // SS 2
@@ -44,19 +45,19 @@ public class Sticker {
      * @param i The index of the SuperStick to change to
      */
     public void setMode(Player player, int i) {
-        if(i == 0 && playerModes.containsKey(player.getName())) {
+        if (i == 0 && playerModes.containsKey(player.getName())) {
             player.sendMessage(BigBrother.premessage + "Turning off SuperStick");
             StickMode mode = playerModes.remove(player.getName());
             mode.disable(player);
             return;
         }
         i--;
-        if(i < 0 || i >= modes.size()) {
-            player.sendMessage(BigBrother.premessage + (i+1) + " is out of SuperStick range. Setting to 1");
+        if (i < 0 || i >= modes.size()) {
+            player.sendMessage(BigBrother.premessage + (i + 1) + " is out of SuperStick range. Setting to 1");
             i = 0;
         }
         try {
-            if(playerModes.containsKey(player.getName())) {
+            if (playerModes.containsKey(player.getName())) {
                 playerModes.get(player.getName()).disable(player);
             }
             playerModes.put(player.getName(), modes.get(i).newInstance());
@@ -72,7 +73,7 @@ public class Sticker {
      * @return the description, or null if the player has no stick
      */
     public String descMode(Player player) {
-        if(playerModes.containsKey(player.getName())) {
+        if (playerModes.containsKey(player.getName())) {
             return playerModes.get(player.getName()).getDescription();
         } else {
             return null;
@@ -88,7 +89,7 @@ public class Sticker {
      * @return true if they're using their stick. false if not
      */
     public boolean hasStick(Player player, ItemStack itemStack) {
-        if(playerModes.containsKey(player.getName())) {
+        if (playerModes.containsKey(player.getName())) {
             return playerModes.get(player.getName()).usesStick(itemStack);
         }
         return false;
@@ -100,10 +101,10 @@ public class Sticker {
      * @param block The block to get info about
      */
     private void blockInfo(Player player, Block block) {
-        if(playerModes.containsKey(player.getName())) {
+        if (playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             ArrayList<String> info = mode.getInfoOnBlock(block, manager);
-            for(String msg : info) {
+            for (String msg : info) {
                 player.sendMessage(msg);
             }
         }
@@ -115,10 +116,8 @@ public class Sticker {
      * @param block The block that the stick is interacting with
      */
     public void stick(Player player, Block block) {
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-        Thread stickThread = new StickThread(player, block);
-        stickThread.start();
-        if(playerModes.containsKey(player.getName())) {
+        blockInfo(player, block);
+        if (playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             mode.update(player);
         }
@@ -130,24 +129,10 @@ public class Sticker {
      * @return Whether they are holding a right click stick
      */
     public boolean rightClickStick(Player player) {
-        if(playerModes.containsKey(player.getName())) {
+        if (playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             return mode.rightClickStick();
         }
         return false;
-    }
-
-    private class StickThread extends Thread {
-        private Player player;
-        private Block block;
-
-
-        public StickThread(Player player, Block block) {
-            this.player = player;
-            this.block = block;
-        }
-        public void run() {
-            blockInfo(player, block);
-        }
     }
 }
