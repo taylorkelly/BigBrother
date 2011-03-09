@@ -38,9 +38,9 @@ public class Fix4 extends Fix {
             BBLogging.info("Updating table for 1.6.4");
             boolean sqlite = BBSettings.databaseSystem == DBMS.sqlite;
 
-            if (updateTable(sqlite)) {
-                updateVersion(version);
-            }
+            updateTable(sqlite);
+            updateVersion(version);
+
         }
     }
 
