@@ -22,7 +22,6 @@ public class Finder {
     private Location location;
     private int radius;
     private ArrayList<Player> players;
-    //private List<World> worlds; // Not used- N3X
     private WorldManager manager;
 
     public Finder(Location location, List<World> worlds, WorldManager manager) {
@@ -30,7 +29,6 @@ public class Finder {
         this.location = location;
         this.radius = BBSettings.defaultSearchRadius;
         players = new ArrayList<Player>();
-        //this.worlds = worlds;
     }
 
     public void setRadius(double radius) {
@@ -210,9 +208,9 @@ public class Finder {
             }
             if (size > 0) {
                 StringBuilder creationList = new StringBuilder();
-                // creationList.append(Color.AQUA);
+                creationList.append(ChatColor.AQUA.toString());
                 creationList.append("Placed Blocks: ");
-                // creationList.append(Color.WHITE);
+                creationList.append(ChatColor.WHITE.toString());
                 for (Entry<Integer, Integer> entry : creations.entrySet()) {
                     creationList.append(Material.getMaterial(entry.getKey()));
                     creationList.append(" (");
@@ -223,9 +221,9 @@ public class Finder {
                     creationList.delete(creationList.lastIndexOf(","), creationList.length());
                 }
                 StringBuilder brokenList = new StringBuilder();
-                // brokenList.append(Color.RED);
+                brokenList.append(ChatColor.RED.toString());
                 brokenList.append("Broken Blocks: ");
-                // brokenList.append(Color.WHITE);
+                brokenList.append(ChatColor.WHITE.toString());
                 for (Entry<Integer, Integer> entry : destructions.entrySet()) {
                     brokenList.append(Material.getMaterial(entry.getKey()));
                     brokenList.append(" (");
@@ -236,9 +234,9 @@ public class Finder {
                     brokenList.delete(brokenList.lastIndexOf(","), brokenList.length());
                 }
                 StringBuilder explodeList = new StringBuilder();
-                // brokenList.append(Color.RED);
+                explodeList.append(ChatColor.RED.toString());
                 explodeList.append("Exploded Blocks: ");
-                // brokenList.append(Color.WHITE);
+                explodeList.append(ChatColor.WHITE.toString());
                 for (Entry<Integer, Integer> entry : explosions.entrySet()) {
                     explodeList.append(Material.getMaterial(entry.getKey()));
                     explodeList.append(" (");
@@ -250,9 +248,9 @@ public class Finder {
                 }
 
                 StringBuilder burnList = new StringBuilder();
-                // brokenList.append(Color.RED);
+                burnList.append(ChatColor.RED.toString());
                 burnList.append("Burned Blocks: ");
-                // brokenList.append(Color.WHITE);
+                burnList.append(ChatColor.WHITE.toString());
                 for (Entry<Integer, Integer> entry : burns.entrySet()) {
                     burnList.append(Material.getMaterial(entry.getKey()));
                     burnList.append(" (");

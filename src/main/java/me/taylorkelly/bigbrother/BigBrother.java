@@ -115,11 +115,6 @@ public class BigBrother extends JavaPlugin {
         BBDataTable.initialize();
         worldManager = new WorldManager();
 
-        //Check for old records - Disabled until can be optimized
-        //if (Cleanser.needsCleaning()) {
-        //    Cleanser.clean();
-        //}
-
         // Initialize Listeners
         playerListener = new BBPlayerListener(this);
         blockListener = new BBBlockListener(this);
@@ -157,6 +152,9 @@ public class BigBrother extends JavaPlugin {
 
         // Initialize DataBlockSender
         DataBlockSender.initialize(this, getDataFolder(), worldManager);
+
+        // Initialize Cleanser
+        Cleanser.initialize(this);
 
         // Done!
         BBLogging.info(name + " " + version + " enabled");
