@@ -38,7 +38,7 @@ public class Cleanser {
     }
 
     public static void initialize(BigBrother bigbrother) {
-        bigbrother.getServer().getScheduler().scheduleAsyncRepeatingTask(bigbrother, new CleanupTask(), 26000, 26000);
+        bigbrother.getServer().getScheduler().scheduleAsyncRepeatingTask(bigbrother, new CleanupTask(), 50, 26000);
     }
 
     private static class CleanupTask implements Runnable {
@@ -77,7 +77,7 @@ public class Cleanser {
             }
 
             if (BBSettings.maxRecords != -1) {
-                cleanByNumber();
+                //cleanByNumber();
             }
             BBLogging.info("Ending Cleanser thread...");
             done = true; // Wait for cleanup
@@ -139,7 +139,8 @@ public class Cleanser {
                     stmt = conn.createStatement();
                     long start = System.currentTimeMillis() / 1000;
 
-                    String cleansql = "DELETE FROM `bbdata` AS bbtable LEFT OUTER JOIN (SELECT `id` FROM `bbdata`  ORDER BY `id` DESC LIMIT 0," + Long.valueOf(BBSettings.maxRecords) + ") AS savedValues ON savedValues.id=bbtable.id WHERE savedValues.id IS NULL;";
+                    String cleansql = "DELETE FROM `bbdata` LEFT OUTER JOIN (SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0," + Long.valueOf(BBSettings.maxRecords) + ") AS `savedValues` ON `savedValues`.`id`=`bbdata`.`id` WHERE `savedValues`.`id` IS NULL";
+                    System.out.println(cleansql);
                     if (BBSettings.deletesPerCleansing > 0) {
                         cleansql += " LIMIT " + Long.valueOf(BBSettings.deletesPerCleansing);
                     }
