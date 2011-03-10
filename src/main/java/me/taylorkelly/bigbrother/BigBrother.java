@@ -54,7 +54,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BigBrother extends JavaPlugin {
-
     private BBPlayerListener playerListener;
     private BBBlockListener blockListener;
     private BBEntityListener entityListener;
@@ -66,8 +65,6 @@ public class BigBrother extends JavaPlugin {
     public String version;
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
     private Updater updater;
-    // Disabled until we can get a better way
-    //private Rollback currentRollback = null;
 
     @Override
     public void onDisable() {
@@ -167,8 +164,6 @@ public class BigBrother extends JavaPlugin {
 
     private void registerEvents() {
         // TODO Only register events that are being listened to
-        // Movement used for lag avoidance when rolling back. Disabled until we can get a better way -tkelly
-        //getServer().getPluginManager().registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Monitor, this);
         getServer().getPluginManager().registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Monitor, this);
@@ -201,24 +196,7 @@ public class BigBrother extends JavaPlugin {
     public boolean toggleWatch(String player) {
         return watcher.toggleWatch(player);
     }
-
-    /**
-     * On ANY event we can get our grubby little hands on, try and process a chunk of rollbacks at a time.
-     */
-    //Disabled until we can get a better way
-    // TODO: Convert to Scheduler.
-//    public void processPsuedotick() {
-//        // Anything in queue?
-//        if (currentRollback != null) {
-//            // Deal with it.
-//            if (currentRollback.nextPass()) {
-//                getServer().broadcastMessage(BigBrother.premessage + "Rollback complete!");
-//
-//                // Now that we're all done, make room for the next one!
-//                currentRollback = null;
-//            }
-//        }
-//    }
+    
     public String getWatchedPlayers() {
         return watcher.getWatchedPlayers();
     }
@@ -298,21 +276,12 @@ public class BigBrother extends JavaPlugin {
                             Boolean passed = interpreter.interpret();
                             if (passed != null) {
                                 if (passed) {
-                                    interpreter.send(); //Readded
-                                    //if (currentRollback == null) {
-                                    //    currentRollback = interpreter.getAndInitializeRollback();
-                                    //} else {
-                                    //    player.sendMessage(BigBrother.premessage + "Rollback already in progress, please wait for it to complete!");
-                                    //}
+                                    interpreter.send();
                                 } else {
-                                    //if (currentRollback != null) {
-                                    //    player.sendMessage(BigBrother.premessage + "Rollback already in progress, please wait for it to complete!");
-                                    //} else {
                                     player.sendMessage(BigBrother.premessage + ChatColor.RED + "Warning: " + ChatColor.WHITE + "You are rolling back without a time or radius argument.");
                                     player.sendMessage("Use " + ChatColor.RED + "/bb confirm" + ChatColor.WHITE + " to confirm the rollback.");
                                     player.sendMessage("Use " + ChatColor.RED + "/bb delete" + ChatColor.WHITE + " to delete it.");
                                     RollbackConfirmation.setRI(player, interpreter);
-                                    //}
                                 }
                             }
                         } else {
@@ -323,8 +292,7 @@ public class BigBrother extends JavaPlugin {
                         if (split.length == 1) {
                             if (RollbackConfirmation.hasRI(player)) {
                                 RollbackInterpreter interpret = RollbackConfirmation.getRI(player);
-                                interpret.send(); //Readded
-                                //currentRollback = interpret.getAndInitializeRollback();
+                                interpret.send();
                             } else {
                                 player.sendMessage(BigBrother.premessage + "You have no rollback to confirm.");
                             }
