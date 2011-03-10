@@ -102,7 +102,7 @@ public class BBSettings {
         autoWatch = yml.getBoolean("general.auto-watch", true);// "Automatically start watching players");
         defaultSearchRadius = yml.getInt("general.default-search-radius", 2);// "Default search radius for bbhere and bbfind");
         flatLog = yml.getBoolean("general.personal-log-files", false);// "If true, will also log actions to .logs (one for each player)");
-        rollbacksPerTick = yml.getInt("general.rollbacks-per-tick", 300);// "If true, will also log actions to .logs (one for each player)");
+        rollbacksPerTick = yml.getInt("general.rollbacks-per-tick", 2000);// "If true, will also log actions to .logs (one for each player)");
 
         yml.save();
     }

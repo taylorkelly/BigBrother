@@ -243,7 +243,7 @@ public class Rollback {
         private final int id;
 
         public RollbackByTick(BukkitScheduler scheduler, Plugin plugin) {
-            this.id = scheduler.scheduleSyncRepeatingTask(plugin, this, 0, 2);
+            this.id = scheduler.scheduleSyncRepeatingTask(plugin, this, 0, 1);
         }
 
         public void run() {
@@ -258,8 +258,12 @@ public class Rollback {
                 }
             }
 
+
             if (listBlocks.size() == 0) {
+                System.out.println("Done");
                 plugin.getServer().getScheduler().cancelTask(id);
+            } else {
+                System.out.println("Need to rollback " + listBlocks.size() + " more");
             }
         }
     }
