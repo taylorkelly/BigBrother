@@ -207,7 +207,7 @@ public class BBSettings {
             mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
             mysqlLowPrioInserts = yml.getBoolean("database.mysql.low-priority-insert", mysqlLowPrioInserts);
         }
-        
+
         blockBreak = yml.getBoolean("watched.blocks.block-break", watchingPf.getBoolean("blockBreak", true, "Watch when players break blocks"));// "Watch when players break blocks");
         blockPlace = yml.getBoolean("watched.blocks.block-place", watchingPf.getBoolean("blockPlace", true, "Watch when players place blocks"));// "Watch when players place blocks");
         teleport = yml.getBoolean("watched.player.teleport", watchingPf.getBoolean("teleport", true, "Watch when players teleport around"));// "Watch when players teleport around");

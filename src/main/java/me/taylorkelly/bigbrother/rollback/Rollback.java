@@ -16,6 +16,7 @@ import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
+import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -253,7 +254,11 @@ public class Rollback {
                 BBDataBlock dataBlock = listBlocks.removeFirst();
                 if (dataBlock != null) {
                     lastRollback.addFirst(dataBlock);
-                    dataBlock.rollback(server);
+                    try {
+                        dataBlock.rollback(server);
+                    } catch (Exception e) {
+                        BBLogging.warning("Caught exception when rolling back a " + dataBlock.action);
+                    }
                     count++;
                 }
             }
