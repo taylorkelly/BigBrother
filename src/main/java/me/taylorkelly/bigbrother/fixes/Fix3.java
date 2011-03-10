@@ -22,7 +22,7 @@ public class Fix3 extends Fix {
     public void apply() {
         if (needsUpdate(version)) {
             BBLogging.info("Updating table for 1.6.2");
-            boolean sqlite = BBSettings.databaseSystem == DBMS.sqlite;
+            boolean sqlite = BBSettings.databaseSystem == DBMS.SQLITE;
 
             if (updateTable(sqlite)) {
                 updateVersion(version);
@@ -31,7 +31,7 @@ public class Fix3 extends Fix {
     }
 
     private static boolean updateTable(boolean sqlite) {
-        if (BBSettings.usingDBMS(DBMS.mysql)) {
+        if (BBSettings.usingDBMS(DBMS.MYSQL)) {
             Connection conn = null;
             Statement st = null;
             try {

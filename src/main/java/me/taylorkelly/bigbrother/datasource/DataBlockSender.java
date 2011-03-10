@@ -43,7 +43,7 @@ public class DataBlockSender {
 
     private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection, WorldManager manager) {
         //SQLite fix...
-        if (BBSettings.databaseSystem == DBMS.sqlite) {
+        if (BBSettings.databaseSystem == DBMS.SQLITE) {
             for (BBDataBlock block : collection) {
                 manager.getWorld(block.world);
             }

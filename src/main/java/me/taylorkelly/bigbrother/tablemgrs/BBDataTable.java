@@ -43,11 +43,11 @@ public class BBDataTable {
     // drop them and add the posIndex above.
     
     public static void initialize() {
-        if (!bbdataTableExists(BBSettings.usingDBMS(DBMS.mysql))) {
+        if (!bbdataTableExists(BBSettings.usingDBMS(DBMS.MYSQL))) {
             BBLogging.info("Building `bbdata` table...");
-            createBBDataTable(BBSettings.databaseSystem != DBMS.mysql);
+            createBBDataTable(BBSettings.databaseSystem != DBMS.MYSQL);
         }
-        if (BBSettings.usingDBMS(DBMS.mysql)) {
+        if (BBSettings.usingDBMS(DBMS.MYSQL)) {
             // MyISAM supports caching record COUNT(*), so we don't have to wait
             // through the initial COUNT(*) of records that BB does.
             // OPTIONAL, since this could take hours on larger databases. Throw

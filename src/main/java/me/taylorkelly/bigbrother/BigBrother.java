@@ -139,10 +139,9 @@ public class BigBrother extends JavaPlugin {
         Fix fix4 = new Fix4(getDataFolder()); // 5 March, 2011 - N3X
         fix4.apply();
 
-        // Initialize Permissions, Help, Stats
+        // Initialize Permissions, Help
         BBPermissions.initialize(getServer());
         BBHelp.initialize(this);
-        Stats.initialize();
 
         // Register Events
         registerEvents();

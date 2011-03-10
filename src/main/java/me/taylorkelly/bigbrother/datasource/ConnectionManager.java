@@ -29,32 +29,32 @@ public class ConnectionManager {
     public static boolean createConnection(BigBrother bb) {
     	plugin=bb;
         try {
-            if (BBSettings.usingDBMS(DBMS.mysql)) {
+            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
             } else {
                 new JDCConnectionDriver("org.sqlite.JDBC", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
             }
             return true;
         } catch (ClassNotFoundException e) {
-            if (BBSettings.usingDBMS(DBMS.mysql)) {
+            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("Could not find lib/mysql.jar!  Please make sure it is present and readable.");
             } else {
                 BBLogging.severe("Could not find lib/sqlite.jar!  Please make sure it is present and readable.");
             }
         } catch (SQLException e) {
-            if (BBSettings.usingDBMS(DBMS.mysql)) {
+            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("MySQL error during connection:", e);
             } else {
                 BBLogging.severe("SQLite error during connection:", e);
             }
         } catch (InstantiationException e) {
-            if (BBSettings.usingDBMS(DBMS.mysql)) {
+            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("InstantiationException", e);
             } else {
                 BBLogging.severe("InstantiationException", e);
             }
         } catch (IllegalAccessException e) {
-            if (BBSettings.usingDBMS(DBMS.mysql)) {
+            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("IllegalAccessException", e);
             } else {
                 BBLogging.severe("IllegalAccessException", e);
