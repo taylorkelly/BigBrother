@@ -37,8 +37,7 @@ public class BBSettings {
     public static boolean miscExplosions;
     public static boolean ipPlayer;
     public static boolean lavaFlow;
-
-    private static boolean debugMode = false;
+    public static boolean debugMode;
     public static boolean restoreFire = false;
     public static boolean autoWatch = true;
     public static boolean flatLog = false;
@@ -80,6 +79,9 @@ public class BBSettings {
             dataFolder.mkdirs();
         }
         final File yml = new File(dataFolder, "BigBrother.yml");
+        if (BBSettings.debugMode) {
+            BBLogging.debug("Path to BigBrother.yml: " + yml.getPath());
+        }
         final File bbprops = new File(dataFolder, "BigBrother.properties");
         if (!yml.exists() && bbprops.exists()) {
             BBLogging.info("Importing properties files to new configuration file!");
@@ -90,6 +92,9 @@ public class BBSettings {
         }
         loadLists(dataFolder);
         loadYaml(yml);
+        if (BBSettings.debugMode) {
+            BBLogging.debug("Loaded Settings");
+        }
     }
 
     private static void loadYaml(File yamlfile) {
@@ -149,7 +154,7 @@ public class BBSettings {
             mysqlDatabase = yml.getString("database.mysql.database", mysqlDatabase);
             mysqlPort = yml.getInt("database.mysql.port", mysqlPort);
             mysqlEngine = yml.getString("database.mysql.engine", mysqlEngine);
-            mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
+            //mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
             mysqlLowPrioInserts = yml.getBoolean("database.mysql.low-priority-insert", mysqlLowPrioInserts);
         } else if (databaseSystem == DBMS.SQLITE) {
             // SQLite stuff here
@@ -207,7 +212,7 @@ public class BBSettings {
             }
 
             mysqlEngine = yml.getString("database.mysql.engine", mysqlEngine);
-            mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
+            //mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
             mysqlLowPrioInserts = yml.getBoolean("database.mysql.low-priority-insert", mysqlLowPrioInserts);
         }
 

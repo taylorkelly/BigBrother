@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.listeners;
 
+import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBPermissions;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
@@ -35,7 +37,6 @@ public class BBPlayerListener extends PlayerListener {
 //    public void onPlayerMove(PlayerMoveEvent event) {
 //        plugin.processPsuedotick();
 //    }
-
     @Override
     public void onPlayerCommandPreprocess(PlayerChatEvent event) {
         //plugin.processPsuedotick();
@@ -45,7 +46,6 @@ public class BBPlayerListener extends PlayerListener {
             dataBlock.send();
         }
     }
-
 
     @Override
     public void onPlayerJoin(PlayerEvent event) {
@@ -61,6 +61,14 @@ public class BBPlayerListener extends PlayerListener {
         if (BBSettings.login && plugin.watching(player)) {
             Login dataBlock = new Login(player, player.getWorld().getName());
             dataBlock.send();
+        }
+
+        if (BBSettings.debugMode) {
+            BBLogging.debug(player.getName() + " has Permissions: ");
+            BBLogging.debug("- Watching privileges: " + BBPermissions.watch(player));
+            BBLogging.debug("- Info privileges: " + BBPermissions.info(player));
+            BBLogging.debug("- Rollback privileges: " + BBPermissions.rollback(player));
+            BBLogging.debug("- Cleansing privileges: " + BBPermissions.cleanse(player));
         }
     }
 

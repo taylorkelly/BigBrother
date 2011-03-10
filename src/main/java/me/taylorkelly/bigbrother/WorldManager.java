@@ -17,12 +17,15 @@ public class WorldManager {
             "CREATE TABLE `bbworlds` ("
             + "`id` INTEGER PRIMARY KEY,"
             + "`name` varchar(50) NOT NULL DEFAULT 'world');";
-
     private HashMap<String, Integer> worldMap;
 
     public WorldManager() {
         if (!worldTableExists()) {
             createWorldTable();
+        } else {
+            if (BBSettings.debugMode) {
+                BBLogging.debug("`bbworlds` table already exists");
+            }
         }
         worldMap = loadWorlds();
     }
@@ -36,11 +39,11 @@ public class WorldManager {
      * @return The index of the world
      */
     public int getWorld(String world) {
-        if(worldMap.containsKey(world)) {
+        if (worldMap.containsKey(world)) {
             return worldMap.get(world);
         } else {
             int nextKey = 0;
-            if(!worldMap.isEmpty()) {
+            if (!worldMap.isEmpty()) {
                 nextKey = getMax(worldMap.values()) + 1;
             }
             saveWorld(world, nextKey);
@@ -57,8 +60,8 @@ public class WorldManager {
      */
     public static int getMax(Collection<Integer> values) {
         int max = -1;
-        for(Integer value : values) {
-            if(value > max) {
+        for (Integer value : values) {
+            if (value > max) {
                 max = value;
             }
         }
@@ -126,6 +129,10 @@ public class WorldManager {
             } catch (SQLException ex) {
                 BBLogging.severe("World Load Exception (on close)", ex);
             }
+        }
+
+        if (BBSettings.debugMode) {
+            BBLogging.debug("Loaded worlds: " + ret.keySet().toString());
         }
         return ret;
     }

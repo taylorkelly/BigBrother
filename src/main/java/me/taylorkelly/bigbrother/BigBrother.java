@@ -74,6 +74,9 @@ public class BigBrother extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if(BBSettings.debugMode) {
+            BBLogging.debug("Debug Mode enabled");
+        }
         // Stuff that was in Constructor
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();

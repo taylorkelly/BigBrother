@@ -71,4 +71,8 @@ public class BBLogging {
     public static void fine(String message) {
         log.log(Level.FINE, "[BBROTHER] " + message);
     }
+
+    public static void debug(String string) {
+        log.log(Level.INFO, "[BBDEBUG] " + string);
+    }
 }

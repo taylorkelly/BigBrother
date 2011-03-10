@@ -238,6 +238,7 @@ public class Rollback {
     }
 
     private class RollbackByTick implements Runnable {
+
         private final int id;
 
         public RollbackByTick(BukkitScheduler scheduler, Plugin plugin) {
@@ -263,10 +264,14 @@ public class Rollback {
 
 
             if (listBlocks.size() == 0) {
-                System.out.println("Done");
+                if (BBSettings.debugMode) {
+                    BBLogging.debug("Finished rollback");
+                }
                 plugin.getServer().getScheduler().cancelTask(id);
             } else {
-                System.out.println("Need to rollback " + listBlocks.size() + " more");
+                if (BBSettings.debugMode) {
+                    BBLogging.debug("Need to rollback " + listBlocks.size() + " more");
+                }
             }
         }
     }

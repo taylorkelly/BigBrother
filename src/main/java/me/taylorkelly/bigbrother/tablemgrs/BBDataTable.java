@@ -17,18 +17,16 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
  * @author tkelly
  */
 public class BBDataTable {
+
     public final static String BBDATA_NAME = "bbdata";
-    
     // Singletons :D
     // Used later, after I screw around with separating into
     // BBDataTableMySQL/SQLite
     // private static BBDataTable instance=null;
-    
     /**
      * CREATE TABLE syntax for mysql
      */
     public final static String BBDATA_TABLE_MYSQL = "CREATE TABLE `bbdata` (" + "`id` INT NOT NULL AUTO_INCREMENT," + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," + "`player` varchar(32) NOT NULL DEFAULT 'Player'," + "`action` tinyint NOT NULL DEFAULT '0'," + "`world` tinyint NOT NULL DEFAULT '0'," + "`x` int NOT NULL DEFAULT '0'," + "`y` tinyint UNSIGNED NOT NULL DEFAULT '0'," + "`z` int NOT NULL DEFAULT '0'," + "`type` smallint NOT NULL DEFAULT '0'," + "`data` varchar(500) NOT NULL DEFAULT ''," + "`rbacked` boolean NOT NULL DEFAULT '0'," + "PRIMARY KEY (`id`)," + "INDEX(`world`)," + "INDEX(`x`,`y`,`z`)," + "INDEX(`player`(10))," + "INDEX(`action`)," + "INDEX(`date`)," + "INDEX(`type`)," + "INDEX(`rbacked`)" + ")";
-    
     // GoMySQL suggested partitioning. Currently, I like the following modifier,
     // but it doesn't work on MySQL < 5.1. So we need to add a setting for
     // "enableMySQLPartitioning" or something
@@ -38,14 +36,17 @@ public class BBDataTable {
      * CREATE TABLE syntax for sqlite.
      */
     private final static String BBDATA_TABLE_SQLITE = "CREATE TABLE `bbdata` (" + "`id` INTEGER PRIMARY KEY," + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," + "`player` varchar(32) NOT NULL DEFAULT 'Player'," + "`action` tinyint NOT NULL DEFAULT '0'," + "`world` tinyint NOT NULL DEFAULT '0'," + "`x` int NOT NULL DEFAULT '0'," + "`y` tinyint UNSIGNED NOT NULL DEFAULT '0'," + "`z` int NOT NULL DEFAULT '0'," + "`type` smallint NOT NULL DEFAULT '0'," + "`data` varchar(500) NOT NULL DEFAULT ''," + "`rbacked` boolean NOT NULL DEFAULT '0'" + ");" + "CREATE INDEX dateIndex on bbdata (date);" + "CREATE INDEX playerIndex on bbdata (player);" + "CREATE INDEX actionIndex on bbdata (action);" + "CREATE INDEX worldIndex on bbdata (world);" + "CREATE INDEX posIndex on bbdata (x,y,z);" + "CREATE INDEX typeIndex on bbdata (type);" + "CREATE INDEX rbackedIndex on bbdata (rbacked);";
-    
+
     // Server owners watching: xIndex, yIndex, and zIndex were removed, please
     // drop them and add the posIndex above.
-    
     public static void initialize() {
         if (!bbdataTableExists(BBSettings.usingDBMS(DBMS.MYSQL))) {
             BBLogging.info("Building `bbdata` table...");
             createBBDataTable(BBSettings.databaseSystem != DBMS.MYSQL);
+        } else {
+            if (BBSettings.debugMode) {
+                BBLogging.debug("`bbdata` table already exists");
+            }
         }
         if (BBSettings.usingDBMS(DBMS.MYSQL)) {
             // MyISAM supports caching record COUNT(*), so we don't have to wait
@@ -55,7 +56,7 @@ public class BBDataTable {
             checkDBEngine(BBDATA_NAME, "MyISAM", true);
         }
     }
-    
+
     /**
      * Ensure we're using the right storage engine.
      * 
@@ -64,8 +65,9 @@ public class BBDataTable {
      */
     private static void checkDBEngine(String tableName, String requiredEngine, boolean optional) {
         String engine = getEngine(tableName);
-        if (engine == null)
+        if (engine == null) {
             return; // Error.
+        }
         if (!engine.equalsIgnoreCase(requiredEngine)) {
             if (!optional) {
                 BBLogging.warning("Changing " + tableName + " so that it uses " + requiredEngine + " instead of " + engine + ". THIS MAY TAKE A WHILE!");
@@ -78,7 +80,7 @@ public class BBDataTable {
             }
         }
     }
-    
+
     private static void setEngine(String tableName, String engine) {
         Connection conn = null;
         Statement st = null;
@@ -102,7 +104,7 @@ public class BBDataTable {
             }
         }
     }
-    
+
     private static String getEngine(String tableName) {
         Connection conn = null;
         ResultSet rs = null;
@@ -134,7 +136,7 @@ public class BBDataTable {
         }
         return engine;
     }
-    
+
     private static boolean bbdataTableExists(boolean sqlite) {
         Connection conn = null;
         ResultSet rs = null;
@@ -162,7 +164,7 @@ public class BBDataTable {
             }
         }
     }
-    
+
     private static void createBBDataTable(boolean sqlite) {
         Connection conn = null;
         Statement st = null;
@@ -190,5 +192,4 @@ public class BBDataTable {
             }
         }
     }
-    
 }
