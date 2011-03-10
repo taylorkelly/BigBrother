@@ -54,6 +54,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BigBrother extends JavaPlugin {
+
     private BBPlayerListener playerListener;
     private BBBlockListener blockListener;
     private BBEntityListener entityListener;
@@ -90,10 +91,10 @@ public class BigBrother extends JavaPlugin {
         }
 
         // Create Connection
-        if(!ConnectionManager.createConnection(this)) {
+        if (!ConnectionManager.createConnection(this)) {
             BBLogging.severe("Error getting a connection, disabling BigBrother...");
-        	getServer().getPluginManager().disablePlugin(this);
-        	return;
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         Connection conn = ConnectionManager.getConnection();
         if (conn == null) {
@@ -196,7 +197,7 @@ public class BigBrother extends JavaPlugin {
     public boolean toggleWatch(String player) {
         return watcher.toggleWatch(player);
     }
-    
+
     public String getWatchedPlayers() {
         return watcher.getWatchedPlayers();
     }
@@ -228,8 +229,16 @@ public class BigBrother extends JavaPlugin {
                 if (commandName.equals("bb")) {
                     if (split.length == 0) {
                         return false;
-                    }
-                    if (split[0].equalsIgnoreCase("watch") && BBPermissions.watch(player)) {
+                    } else if (split[0].equalsIgnoreCase("version")) {
+                        player.sendMessage("You're running: " + ChatColor.AQUA.toString() + name + " " + version);
+                    } else if (split[0].equalsIgnoreCase("update")) {
+                        if (Updatr.updateAvailable()) {
+                            player.sendMessage(ChatColor.RED.toString() + "There is an update available for " + name);
+                        } else {
+                            player.sendMessage(ChatColor.AQUA.toString() + name + " " + version + " is up to date");
+                        }
+                        player.sendMessage("You're running: " + ChatColor.AQUA.toString() + name + " " + version);
+                    } else if (split[0].equalsIgnoreCase("watch") && BBPermissions.watch(player)) {
                         if (split.length == 2) {
                             List<Player> targets = getServer().matchPlayer(split[1]);
                             Player watchee = null;
@@ -311,7 +320,7 @@ public class BigBrother extends JavaPlugin {
                         } else {
                             player.sendMessage(BigBrother.premessage + "usage is " + ChatColor.RED + "/bb delete");
                         }
-                    // Undo rollback.
+                        // Undo rollback.
                     } else if (split[0].equalsIgnoreCase("undo") && BBPermissions.rollback(player)) {
                         if (split.length == 1) {
                             if (Rollback.canUndo()) {
@@ -325,20 +334,20 @@ public class BigBrother extends JavaPlugin {
                         } else {
                             player.sendMessage(BigBrother.premessage + "Usage is " + ChatColor.RED + "/bb undo");
                         }
-                    // Report changes made to solid block.
-                    // /bb stick [1]
+                        // Report changes made to solid block.
+                        // /bb stick [1]
                     } else if (split[0].equalsIgnoreCase("stick") && BBPermissions.info(player)) {
                         if (split.length == 1) {
                             sticker.setMode(player, 1);
                             reportStickMode(player, 1);
                         } else if (split.length == 2 && Numbers.isInteger(split[1])) {
                             sticker.setMode(player, Integer.parseInt(split[1]));
-                            reportStickMode(player,Integer.parseInt(split[1]));
+                            reportStickMode(player, Integer.parseInt(split[1]));
                         } else {
                             player.sendMessage(BigBrother.premessage + "Usage is " + ChatColor.RED + "/bb stick [#]");
                         }
-                    // Report changes made to non-solid block
-                    // /bb log == /bb stick 2
+                        // Report changes made to non-solid block
+                        // /bb log == /bb stick 2
                     } else if (split[0].equalsIgnoreCase("log") && BBPermissions.info(player)) {
                         if (split.length == 1) {
                             sticker.setMode(player, 2);
@@ -449,6 +458,7 @@ public class BigBrother extends JavaPlugin {
             return true;
         }
     }
+
     /**
      * Tell the user what mode their stick is.
      * 
@@ -457,14 +467,13 @@ public class BigBrother extends JavaPlugin {
      * @author N3X15
      */
     private void reportStickMode(Player player, int stickLevel) {
-    	if(stickLevel>0)
-    	{
-    		player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
-    		player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
-    	}
-	}
+        if (stickLevel > 0) {
+            player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
+            player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
+        }
+    }
 
-	public boolean hasStick(Player player, ItemStack itemStack) {
+    public boolean hasStick(Player player, ItemStack itemStack) {
         return sticker.hasStick(player, itemStack);
     }
 
