@@ -13,21 +13,21 @@ public class ConnectionManager {
 
     private static BigBrother plugin;
 
-	public static Connection getConnection() {
+    public static Connection getConnection() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:jdc:jdcpool");
             conn.setAutoCommit(false);
             return conn;
         } catch (SQLException e) {
             BBLogging.severe("Error getting a connection, disabling BigBrother...", e);
-        	plugin.getServer().getPluginManager().disablePlugin(plugin);
-        	plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
             return null;
         }
     }
 
     public static boolean createConnection(BigBrother bb) {
-    	plugin=bb;
+        plugin = bb;
         try {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
@@ -38,25 +38,21 @@ public class ConnectionManager {
         } catch (ClassNotFoundException e) {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("Could not find lib/mysql.jar!  Please make sure it is present and readable.");
-            } else {
+            } else if (BBSettings.usingDBMS(DBMS.SQLITE)) {
                 BBLogging.severe("Could not find lib/sqlite.jar!  Please make sure it is present and readable.");
             }
         } catch (SQLException e) {
-            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
-                BBLogging.severe("MySQL error during connection:", e);
-            } else {
-                BBLogging.severe("SQLite error during connection:", e);
-            }
+            BBLogging.severe(BBSettings.databaseSystem.name() + " error during connection:", e);
         } catch (InstantiationException e) {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("InstantiationException", e);
-            } else {
+            } else if (BBSettings.usingDBMS(DBMS.SQLITE)) {
                 BBLogging.severe("InstantiationException", e);
             }
         } catch (IllegalAccessException e) {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("IllegalAccessException", e);
-            } else {
+            } else if (BBSettings.usingDBMS(DBMS.SQLITE)) {
                 BBLogging.severe("IllegalAccessException", e);
             }
         }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBSettings;
 
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
@@ -62,130 +63,6 @@ public class Rollback {
         Thread rollbacker = new Rollbacker(plugin, server.getScheduler());
         rollbacker.start();
     }
-//	/**
-//	 * Rollback stuff.
-//	 * @return Rollback done
-//	 */
-//	public boolean nextPass() {
-//		return doRollback(BBSettings.databaseSystem != DBMS.mysql);
-//	}
-//
-//	private int rollbackBlocks() {
-//		lastRollback.clear();
-//		int numChanged = 0;
-//		while (listBlocks.size() > 0) {
-//			BBDataBlock dataBlock = listBlocks.removeFirst();
-//			if (dataBlock != null) {
-//				lastRollback.addFirst(dataBlock);
-//				dataBlock.rollback(server);
-//				numChanged++;
-//				if(numChanged > BBSettings.maxBlocksRolledBackPerPass)
-//					return numChanged-1;
-//			}
-//		}
-//		Stats.logRollback(size);
-//		return numChanged;
-//	}
-//
-//
-//	private boolean doRollback(boolean sqlite) {
-//		PreparedStatement ps = null;
-//		ResultSet set = null;
-//		Connection conn = null;
-//		int blocksRolled=-1;
-//		boolean done=false;
-//		try {
-//			conn = ConnectionManager.getConnection();
-//			blocksRolled=rollbackBlocks();
-//			ps = conn.prepareStatement(RollbackPreparedStatement.update(this, manager));
-//			ps.execute();
-//			conn.commit();
-//
-//			for (Player player : recievers) {
-//				player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
-//			}
-//			undoRollback = RollbackPreparedStatement.undoStatement(this, manager);
-//			done=(blocksRolled<BBSettings.maxBlocksRolledBackPerPass);
-//		} catch (SQLException ex) {
-//			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception", ex);
-//			done=true;
-//		} finally {
-//			try {
-//				if (set != null)
-//					set.close();
-//				if (ps != null)
-//					ps.close();
-//				if (conn != null)
-//					conn.close();
-//			} catch (SQLException ex) {
-//				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback edit SQL Exception (on close)");
-//			}
-//		}
-//		return done;
-//	}
-//
-//
-//
-//	/**
-//	 * Prefretch blocks that need changin'.
-//	 *
-//	 * Should be done in a seperate thread to avoid blocking the server...
-//	 * @return Success
-//	 */
-//	public boolean prepareRollback()
-//	{
-//		boolean success=false;
-//		PreparedStatement ps = null;
-//		ResultSet set = null;
-//		Connection conn = null;
-//		try {
-//
-//			conn = ConnectionManager.getConnection();
-//			ps = conn.prepareStatement(RollbackPreparedStatement.create(this,manager));
-//			set = ps.executeQuery();
-//			conn.commit();
-//			size=0;
-//			if (size > 0) {
-//				for (Player player : recievers) {
-//					player.sendMessage(BigBrother.premessage + "Rolling back " + size + " edits.");
-//					String players = (rollbackAll) ? "All Players" : getSimpleString(this.players);
-//					player.sendMessage(ChatColor.BLUE + "Player(s): " + ChatColor.WHITE + players);
-//					if (blockTypes.size() > 0) {
-//						player.sendMessage(ChatColor.BLUE + "Block Type(s): " + ChatColor.WHITE + getSimpleString(this.blockTypes));
-//					}
-//					if (time != 0) {
-//						Calendar cal = Calendar.getInstance();
-//						String DATE_FORMAT = "kk:mm:ss 'on' MMM d";
-//						SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-//						cal.setTimeInMillis(time * 1000);
-//						player.sendMessage(ChatColor.BLUE + "Since: " + ChatColor.WHITE + sdf.format(cal.getTime()));
-//					}
-//					if (radius != 0) {
-//						player.sendMessage(ChatColor.BLUE + "Radius: " + ChatColor.WHITE + radius + " blocks");
-//					}
-//
-//				}
-//			}
-//			success=true;
-//		} catch (SQLException ex) {
-//			BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception", ex);
-//		} finally {
-//			try {
-//				if (set != null)
-//					set.close();
-//				if (ps != null)
-//					ps.close();
-//				if (conn != null)
-//					conn.close();
-//			} catch (SQLException ex) {
-//				BigBrother.log.log(Level.SEVERE, "[BBROTHER]: Rollback get SQL Exception (on close)");
-//			}
-//		}
-//		return success;
-//	}
-//
-//
-//
 
     private String getSimpleString(ArrayList<?> list) {
         StringBuilder builder = new StringBuilder();
@@ -215,17 +92,9 @@ public class Rollback {
     }
 
     private void rollbackBlocks() {
-        //TODO Threading
         lastRollback.clear();
-        long rollbackSize = 0;
-        while (listBlocks.size() > 0) {
-            BBDataBlock dataBlock = listBlocks.removeFirst();
-            if (dataBlock != null) {
-                lastRollback.addFirst(dataBlock);
-                dataBlock.rollback(server);
-                rollbackSize++;
-            }
-        }
+        RollbackByTick runner = new RollbackByTick();
+        runner.setId(plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, runner, 0, 1));
     }
 
     public static boolean canUndo() {
@@ -334,7 +203,10 @@ public class Rollback {
                     }
                     try {
                         ps.close();
-                        scheduler.scheduleSyncDelayedTask(plugin, new RollbackTask());
+                        rollbackBlocks();
+                        for (Player player : recievers) {
+                            player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
+                        }
                         ps = conn.prepareStatement(RollbackPreparedStatement.update(Rollback.this, manager));
                         ps.execute();
                         conn.commit();
@@ -367,12 +239,31 @@ public class Rollback {
         }
     }
 
-    private class RollbackTask implements Runnable {
+    private class RollbackByTick implements Runnable {
+
+        private int id;
+
+        public RollbackByTick() {
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public void run() {
-            rollbackBlocks();
-            for (Player player : recievers) {
-                player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
+            int count = 0;
+
+            while (count < BBSettings.rollbacksPerTick && listBlocks.size() > 0) {
+                BBDataBlock dataBlock = listBlocks.removeFirst();
+                if (dataBlock != null) {
+                    lastRollback.addFirst(dataBlock);
+                    dataBlock.rollback(server);
+                    count++;
+                }
+            }
+
+            if (listBlocks.size() == 0) {
+                plugin.getServer().getScheduler().cancelTask(id);
             }
         }
     }
