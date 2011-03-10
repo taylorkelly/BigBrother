@@ -243,7 +243,7 @@ public class Rollback {
         private final int id;
 
         public RollbackByTick(BukkitScheduler scheduler, Plugin plugin) {
-            this.id = scheduler.scheduleAsyncRepeatingTask(plugin, this, 0, 2);
+            this.id = scheduler.scheduleSyncRepeatingTask(plugin, this, 0, 2);
         }
 
         public void run() {
