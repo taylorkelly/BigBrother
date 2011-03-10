@@ -8,15 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
+
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
-
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
-import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,20 +26,20 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 public class Rollback {
 
-    Server server;
-    ArrayList<Player> recievers;
-    ArrayList<String> players;
-    boolean rollbackAll;
-    long time;
-    ArrayList<Integer> blockTypes;
-    int radius;
-    Location center;
-    private LinkedList<BBDataBlock> listBlocks;
-    private static LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
+    public final Server server;
+    private final ArrayList<Player> recievers;
+    public final ArrayList<String> players;
+    public boolean rollbackAll;
+    public long time;
+    public final ArrayList<Integer> blockTypes;
+    public int radius;
+    public Location center;
+    private final LinkedList<BBDataBlock> listBlocks;
+    private static final LinkedList<BBDataBlock> lastRollback = new LinkedList<BBDataBlock>();
     private static String undoRollback = null;
-    private WorldManager manager;
+    private final WorldManager manager;
     //private int size; // Number of items to roll back
-    private Plugin plugin;
+    private final Plugin plugin;
 
     public Rollback(Server server, WorldManager manager, Plugin plugin) {
         this.manager = manager;
@@ -51,7 +50,6 @@ public class Rollback {
         blockTypes = new ArrayList<Integer>();
         players = new ArrayList<String>();
         recievers = new ArrayList<Player>();
-
         listBlocks = new LinkedList<BBDataBlock>();
     }
 
@@ -240,13 +238,13 @@ public class Rollback {
     }
 
     private class RollbackByTick implements Runnable {
-
         private final int id;
 
         public RollbackByTick(BukkitScheduler scheduler, Plugin plugin) {
             this.id = scheduler.scheduleSyncRepeatingTask(plugin, this, 0, 1);
         }
 
+        @Override
         public void run() {
             int count = 0;
 

@@ -37,6 +37,8 @@ public class BBSettings {
     public static boolean miscExplosions;
     public static boolean ipPlayer;
     public static boolean lavaFlow;
+
+    private static boolean debugMode = false;
     public static boolean restoreFire = false;
     public static boolean autoWatch = true;
     public static boolean flatLog = false;
@@ -103,6 +105,7 @@ public class BBSettings {
         defaultSearchRadius = yml.getInt("general.default-search-radius", 2);// "Default search radius for bbhere and bbfind");
         flatLog = yml.getBoolean("general.personal-log-files", false);// "If true, will also log actions to .logs (one for each player)");
         rollbacksPerTick = yml.getInt("general.rollbacks-per-tick", 2000);// "If true, will also log actions to .logs (one for each player)");
+        debugMode = yml.getBoolean("general.debug-mode", false);// "If true, will also log actions to .logs (one for each player)");
 
         yml.save();
     }
