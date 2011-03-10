@@ -93,8 +93,7 @@ public class Rollback {
 
     private void rollbackBlocks() {
         lastRollback.clear();
-        RollbackByTick runner = new RollbackByTick();
-        runner.setId(plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, runner, 0, 1));
+        RollbackByTick runner = new RollbackByTick(plugin.getServer().getScheduler(), plugin);
     }
 
     public static boolean canUndo() {
@@ -241,13 +240,10 @@ public class Rollback {
 
     private class RollbackByTick implements Runnable {
 
-        private int id;
+        private final int id;
 
-        public RollbackByTick() {
-        }
-
-        public void setId(int id) {
-            this.id = id;
+        public RollbackByTick(BukkitScheduler scheduler, Plugin plugin) {
+            this.id = scheduler.scheduleAsyncRepeatingTask(plugin, this, 0, 2);
         }
 
         public void run() {
