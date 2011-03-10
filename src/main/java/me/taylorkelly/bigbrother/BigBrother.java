@@ -278,8 +278,6 @@ public class BigBrother extends JavaPlugin {
                             player.sendMessage(BigBrother.premessage + "Now watching:");
                             player.sendMessage(watchedPlayers);
                         }
-                    } else if (split[0].equalsIgnoreCase("stats") && BBPermissions.info(player)) {
-                        Stats.report(player);
                     } else if (split[0].equalsIgnoreCase("unwatched") && BBPermissions.info(player)) {
                         String unwatchedPlayers = getUnwatchedPlayers();
                         if (unwatchedPlayers.equals("")) {

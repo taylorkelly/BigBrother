@@ -16,7 +16,6 @@ import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.BigBrother;
-import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
@@ -237,8 +236,6 @@ public class DataBlockSender {
             if (!worked) {
                 SENDING.addAll(collection);
                 BBLogging.warning("SQL send failed. Keeping data for later send.");
-            } else {
-                Stats.logBlocks(collection.size());
             }
         }
     }

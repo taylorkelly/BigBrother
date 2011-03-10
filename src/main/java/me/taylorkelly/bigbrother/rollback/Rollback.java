@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import me.taylorkelly.bigbrother.BBLogging;
 
 import me.taylorkelly.bigbrother.BigBrother;
-import me.taylorkelly.bigbrother.Stats;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
@@ -227,9 +226,6 @@ public class Rollback {
                 rollbackSize++;
             }
         }
-
-        Stats.logRollback(rollbackSize);
-
     }
 
     public static boolean canUndo() {
