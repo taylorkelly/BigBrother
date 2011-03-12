@@ -131,9 +131,7 @@ public class WorldManager {
             }
         }
 
-        if (BBSettings.debugMode) {
-            BBLogging.debug("Loaded worlds: " + ret.keySet().toString());
-        }
+        BBLogging.debug("Loaded worlds: " + ret.keySet().toString());
         return ret;
     }
 

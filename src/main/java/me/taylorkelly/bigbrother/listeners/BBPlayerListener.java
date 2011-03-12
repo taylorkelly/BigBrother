@@ -63,13 +63,11 @@ public class BBPlayerListener extends PlayerListener {
             dataBlock.send();
         }
 
-        if (BBSettings.debugMode) {
-            BBLogging.debug(player.getName() + " has Permissions: ");
-            BBLogging.debug("- Watching privileges: " + BBPermissions.watch(player));
-            BBLogging.debug("- Info privileges: " + BBPermissions.info(player));
-            BBLogging.debug("- Rollback privileges: " + BBPermissions.rollback(player));
-            BBLogging.debug("- Cleansing privileges: " + BBPermissions.cleanse(player));
-        }
+        BBLogging.debug(player.getName() + " has Permissions: ");
+        BBLogging.debug("- Watching privileges: " + BBPermissions.watch(player));
+        BBLogging.debug("- Info privileges: " + BBPermissions.info(player));
+        BBLogging.debug("- Rollback privileges: " + BBPermissions.rollback(player));
+        BBLogging.debug("- Cleansing privileges: " + BBPermissions.cleanse(player));
     }
 
     @Override

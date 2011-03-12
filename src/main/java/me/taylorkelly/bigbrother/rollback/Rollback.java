@@ -264,14 +264,12 @@ public class Rollback {
 
 
             if (listBlocks.size() == 0) {
-                if (BBSettings.debugMode) {
-                    BBLogging.debug("Finished rollback");
-                }
+                BBLogging.debug("Finished rollback");
+
                 plugin.getServer().getScheduler().cancelTask(id);
             } else {
-                if (BBSettings.debugMode) {
-                    BBLogging.debug("Need to rollback " + listBlocks.size() + " more");
-                }
+                BBLogging.debug("Need to rollback " + listBlocks.size() + " more");
+
             }
         }
     }

@@ -39,7 +39,6 @@ public class BBLogging {
         log.log(Level.FINE, "[BBROTHER] " + message, e);
     }
 
-
     /**
      * Log INFO-level messages with a minimum of cruft.
      * @author N3X15
@@ -73,6 +72,8 @@ public class BBLogging {
     }
 
     public static void debug(String string) {
-        log.log(Level.INFO, "[BBDEBUG] " + string);
+        if (BBSettings.debugMode) {
+            log.log(Level.FINE, "[BBDEBUG] " + string);
+        }
     }
 }

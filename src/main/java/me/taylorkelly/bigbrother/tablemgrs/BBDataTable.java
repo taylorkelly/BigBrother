@@ -44,9 +44,8 @@ public class BBDataTable {
             BBLogging.info("Building `bbdata` table...");
             createBBDataTable(BBSettings.databaseSystem != DBMS.MYSQL);
         } else {
-            if (BBSettings.debugMode) {
-                BBLogging.debug("`bbdata` table already exists");
-            }
+            BBLogging.debug("`bbdata` table already exists");
+
         }
         if (BBSettings.usingDBMS(DBMS.MYSQL)) {
             // MyISAM supports caching record COUNT(*), so we don't have to wait

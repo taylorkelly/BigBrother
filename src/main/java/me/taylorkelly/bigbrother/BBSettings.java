@@ -79,9 +79,7 @@ public class BBSettings {
             dataFolder.mkdirs();
         }
         final File yml = new File(dataFolder, "BigBrother.yml");
-        if (BBSettings.debugMode) {
-            BBLogging.debug("Path to BigBrother.yml: " + yml.getPath());
-        }
+        BBLogging.debug("Path to BigBrother.yml: " + yml.getPath());
         final File bbprops = new File(dataFolder, "BigBrother.properties");
         if (!yml.exists() && bbprops.exists()) {
             BBLogging.info("Importing properties files to new configuration file!");
@@ -92,9 +90,8 @@ public class BBSettings {
         }
         loadLists(dataFolder);
         loadYaml(yml);
-        if (BBSettings.debugMode) {
-            BBLogging.debug("Loaded Settings");
-        }
+        BBLogging.debug("Loaded Settings");
+
     }
 
     private static void loadYaml(File yamlfile) {
@@ -171,11 +168,11 @@ public class BBSettings {
 
         final BetterConfig yml = new BetterConfig(yamlfile);
         yml.load();
-        stickItem = yml.getInt("stick-item", propsPf.getInt("stickItem", 280, "The item used for /bb stick"));
-        restoreFire = yml.getBoolean("restore-fire", propsPf.getBoolean("restoreFire", false, "Restore fire when rolling back"));
-        autoWatch = yml.getBoolean("auto-watch", propsPf.getBoolean("autoWatch", true, "Automatically start watching players"));
-        defaultSearchRadius = yml.getInt("default-search-radius", propsPf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind"));
-        flatLog = yml.getBoolean("personal-log-files", propsPf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)"));
+        stickItem = yml.getInt("general.stick-item", propsPf.getInt("stickItem", 280, "The item used for /bb stick"));
+        restoreFire = yml.getBoolean("general.restore-fire", propsPf.getBoolean("restoreFire", false, "Restore fire when rolling back"));
+        autoWatch = yml.getBoolean("general.auto-watch", propsPf.getBoolean("autoWatch", true, "Automatically start watching players"));
+        defaultSearchRadius = yml.getInt("general.default-search-radius", propsPf.getInt("defaultSearchRadius", 2, "Default search radius for bbhere and bbfind"));
+        flatLog = yml.getBoolean("general.personal-log-files", propsPf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)"));
 
 
         if (propsPf.getBoolean("MySQL", true, "If true, uses MySQL. If false, uses Sqlite")) {

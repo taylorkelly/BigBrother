@@ -29,9 +29,7 @@ public class ConnectionManager {
     public static boolean createConnection(BigBrother bb) {
         plugin = bb;
         try {
-            if (BBSettings.debugMode) {
-                BBLogging.debug("Creating connection using " + BBSettings.databaseSystem + " at " + BBSettings.getDSN());
-            }
+            BBLogging.debug("Creating connection using " + BBSettings.databaseSystem + " at " + BBSettings.getDSN());
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
             } else {
