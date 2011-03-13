@@ -474,32 +474,18 @@ public class BigBrother extends JavaPlugin {
         if (stickLevel > 0) {
             player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
             player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");
-
-
-
-
         }
     }
 
     public boolean hasStick(Player player, ItemStack itemStack) {
         return sticker.hasStick(player, itemStack);
-
-
-
-
     }
 
     public void stick(Player player, Block block) {
         sticker.stick(player, block);
-
-
-
-
     }
 
     public boolean rightClickStick(Player player) {
         return sticker.rightClickStick(player);
-
-
     }
 }
