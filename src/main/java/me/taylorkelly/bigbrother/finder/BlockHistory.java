@@ -55,19 +55,7 @@ public class BlockHistory {
         } catch (SQLException ex) {
             BBLogging.severe("Find SQL Exception", ex);
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("Find SQL Exception (on close)", ex);
-            }
+            ConnectionManager.cleanup( "Find",  conn, ps, rs );
         }
         return blockList;
     }

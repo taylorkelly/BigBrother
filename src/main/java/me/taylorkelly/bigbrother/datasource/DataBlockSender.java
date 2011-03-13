@@ -91,19 +91,7 @@ public class DataBlockSender {
             BBLogging.severe("Data Insert SQL Exception when sending blocks", ex);
             return false;
         } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                if (rs != null) {
-                    rs.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("Data Insert SQL Exception when sending blocks (on close)", ex);
-            }
+            ConnectionManager.cleanup( "Data Insert",  conn, ps, rs );
         }
     }
 
