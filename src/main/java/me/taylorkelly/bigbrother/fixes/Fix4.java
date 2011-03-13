@@ -38,9 +38,8 @@ public class Fix4 extends Fix {
             BBLogging.info("Updating table for 1.7");
             boolean sqlite = BBSettings.databaseSystem == DBMS.SQLITE;
 
-            updateTable(sqlite);
             updateVersion(version);
-
+            updateTable(sqlite);
         }
     }
 
@@ -63,7 +62,7 @@ public class Fix4 extends Fix {
                 BBLogging.severe("[Fix4] Unable to remove/create new indices.  However, this shouldn't be a problem except performance-wise.");
                 return false;
             } finally {
-                ConnectionManager.cleanup( "Fix 4",  conn, st, null );
+                ConnectionManager.cleanup("Fix 4", conn, st, null);
             }
         }
     }
