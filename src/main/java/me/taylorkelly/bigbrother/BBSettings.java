@@ -37,6 +37,9 @@ public class BBSettings {
     public static boolean miscExplosions;
     public static boolean ipPlayer;
     public static boolean lavaFlow;
+
+
+    public static boolean libraryAutoDownload;
     public static boolean debugMode;
     public static boolean restoreFire = false;
     public static boolean autoWatch = true;
@@ -62,11 +65,11 @@ public class BBSettings {
     public static int stickItem = 280;
     // TODO: Get long version of this
     public static long cleanseAge = TimeParser.parseInterval("3d");
-    public static long maxRecords = 3000001L;
+    public static long maxRecords = 3000000L;
     // Maximum records deleted per cleanBy*().
     // Tested with this value, 10000rows = 1-2s on a
     // Pentium 4 MySQL server with 1GB RAM and a SATA MySQL HDD
-    public static long deletesPerCleansing = 10000L;
+    public static long deletesPerCleansing = 20000L;
     private static ArrayList<String> watchList;
     private static ArrayList<String> seenList;
     public static int rollbacksPerTick;
@@ -108,7 +111,7 @@ public class BBSettings {
         flatLog = yml.getBoolean("general.personal-log-files", false);// "If true, will also log actions to .logs (one for each player)");
         rollbacksPerTick = yml.getInt("general.rollbacks-per-tick", 2000);// "If true, will also log actions to .logs (one for each player)");
         debugMode = yml.getBoolean("general.debug-mode", false);// "If true, will also log actions to .logs (one for each player)");
-
+        libraryAutoDownload = yml.getBoolean("general.library-autodownload", true);// "If true, will also log actions to .logs (one for each player)");
         yml.save();
     }
 

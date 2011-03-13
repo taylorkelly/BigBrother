@@ -83,12 +83,16 @@ public class BigBrother extends JavaPlugin {
         BBSettings.initialize(getDataFolder());
 
         // Download dependencies...
-        updater = new Updater();
-        try {
-            updater.check();
-            updater.update();
-        } catch (Throwable e) {
-            BBLogging.severe("Could not download dependencies", e);
+        if (BBSettings.libraryAutoDownload) {
+            updater = new Updater();
+            try {
+                updater.check();
+                updater.update();
+            } catch (Throwable e) {
+                BBLogging.severe("Could not download dependencies", e);
+            }
+        } else {
+            BBLogging.debug("Downloading libraries was skipped");
         }
 
         // Create Connection
