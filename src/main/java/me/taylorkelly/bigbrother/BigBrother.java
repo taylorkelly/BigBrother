@@ -19,7 +19,6 @@ package me.taylorkelly.bigbrother;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -62,8 +61,8 @@ public class BigBrother extends JavaPlugin {
     private Watcher watcher;
     private Sticker sticker;
     private WorldManager worldManager;
-    public String name;
-    public String version;
+    public static String name;
+    public static String version;
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
     private Updater updater;
 
@@ -107,7 +106,7 @@ public class BigBrother extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
-            ConnectionManager.cleanup( "onEnable",  conn, null, null );
+            ConnectionManager.cleanup("onEnable", conn, null, null);
         }
 
         // Initialize tables
@@ -233,12 +232,7 @@ public class BigBrother extends JavaPlugin {
                     } else if (split[0].equalsIgnoreCase("version")) {
                         player.sendMessage("You're running: " + ChatColor.AQUA.toString() + name + " " + version);
                     } else if (split[0].equalsIgnoreCase("update")) {
-                        if (Updatr.updateAvailable()) {
-                            player.sendMessage(ChatColor.RED.toString() + "There is an update available for " + name);
-                        } else {
-                            player.sendMessage(ChatColor.AQUA.toString() + name + " " + version + " is up to date");
-                        }
-                        player.sendMessage("You're running: " + ChatColor.AQUA.toString() + name + " " + version);
+                        Updatr.updateAvailable(player);
                     } else if (split[0].equalsIgnoreCase("watch") && BBPermissions.watch(player)) {
                         if (split.length == 2) {
                             List<Player> targets = getServer().matchPlayer(split[1]);
