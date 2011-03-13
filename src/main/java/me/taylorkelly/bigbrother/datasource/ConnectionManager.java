@@ -3,6 +3,8 @@ package me.taylorkelly.bigbrother.datasource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.ResultSet;
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.BigBrother;
@@ -58,5 +60,31 @@ public class ConnectionManager {
             }
         }
         return false;
+    }
+
+    public static void cleanup( String caller, Connection conn, Statement stmt, ResultSet rs ) {
+        try {
+            if ( null != rs ) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            BBLogging.severe("Error closing recordset from '" + caller + "':", e);
+        }
+
+        try {
+            if ( null != stmt ) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            BBLogging.severe("Error closing statement from '" + caller + "':", e);
+        }
+
+        try {
+            if ( null != conn ) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            BBLogging.severe("Error closing connection from '" + caller + "':", e);
+        }
     }
 }

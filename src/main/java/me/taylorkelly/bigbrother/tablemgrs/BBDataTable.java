@@ -13,7 +13,7 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 /**
  * Handler class for the bbdata table
- * 
+ *
  * @author tkelly
  */
 public class BBDataTable {
@@ -58,7 +58,7 @@ public class BBDataTable {
 
     /**
      * Ensure we're using the right storage engine.
-     * 
+     *
      * @param tableName
      * @param requiredEngine
      */
@@ -91,16 +91,7 @@ public class BBDataTable {
         } catch (SQLException e) {
             BBLogging.severe("Altering " + tableName + " to use " + engine + " triggered an exception.", e);
         } finally {
-            try {
-                if (st != null) {
-                    st.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                BBLogging.severe("Could not create the table (on close)");
-            }
+            ConnectionManager.cleanup( "setEngine",  conn, st, null );
         }
     }
 
@@ -122,16 +113,7 @@ public class BBDataTable {
         } catch (SQLException e) {
             BBLogging.severe("Could not retreive table information.", e);
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                BBLogging.severe("Could not retreive table information (On close).", e);
-            }
+            ConnectionManager.cleanup( "getEngine",  conn, stmt, rs );
         }
         return engine;
     }
@@ -151,16 +133,7 @@ public class BBDataTable {
             BBLogging.severe("Table Check SQL Exception" + ((sqlite) ? " sqlite" : " mysql"), ex);
             return false;
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("Table Check SQL Exception (on closing)");
-            }
+            ConnectionManager.cleanup( "Table Check",  conn, null, rs );
         }
     }
 
@@ -170,25 +143,12 @@ public class BBDataTable {
         try {
             conn = ConnectionManager.getConnection();
             st = conn.createStatement();
-            if (sqlite) {
-                st.executeUpdate(BBDATA_TABLE_SQLITE);
-            } else {
-                st.executeUpdate(BBDATA_TABLE_MYSQL);
-            }
+            st.executeUpdate( sqlite ? BBDATA_TABLE_SQLITE : BBDATA_TABLE_MYSQL );
             conn.commit();
         } catch (SQLException e) {
             BBLogging.severe("Create Table SQL Exception" + ((sqlite) ? " sqlite" : " mysql"), e);
         } finally {
-            try {
-                if (st != null) {
-                    st.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                BBLogging.severe("Could not create the table (on close)");
-            }
+            ConnectionManager.cleanup( "Create Table",  conn, st, null );
         }
     }
 }

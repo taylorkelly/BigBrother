@@ -112,16 +112,7 @@ public class Cleanser {
             } catch (SQLException ex) {
                 BBLogging.severe("Cleanse SQL exception (by age)", ex);
             } finally {
-                try {
-                    if (stmt != null) {
-                        stmt.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    BBLogging.severe("Cleanse SQL exception (by age) (on close)", ex);
-                }
+                ConnectionManager.cleanup( "Cleanse (by age)",  conn, stmt, null );
             }
         }
 
@@ -167,16 +158,7 @@ public class Cleanser {
                         }
                     }
                 } finally {
-                    try {
-                        if (stmt != null) {
-                            stmt.close();
-                        }
-                        if (conn != null) {
-                            conn.close();
-                        }
-                    } catch (SQLException ex) {
-                        BBLogging.severe("Cleanse SQL exception (by #) (on close)", ex);
-                    }
+                    ConnectionManager.cleanup( "Cleanse (by #)",  conn, stmt, null );
                 }
 
             } else {

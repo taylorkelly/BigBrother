@@ -63,13 +63,7 @@ public class Fix4 extends Fix {
                 BBLogging.severe("[Fix4] Unable to remove/create new indices.  However, this shouldn't be a problem except performance-wise.");
                 return false;
             } finally {
-                try {
-                    if (st != null) {
-                        st.close();
-                    }
-                } catch (SQLException e) {
-                    BBLogging.severe("Fix 4 failed.");
-                }
+                ConnectionManager.cleanup( "Fix 4",  conn, st, null );
             }
         }
     }

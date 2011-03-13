@@ -44,13 +44,7 @@ public class Fix3 extends Fix {
                 BBLogging.severe("Update Table 1.6.2 Fail " + ((sqlite) ? " sqlite" : " mysql"), e);
                 return false;
             } finally {
-                try {
-                    if (st != null) {
-                        st.close();
-                    }
-                } catch (SQLException e) {
-                    BBLogging.severe("Update Table 1.6.2 Fail (on close)");
-                }
+                ConnectionManager.cleanup( "Update Table 1.6.2",  conn, st, null );
             }
         } else {
             return true;

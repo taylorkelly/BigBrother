@@ -83,16 +83,7 @@ public class WorldManager {
             BBLogging.severe("World Insert Exception", ex);
             return false;
         } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("World Insert Exception (on close)", ex);
-            }
+            ConnectionManager.cleanup( "World Insert",  conn, ps, null );
         }
     }
 
@@ -116,19 +107,7 @@ public class WorldManager {
         } catch (SQLException ex) {
             BBLogging.severe("World Load Exception", ex);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (set != null) {
-                    set.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("World Load Exception (on close)", ex);
-            }
+            ConnectionManager.cleanup( "World Load",  conn, statement, set );
         }
 
         BBLogging.debug("Loaded worlds: " + ret.keySet().toString());
@@ -150,16 +129,7 @@ public class WorldManager {
             BBLogging.severe("World Table Check SQL Exception", ex);
             return false;
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                BBLogging.severe("World Table Check SQL Exception (on closing)");
-            }
+            ConnectionManager.cleanup( "World Table Check",  conn, null, rs );
         }
     }
 
@@ -174,16 +144,7 @@ public class WorldManager {
         } catch (SQLException e) {
             BBLogging.severe("Create World Table SQL Exception", e);
         } finally {
-            try {
-                if (st != null) {
-                    st.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                BBLogging.severe("Could not create the world table (on close)");
-            }
+            ConnectionManager.cleanup( "Create World Table",  conn, st, null );
         }
     }
 }

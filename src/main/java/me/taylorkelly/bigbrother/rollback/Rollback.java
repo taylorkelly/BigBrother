@@ -123,7 +123,6 @@ public class Rollback {
         if (undoRollback != null) {
             Connection conn = null;
             PreparedStatement ps = null;
-            ResultSet set = null;
             try {
                 conn = ConnectionManager.getConnection();
                 ps = conn.prepareStatement(undoRollback);
@@ -134,16 +133,7 @@ public class Rollback {
             } catch (SQLException ex) {
                 BBLogging.severe("Rollback undo SQL Exception", ex);
             } finally {
-                try {
-                    if (set != null) {
-                        set.close();
-                    }
-                    if (ps != null) {
-                        ps.close();
-                    }
-                } catch (SQLException ex) {
-                    BBLogging.severe("Rollback undo (on close)");
-                }
+                ConnectionManager.cleanup( "Rollback undo",  conn, ps, null );
             }
         }
     }
@@ -220,19 +210,7 @@ public class Rollback {
             } catch (SQLException ex) {
                 BBLogging.severe("Rollback get SQL Exception", ex);
             } finally {
-                try {
-                    if (set != null) {
-                        set.close();
-                    }
-                    if (ps != null) {
-                        ps.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    BBLogging.severe("Rollback get SQL Exception (on close)");
-                }
+                ConnectionManager.cleanup( "Rollback get",  conn, ps, set );
             }
         }
     }

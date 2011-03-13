@@ -107,11 +107,7 @@ public class BigBrother extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         } else {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                BBLogging.severe("Could not close connection", e);
-            }
+            ConnectionManager.cleanup( "onEnable",  conn, null, null );
         }
 
         // Initialize tables
@@ -466,7 +462,7 @@ public class BigBrother extends JavaPlugin {
 
     /**
      * Tell the user what mode their stick is.
-     * 
+     *
      * Better than having this copypasted 8 times
      * @param player Player to talk to about their stick/log
      * @author N3X15
