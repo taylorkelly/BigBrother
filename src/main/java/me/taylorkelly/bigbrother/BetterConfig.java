@@ -3,8 +3,8 @@ package me.taylorkelly.bigbrother;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 public class BetterConfig extends Configuration {
 
@@ -36,6 +36,7 @@ public class BetterConfig extends Configuration {
         return super.getBoolean(path, defaultValue);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public BetterNode getNode(String path) {
         if (getProperty(path) == null || !(getProperty(path) instanceof Map)) {

@@ -68,6 +68,11 @@ public class BigBrother extends JavaPlugin {
     private Updater updater;
 
     @Override
+    public void onLoad() {
+        // Don't need.
+    }
+    
+    @Override
     public void onDisable() {
         DataBlockSender.disable(this);
     }

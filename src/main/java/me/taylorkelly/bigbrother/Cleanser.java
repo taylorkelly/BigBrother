@@ -116,6 +116,7 @@ public class Cleanser {
             }
         }
 
+        @SuppressWarnings("unused")
         private void cleanByNumber() {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 if (BBSettings.maxRecords < 0) {

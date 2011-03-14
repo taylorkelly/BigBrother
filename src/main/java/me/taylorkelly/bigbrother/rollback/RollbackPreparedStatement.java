@@ -9,7 +9,6 @@ import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 public class RollbackPreparedStatement {
 
     public static String create(Rollback rollback, WorldManager manager) {
-        // TODO More variable prepared statements
         StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
         statement.append(" FROM ");
         statement.append(BBDataTable.BBDATA_NAME);

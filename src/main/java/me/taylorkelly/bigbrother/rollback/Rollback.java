@@ -92,7 +92,7 @@ public class Rollback {
 
     private void rollbackBlocks() {
         lastRollback.clear();
-        RollbackByTick runner = new RollbackByTick(plugin.getServer().getScheduler(), plugin);
+        new RollbackByTick(plugin.getServer().getScheduler(), plugin);
     }
 
     public static boolean canUndo() {
@@ -144,13 +144,13 @@ public class Rollback {
     }
 
     private class Rollbacker extends Thread {
-
-        private final Plugin plugin;
-        private final BukkitScheduler scheduler;
+        // Not used
+        //private final Plugin plugin;
+        //private final BukkitScheduler scheduler;
 
         private Rollbacker(Plugin plugin, BukkitScheduler scheduler) {
-            this.plugin = plugin;
-            this.scheduler = scheduler;
+            //this.plugin = plugin;
+            //this.scheduler = scheduler;
         }
 
         public void run() {
