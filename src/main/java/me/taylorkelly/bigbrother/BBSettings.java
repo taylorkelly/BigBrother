@@ -154,7 +154,7 @@ public class BBSettings {
             mysqlDatabase = yml.getString("database.mysql.database", mysqlDatabase);
             mysqlPort = yml.getInt("database.mysql.port", mysqlPort);
             mysqlEngine = yml.getString("database.mysql.engine", mysqlEngine);
-            //mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
+            mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
             mysqlLowPrioInserts = yml.getBoolean("database.mysql.low-priority-insert", mysqlLowPrioInserts);
         } else if (databaseSystem == DBMS.SQLITE) {
             // SQLite stuff here
@@ -291,20 +291,6 @@ public class BBSettings {
 
     public static Watcher getWatcher(Server server, File dataFolder) {
         return new Watcher(watchList, seenList, server, dataFolder);
-    }
-
-    /**
-     * Returns "LOW_PRIORITY" for MySQL when mysqlLowPrioInserts is set.
-     * 
-     * @return LOW_PRIORITY | ""
-     */
-    public static String getMySQLIgnore() {
-        // Don't really need to check mysql, but going to anyway to be safe.
-        if (mysqlLowPrioInserts && usingDBMS(DBMS.MYSQL)) {
-            return " LOW_PRIORITY ";
-        } else {
-            return " ";
-        }
     }
 
     /**

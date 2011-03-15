@@ -116,7 +116,7 @@ public class BigBrother extends JavaPlugin {
         }
 
         // Initialize tables
-        BBDataTable.initialize();
+        BBLogging.info(BBDataTable.getInstance().toString()+" loaded!");
         worldManager = new WorldManager();
 
         // Initialize Listeners

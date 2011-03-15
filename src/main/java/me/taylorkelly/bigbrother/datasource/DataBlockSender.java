@@ -40,7 +40,9 @@ public class DataBlockSender {
         SENDING.add(dataBlock);
     }
 
-    private static boolean sendBlocksMySQL(Collection<BBDataBlock> collection, WorldManager manager) {
+    private static boolean sendBlocksSQL(Collection<BBDataBlock> collection, WorldManager manager) {
+        // Try to refactor most of these into the table managers.
+        
         //SQLite fix...
         if (BBSettings.databaseSystem == DBMS.SQLITE) {
             for (BBDataBlock block : collection) {
@@ -56,8 +58,7 @@ public class DataBlockSender {
             if (conn == null) {
                 return false;
             }
-            ps = conn.prepareStatement("INSERT " + BBSettings.getMySQLIgnore() + " INTO " + BBDataTable.BBDATA_NAME
-                    + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
+            ps = BBDataTable.getInstance().getPreparedDataBlockStatement(conn);
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);
                 if (block.player.length() > 32) {
@@ -216,7 +217,7 @@ public class DataBlockSender {
             Collection<BBDataBlock> collection = new ArrayList<BBDataBlock>();
             SENDING.drainTo(collection);
 
-            boolean worked = sendBlocksMySQL(collection, manager);
+            boolean worked = sendBlocksSQL(collection, manager);
             if (BBSettings.flatLog) {
                 sendBlocksFlatFile(dataFolder, collection);
             }

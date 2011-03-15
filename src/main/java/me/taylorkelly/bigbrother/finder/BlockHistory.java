@@ -38,7 +38,7 @@ public class BlockHistory {
             conn = ConnectionManager.getConnection();
 
             // TODO maybe more customizable actions?
-            ps = conn.prepareStatement("SELECT  bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world` FROM " + BBDataTable.BBDATA_NAME + " INNER JOIN bbworlds ON bbworlds.id = bbdata.world  WHERE rbacked = 0 AND x = ? AND y = ?  AND z = ? AND bbdata.world = ? ORDER BY bbdata.id ASC;");
+            ps = conn.prepareStatement("SELECT  bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world` FROM " + BBDataTable.getTableName() + " INNER JOIN bbworlds ON bbworlds.id = bbdata.world  WHERE rbacked = 0 AND x = ? AND y = ?  AND z = ? AND bbdata.world = ? ORDER BY bbdata.id ASC;");
 
             ps.setInt(1, block.getX());
             ps.setInt(2, block.getY());

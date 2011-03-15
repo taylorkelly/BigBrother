@@ -11,7 +11,7 @@ public class RollbackPreparedStatement {
     public static String create(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
         statement.append(" FROM ");
-        statement.append(BBDataTable.BBDATA_NAME);
+        statement.append(BBDataTable.getTableName()+" AS bbdata");
         statement.append(" INNER JOIN bbworlds ON bbworlds.id = bbdata.world");
         statement.append(" WHERE ");
         statement.append(getActionString());
@@ -130,7 +130,7 @@ public class RollbackPreparedStatement {
 
     public static String update(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(BBDataTable.BBDATA_NAME);
+        statement.append(BBDataTable.getTableName());
         statement.append(" SET rbacked = '1'");
         statement.append(" WHERE ");
         statement.append(getActionString());
@@ -196,7 +196,7 @@ public class RollbackPreparedStatement {
 
     public static String undoStatement(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(BBDataTable.BBDATA_NAME);
+        statement.append(BBDataTable.getTableName());
         statement.append(" SET rbacked = '0'");
         statement.append(" WHERE ");
         statement.append(getActionString());
