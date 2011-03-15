@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 /**
@@ -31,12 +32,11 @@ public abstract class BBDataTable {
     
     public static BBDataTable getInstance() {
         if(instance==null) {
-            switch(BBSettings.databaseSystem) {
-            case MYSQL:
+            BBLogging.info("BBSettings.databaseSystem="+BBSettings.databaseSystem.toString());
+            if(BBSettings.usingDBMS(DBMS.MYSQL))
                 instance=new BBDataMySQL();
-            default:
+            else
                 instance=new BBDataSQLite();
-            }
         }
         return instance;
     }
