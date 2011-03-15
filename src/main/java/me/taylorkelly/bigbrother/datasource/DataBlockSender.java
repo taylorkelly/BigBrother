@@ -58,7 +58,9 @@ public class DataBlockSender {
             if (conn == null) {
                 return false;
             }
-            ps = BBDataTable.getInstance().getPreparedDataBlockStatement(conn);
+            String statementSql = BBDataTable.getInstance().getPreparedDataBlockStatement(conn);
+            BBLogging.debug(statementSql);
+            ps = conn.prepareStatement(statementSql);
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);
                 if (block.player.length() > 32) {

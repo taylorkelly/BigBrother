@@ -1,7 +1,6 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,9 +37,9 @@ public class BBDataMySQL extends BBDataTable {
     }
     
     @Override
-    public PreparedStatement getPreparedDataBlockStatement(Connection conn) throws SQLException {
-        return conn.prepareStatement("INSERT "+getMySQLIgnore()+" INTO " + BBDataTable.getTableName()
-                + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)");
+    public String getPreparedDataBlockStatement(Connection conn) throws SQLException {
+        return "INSERT "+getMySQLIgnore()+" INTO " + BBDataTable.getTableName()
+                + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)";
     }
     /**
      * CREATE TABLE syntax for mysql
