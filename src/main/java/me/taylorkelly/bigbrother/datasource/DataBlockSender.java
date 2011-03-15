@@ -59,7 +59,7 @@ public class DataBlockSender {
                 return false;
             }
             String statementSql = BBDataTable.getInstance().getPreparedDataBlockStatement(conn);
-            BBLogging.debug(statementSql);
+            //BBLogging.debug(statementSql);
             ps = conn.prepareStatement(statementSql);
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);
