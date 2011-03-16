@@ -33,6 +33,7 @@ public class BBPermissions {
             String version = permissions.getDescription().getVersion();
             BBLogging.info("Permissions enabled using: Permissions v" + version);
         } else {
+            handler = PermissionHandler.NONE;
             BBLogging.severe("A permission plugin isn't loaded, only OPs can use commands");
         }
     }
