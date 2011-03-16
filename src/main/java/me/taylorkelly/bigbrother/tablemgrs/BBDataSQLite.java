@@ -11,7 +11,7 @@ public class BBDataSQLite extends BBDataTable {
 
     public final int revision = 1;
     public String toString() {
-        return "BBData SQLite Driver (by N3X15 and tkelly) r"+Integer.valueOf(revision);
+        return "BBData SQLite Driver r"+Integer.valueOf(revision);
     }
     
     /* (non-Javadoc)

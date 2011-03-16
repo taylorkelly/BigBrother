@@ -18,7 +18,7 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 public class BBDataMySQL extends BBDataTable {
     public final int revision = 1;
     public String toString() {
-        return "BBData MySQL Driver (by N3X15 and tkelly) r"+Integer.valueOf(revision);
+        return "BBData MySQL Driver r"+Integer.valueOf(revision);
     }
     
 
