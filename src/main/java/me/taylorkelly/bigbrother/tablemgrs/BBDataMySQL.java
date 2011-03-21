@@ -13,7 +13,6 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
  * BBDataTable, but for MySQL
  * 
  * @author N3X15
- * 
  */
 public class BBDataMySQL extends BBDataTable {
     public final int revision = 1;
@@ -38,14 +37,16 @@ public class BBDataMySQL extends BBDataTable {
     
     @Override
     public String getPreparedDataBlockStatement(Connection conn) throws SQLException {
-        return "INSERT "+getMySQLIgnore()+" INTO " + BBDataTable.getTableName()
+        return "INSERT "+getMySQLIgnore()+" INTO " + getRealTableName()
                 + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)";
     }
-    /**
-     * CREATE TABLE syntax for mysql
+
+    /* (non-Javadoc)
+     * @see me.taylorkelly.bigbrother.tablemgrs.DBTable#getCreateSyntax()
      */
+    @Override
     public String getCreateSyntax() {
-        return "CREATE TABLE `"+getTableName()+"` ("
+        return "CREATE TABLE `"+getRealTableName()+"` ("
         + "`id` INT NOT NULL AUTO_INCREMENT," 
         + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," 
         + "`player` varchar(32) NOT NULL DEFAULT 'Player'," 
@@ -73,10 +74,14 @@ public class BBDataMySQL extends BBDataTable {
     // PARTITION BY LINEAR KEY(date) PARTITIONS 12;
     // Another stupid idea: use table comments for tracking table revision.
     
+
+    /* (non-Javadoc)
+     * @see me.taylorkelly.bigbrother.tablemgrs.DBTable#onLoad()
+     */
     @Override
     public void onLoad() {
         // bbdata needs to be MyISAM, but the conversion takes forever.
-        checkDBEngine(getTableName(), "MyISAM", true);
+        checkDBEngine(getRealTableName(), "MyISAM", true);
     }
     
     /**
