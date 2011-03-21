@@ -71,7 +71,7 @@ public class BBBlockListener extends BlockListener {
         Player player = event.getPlayer();
         if (BBSettings.blockPlace && plugin.watching(player) && !event.isCancelled()) {
             Block block = event.getBlockPlaced();
-            if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
+            if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                 LavaFlowLogger.log(block, player.getName());
             }
             PlacedBlock dataBlock = new PlacedBlock(player.getName(), block, block.getWorld().getName());
