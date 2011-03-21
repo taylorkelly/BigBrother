@@ -18,15 +18,9 @@ public class TNTExplosion extends Explosion {
         super(Action.TNT_EXPLOSION, ENVIRONMENT, block, world);
     }
 
+    @Override
     protected Explosion newInstance(String player, Block block) {
         return new TNTExplosion(player, block, block.getWorld().getName());
-    }
-
-    public static void create(Location location, List<Block> blockList, String world) {
-        for (Block block : blockList) {
-            BBDataBlock dataBlock = new TNTExplosion(ENVIRONMENT, block, world);
-            dataBlock.send();
-        }
     }
 
     private TNTExplosion(String player, String world, int x, int y, int z, int type, String data) {

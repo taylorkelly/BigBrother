@@ -48,10 +48,8 @@ public class BBBlockListener extends BlockListener {
 
     @Override
     public void onBlockDamage(BlockDamageEvent event) {
-        if (event.getDamageLevel() == BlockDamageLevel.STARTED && !event.isCancelled()) {
-            if (event.getBlock().getType() == Material.TNT) {
-                TNTLogger.log(event.getPlayer().getName(), event.getBlock());
-            }
+        if (event.getBlock().getType() == Material.TNT) {
+            TNTLogger.log(event.getPlayer().getName(), event.getBlock());
         }
     }
 
