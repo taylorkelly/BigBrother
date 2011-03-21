@@ -4,6 +4,7 @@ import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBPermissions;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.LavaFlowLogger;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
 import me.taylorkelly.bigbrother.datablock.Chat;
 import me.taylorkelly.bigbrother.datablock.Command;
@@ -137,6 +138,7 @@ public class BBPlayerListener extends PlayerListener {
                     type = Material.LAVA.getId();
                     world = event.getBlockClicked().getWorld();
                     dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                    LavaFlowLogger.log(new Location(world, x, y, z), event.getPlayer().getName());
                     dataBlock.send();
                     break;
                 case WATER_BUCKET:

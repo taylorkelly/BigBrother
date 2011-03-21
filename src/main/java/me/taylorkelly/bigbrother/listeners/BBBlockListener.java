@@ -69,8 +69,10 @@ public class BBBlockListener extends BlockListener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (BBSettings.blockPlace && plugin.watching(player) && !event.isCancelled()) {
-            //TODO: Lava Check for LavaFlows
             Block block = event.getBlockPlaced();
+            if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
+                LavaFlowLogger.log(block, player.getName());
+            }
             PlacedBlock dataBlock = new PlacedBlock(player.getName(), block, block.getWorld().getName());
             dataBlock.send();
         }
