@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 
 public class TNTLogger {
 
-    private static final double THRESHOLD = 1.0;
+    public static double THRESHOLD = 10.0;
     private static HashMap<Location, String> tntMap = new HashMap<Location, String>();
 
     public static void log(String player, Block block) {
@@ -49,6 +49,10 @@ public class TNTLogger {
     }
 
     public static double distance(Location from, Location to) {
-        return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
+        if (!from.getWorld().getName().equals(to.getWorld().getName())) {
+            return Double.MAX_VALUE;
+        } else {
+            return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
+        }
     }
 }
