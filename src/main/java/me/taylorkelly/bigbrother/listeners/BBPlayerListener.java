@@ -34,13 +34,6 @@ public class BBPlayerListener extends PlayerListener {
         this.plugin = plugin;
     }
 
-    /**
-     * Only used for lag avoidance.
-     */
-//   @Override
-//    public void onPlayerMove(PlayerMoveEvent event) {
-//        plugin.processPsuedotick();
-//    }
     @Override
     public void onPlayerCommandPreprocess(PlayerChatEvent event) {
         //plugin.processPsuedotick();

@@ -43,10 +43,16 @@ public class Finder {
     }
 
     public void find() {
+        for (Player player : players) {
+            player.sendMessage(ChatColor.AQUA + "Searching...");
+        }
         plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new FinderRunner(plugin, location, radius, manager, players));
     }
 
     public void find(String player) {
+        for (Player reciept : players) {
+            reciept.sendMessage(ChatColor.AQUA + "Searching...");
+        }
         plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new FinderRunner(plugin, player, location, radius, manager, players));
     }
 
@@ -55,6 +61,7 @@ public class Finder {
     }
 
     private class FinderRunner implements Runnable {
+
         private final Location location;
         private final int radius;
         private final ArrayList<Player> players;
