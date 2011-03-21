@@ -42,7 +42,9 @@ public abstract class BBDataBlock {
         MISC_EXPLOSION,
         OPEN_CHEST,
         BLOCK_BURN,
-        LAVA_FLOW
+        LAVA_FLOW,
+        DROP_ITEM,
+        PICKUP_ITEM
     }
 
     public BBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
@@ -113,6 +115,10 @@ public abstract class BBDataBlock {
                 return BlockBurn.getBBDataBlock(player, world, x, y, z, type, data);
             case LAVA_FLOW:
                 return LavaFlow.getBBDataBlock(player, world, x, y, z, type, data);
+            case DROP_ITEM:
+                return DropItem.getBBDataBlock(player, world, x, y, z, type, data);
+            case PICKUP_ITEM:
+                return PickupItem.getBBDataBlock(player, world, x, y, z, type, data);
             default:
                 return null;
         }

@@ -37,6 +37,8 @@ public class BBSettings {
     public static boolean miscExplosions;
     public static boolean ipPlayer;
     public static boolean lavaFlow;
+    public static boolean pickupItem;
+    public static boolean dropItem;
 
 
     public static boolean libraryAutoDownload;
@@ -132,8 +134,10 @@ public class BBSettings {
         tntExplosions = watched.getBoolean("watched.explosions.tnt", true);// "Watch for when TNT explodes");
         creeperExplosions = watched.getBoolean("watched.explosions.creeper", true);// "Watch for when Creepers explodes");
         miscExplosions = watched.getBoolean("watched.explosions.misc", true);// "Watch for miscellaneous explosions");
-        ipPlayer = watched.getBoolean("watched.player.ip-player", true);// "Add player's IP when login");
-        lavaFlow = watched.getBoolean("watched.environment.lava-flow", false);// "Log lava flow (useful for rolling-back lava)");
+        ipPlayer = watched.getBoolean("watched.player.ip-player", true);
+        dropItem = watched.getBoolean("watched.player.drop-item", false);
+        pickupItem = watched.getBoolean("watched.player.pickup-item", false);
+        lavaFlow = watched.getBoolean("watched.environment.lava-flow", false);
     }
 
     // Database configuration

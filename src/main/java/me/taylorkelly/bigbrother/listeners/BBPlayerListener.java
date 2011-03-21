@@ -8,7 +8,9 @@ import me.taylorkelly.bigbrother.datablock.BrokenBlock;
 import me.taylorkelly.bigbrother.datablock.Chat;
 import me.taylorkelly.bigbrother.datablock.Command;
 import me.taylorkelly.bigbrother.datablock.Disconnect;
+import me.taylorkelly.bigbrother.datablock.DropItem;
 import me.taylorkelly.bigbrother.datablock.Login;
+import me.taylorkelly.bigbrother.datablock.PickupItem;
 import me.taylorkelly.bigbrother.datablock.PlacedBlock;
 import me.taylorkelly.bigbrother.datablock.Teleport;
 
@@ -21,6 +23,8 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerItemEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class BBPlayerListener extends PlayerListener {
 
@@ -99,6 +103,24 @@ public class BBPlayerListener extends PlayerListener {
         final Player player = event.getPlayer();
         if (BBSettings.chat && plugin.watching(player)) {
             Chat dataBlock = new Chat(player, event.getMessage(), player.getWorld().getName());
+            dataBlock.send();
+        }
+    }
+
+    @Override
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+        final Player player = event.getPlayer();
+        if (BBSettings.pickupItem && plugin.watching(player)) {
+            PickupItem dataBlock = new PickupItem(player.getName(), event.getItem(), event.getItem().getWorld().getName());
+            dataBlock.send();
+        }
+    }
+
+    @Override
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        final Player player = event.getPlayer();
+        if (BBSettings.dropItem && plugin.watching(player)) {
+            DropItem dataBlock = new DropItem(player.getName(), event.getItemDrop(), event.getItemDrop().getWorld().getName());
             dataBlock.send();
         }
     }

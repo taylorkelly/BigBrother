@@ -55,7 +55,6 @@ public class Finder {
     }
 
     private class FinderRunner implements Runnable {
-
         private final Location location;
         private final int radius;
         private final ArrayList<Player> players;

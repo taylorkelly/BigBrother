@@ -42,7 +42,7 @@ public class DataBlockSender {
 
     private static boolean sendBlocksSQL(Collection<BBDataBlock> collection, WorldManager manager) {
         // Try to refactor most of these into the table managers.
-        
+
         //SQLite fix...
         if (BBSettings.databaseSystem == DBMS.SQLITE) {
             for (BBDataBlock block : collection) {
@@ -94,7 +94,7 @@ public class DataBlockSender {
             BBLogging.severe("Data Insert SQL Exception when sending blocks", ex);
             return false;
         } finally {
-            ConnectionManager.cleanup( "Data Insert",  conn, ps, rs );
+            ConnectionManager.cleanup("Data Insert", conn, ps, rs);
         }
     }
 
@@ -192,6 +192,10 @@ public class DataBlockSender {
                 return "burned block";
             case LAVA_FLOW:
                 return "flowed lava";
+            case DROP_ITEM:
+                return "dropped item";
+            case PICKUP_ITEM:
+                return "pickedup item";
             default:
                 return action.name();
         }
