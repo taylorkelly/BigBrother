@@ -16,19 +16,22 @@ import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class Finder {
 
-    private Location location;
+    private final Location location;
     private int radius;
-    private ArrayList<Player> players;
-    private WorldManager manager;
+    private final ArrayList<Player> players;
+    private final WorldManager manager;
+    private final Plugin plugin;
 
-    public Finder(Location location, List<World> worlds, WorldManager manager) {
+    public Finder(Location location, List<World> worlds, WorldManager manager, Plugin plugin) {
         this.manager = manager;
         this.location = location;
         this.radius = BBSettings.defaultSearchRadius;
         players = new ArrayList<Player>();
+        this.plugin = plugin;
     }
 
     public void setRadius(double radius) {
@@ -40,19 +43,51 @@ public class Finder {
     }
 
     public void find() {
-        mysqlFind();
+        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new FinderRunner(plugin, location, radius, manager, players));
     }
 
     public void find(String player) {
-        mysqlFind(player);
+        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new FinderRunner(plugin, player, location, radius, manager, players));
     }
 
     public void find(ArrayList<String> players) {
         // TODO find around multiple players
     }
 
-    // TODO use IN(1,2,3)
-    private void mysqlFind() {
+    private class FinderRunner implements Runnable {
+
+        private final Location location;
+        private final int radius;
+        private final ArrayList<Player> players;
+        private final WorldManager manager;
+        private final Plugin plugin;
+        private final String player;
+
+        public FinderRunner(final Plugin plugin, final String player, final Location location, final int radius, final WorldManager manager, final ArrayList<Player> players) {
+            this.player = player;
+            this.plugin = plugin;
+            this.radius = radius;
+            this.location = location;
+            this.manager = manager;
+            this.players = players;
+        }
+
+        public FinderRunner(Plugin plugin, final Location location, final int radius, final WorldManager manager, final ArrayList<Player> players) {
+            this(plugin, null, location, radius, manager, players);
+        }
+
+        @Override
+        public void run() {
+            if (player == null) {
+                mysqlFind(plugin, location, radius, manager, players);
+
+            } else {
+                mysqlFind(plugin, player, location, radius, manager, players);
+            }
+        }
+    }
+
+    private static final void mysqlFind(final Plugin plugin, final Location location, final int radius, final WorldManager manager, final ArrayList<Player> players) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -91,6 +126,7 @@ public class Finder {
                     playerList.append("), ");
                 }
                 playerList.delete(playerList.lastIndexOf(","), playerList.length());
+                //TODO Put into sync'd runnable
                 for (Player player : players) {
                     player.sendMessage(BigBrother.premessage + size + " player(s) have modified this area:");
                     player.sendMessage(playerList.toString());
@@ -104,11 +140,11 @@ public class Finder {
         } catch (SQLException ex) {
             BBLogging.severe("Find SQL Exception", ex);
         } finally {
-            ConnectionManager.cleanup( "Find SQL",  conn, ps, rs );
+            ConnectionManager.cleanup("Find SQL", conn, ps, rs);
         }
     }
 
-    private void mysqlFind(String playerName) {
+    private static final void mysqlFind(final Plugin plugin, final String playerName, final Location location, final int radius, final WorldManager manager, final ArrayList<Player> players) {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -272,7 +308,7 @@ public class Finder {
         } catch (SQLException ex) {
             BBLogging.severe("Find SQL Exception", ex);
         } finally {
-            ConnectionManager.cleanup( "Find SQL",  conn, ps, rs );
+            ConnectionManager.cleanup("Find SQL", conn, ps, rs);
         }
     }
 }
