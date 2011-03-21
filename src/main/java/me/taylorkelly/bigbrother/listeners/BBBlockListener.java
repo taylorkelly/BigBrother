@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.listeners;
 
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
+import me.taylorkelly.bigbrother.BlockBurnLogger;
 import me.taylorkelly.bigbrother.LavaFlowLogger;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BlockBurn;
@@ -138,7 +139,7 @@ public class BBBlockListener extends BlockListener {
     public void onBlockBurn(BlockBurnEvent event) {
         if (BBSettings.fire && !event.isCancelled()) {
             final Block block = event.getBlock();
-            BBDataBlock dataBlock = BlockBurn.create(block, block.getWorld().getName());
+            BBDataBlock dataBlock = BlockBurnLogger.create(block, block.getWorld().getName());
             dataBlock.send();
         }
     }

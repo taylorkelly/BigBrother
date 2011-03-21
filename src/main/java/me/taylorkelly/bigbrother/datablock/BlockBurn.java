@@ -31,11 +31,6 @@ public class BlockBurn extends BBDataBlock {
         checkGnomesLivingOnTop(block);
     }
 
-    public static BBDataBlock create(Block block, String world) {
-        // TODO Player handling
-        return new BlockBurn(block, world);
-    }
-
     @Override
     public void send() {
         for (BBDataBlock block : bystanders) {
@@ -233,7 +228,7 @@ public class BlockBurn extends BBDataBlock {
     private void signCheck(Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(ENVIRONMENT, sign, world));
+            bystanders.add(new DestroySignText(player, sign, world));
         }
     }
 

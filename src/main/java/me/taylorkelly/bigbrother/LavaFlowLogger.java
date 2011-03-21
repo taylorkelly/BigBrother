@@ -11,11 +11,9 @@ import org.bukkit.block.Block;
  * properly associated with a specific player
  */
 public class LavaFlowLogger {
-
     public static double THRESHOLD = 3.0;
     private static HashMap<Location, String> lavaMap = new HashMap<Location, String>();
 
-    //TODO: Make it actually work...
     public static LavaFlow getFlow(Block blockFrom, Block blockTo) {
         String player = BBDataBlock.ENVIRONMENT;
         Location bestLocation = null;
@@ -29,7 +27,7 @@ public class LavaFlowLogger {
             }
         }
         if (bestLocation != null) {
-            player = lavaMap.remove(bestLocation);
+            player = lavaMap.get(bestLocation);
             log(blockTo.getLocation(), player);
         }
         return new LavaFlow(player, blockFrom.getWorld().getName(), blockTo.getX(), blockTo.getY(), blockTo.getZ(), blockFrom.getTypeId(), (byte) 0);
