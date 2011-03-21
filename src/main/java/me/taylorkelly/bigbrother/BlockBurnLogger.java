@@ -1,9 +1,10 @@
 package me.taylorkelly.bigbrother;
 
 import java.util.HashMap;
+
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BlockBurn;
-import me.taylorkelly.bigbrother.datablock.LavaFlow;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 

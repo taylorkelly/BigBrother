@@ -1,15 +1,10 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
-import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 /**
  * Handler class for the bbdata table

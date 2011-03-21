@@ -5,7 +5,6 @@ import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.BlockBurnLogger;
 import me.taylorkelly.bigbrother.LavaFlowLogger;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
-import me.taylorkelly.bigbrother.datablock.BlockBurn;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
 import me.taylorkelly.bigbrother.datablock.ButtonPress;
 import me.taylorkelly.bigbrother.datablock.ChestOpen;
@@ -21,7 +20,6 @@ import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockDamageLevel;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

@@ -1,11 +1,7 @@
 package me.taylorkelly.bigbrother.datablock.explosions;
 
-import java.util.List;
-
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class TNTExplosion extends Explosion {
