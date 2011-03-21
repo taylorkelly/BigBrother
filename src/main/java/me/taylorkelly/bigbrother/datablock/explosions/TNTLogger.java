@@ -15,12 +15,9 @@ public class TNTLogger {
 
     public static void log(String player, Block block) {
         tntMap.put(block.getLocation(), player);
-        System.out.println("Logging... " + block.getLocation().toString());
-
     }
 
     public static void createTNTDataBlock(List<Block> blockList, Location location) {
-        System.out.println("Searching for... " + location.toString());
         String player = BBDataBlock.ENVIRONMENT;
         Location bestLocation = null;
         double bestDistance = THRESHOLD;
@@ -34,10 +31,7 @@ public class TNTLogger {
             }
         }
         if (bestLocation != null) {
-            player = tntMap.get(bestLocation);
-            System.out.println("found from" + player);
-        } else {
-            System.out.println("not found");
+            player = tntMap.remove(bestLocation);
         }
         for (Block block : blockList) {
             BBDataBlock dataBlock = new TNTExplosion(player, block, location.getWorld().getName());
