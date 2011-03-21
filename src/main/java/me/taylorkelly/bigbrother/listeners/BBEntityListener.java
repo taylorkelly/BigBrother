@@ -22,11 +22,11 @@ public class BBEntityListener extends EntityListener {
     @Override
     public void onEntityExplode(EntityExplodeEvent event) {
         // Err... why is this null when it's a TNT?
-        // Need a fix to get location.
+        System.out.println(event.getEntity());
         if (!event.isCancelled()) {
             if (event.getEntity() == null) {
                 if (BBSettings.tntExplosions) {
-                    TNTLogger.createTNTDataBlock(event.blockList(), event.getLocation().getWorld().getName());
+                    TNTLogger.createTNTDataBlock(event.blockList(), event.getLocation());
                 }
             } else if (event.getEntity() instanceof LivingEntity) {
                 if (BBSettings.creeperExplosions) {

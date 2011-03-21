@@ -5,6 +5,7 @@ import java.util.List;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class TNTExplosion extends Explosion {
@@ -22,7 +23,7 @@ public class TNTExplosion extends Explosion {
     }
 
     public static void create(Location location, List<Block> blockList, String world) {
-        for(Block block: blockList) {
+        for (Block block : blockList) {
             BBDataBlock dataBlock = new TNTExplosion(ENVIRONMENT, block, world);
             dataBlock.send();
         }
@@ -35,12 +36,4 @@ public class TNTExplosion extends Explosion {
     public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new TNTExplosion(player, world, x, y, z, type, data);
     }
-
-    public static void create(List<Block> blockList, String world) {
-        for(Block block: blockList) {
-            BBDataBlock dataBlock = new TNTExplosion(ENVIRONMENT, block, world);
-            dataBlock.send();
-        }
-    }
-
 }

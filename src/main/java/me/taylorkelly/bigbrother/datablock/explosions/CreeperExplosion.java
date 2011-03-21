@@ -5,6 +5,7 @@ import java.util.List;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class CreeperExplosion extends Explosion {
@@ -22,9 +23,12 @@ public class CreeperExplosion extends Explosion {
     }
 
     public static void create(Location location, List<Block> blockList, String world) {
-        for(Block block: blockList) {
+        for (Block block : blockList) {
             BBDataBlock dataBlock = new CreeperExplosion(ENVIRONMENT, block, world);
             dataBlock.send();
+            if (block.getType() == Material.TNT) {
+                TNTLogger.log(ENVIRONMENT, block);
+            }
         }
     }
 
@@ -35,5 +39,4 @@ public class CreeperExplosion extends Explosion {
     public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
         return new CreeperExplosion(player, world, x, y, z, type, data);
     }
-
 }
