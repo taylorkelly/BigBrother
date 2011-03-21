@@ -22,7 +22,6 @@ public class BBEntityListener extends EntityListener {
     @Override
     public void onEntityExplode(EntityExplodeEvent event) {
         // Err... why is this null when it's a TNT?
-        System.out.println(event.getEntity());
         if (!event.isCancelled()) {
             if (event.getEntity() == null) {
                 if (BBSettings.tntExplosions) {

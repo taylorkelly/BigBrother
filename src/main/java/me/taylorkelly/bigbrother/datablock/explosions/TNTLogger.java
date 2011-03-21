@@ -23,7 +23,6 @@ public class TNTLogger {
         double bestDistance = THRESHOLD;
         for (Location loc : tntMap.keySet()) {
             double distance = distance(loc, location);
-            System.out.println(distance);
             if (distance < bestDistance) {
                 bestLocation = loc;
                 bestDistance = distance;

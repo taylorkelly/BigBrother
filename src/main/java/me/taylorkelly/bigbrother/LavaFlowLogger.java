@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
  */
 public class LavaFlowLogger {
 
-    public static double THRESHOLD = 1.0;
+    public static double THRESHOLD = 3.0;
     private static HashMap<Location, String> lavaMap = new HashMap<Location, String>();
 
     //TODO: Make it actually work...
@@ -20,11 +20,8 @@ public class LavaFlowLogger {
         String player = BBDataBlock.ENVIRONMENT;
         Location bestLocation = null;
         double bestDistance = THRESHOLD;
-        System.out.println(lavaMap.containsKey(blockFrom.getLocation()));
         for (Location loc : lavaMap.keySet()) {
             double distance = distance(loc, blockFrom.getLocation());
-            System.out.println(distance);
-            System.out.println(distance);
             if (distance < bestDistance) {
                 bestLocation = loc;
                 bestDistance = distance;
@@ -33,7 +30,7 @@ public class LavaFlowLogger {
         }
         if (bestLocation != null) {
             player = lavaMap.remove(bestLocation);
-            System.out.println("found a match w/ " + player);
+            log(blockTo.getLocation(), player);
         }
         return new LavaFlow(player, blockFrom.getWorld().getName(), blockTo.getX(), blockTo.getY(), blockTo.getZ(), blockFrom.getTypeId(), (byte) 0);
     }
