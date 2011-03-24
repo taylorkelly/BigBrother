@@ -20,7 +20,7 @@ public abstract class BBDataTable extends DBTable {
     /**
      * Get table name + prefix
      */
-    protected String getTableName() 
+    protected String getActualTableName() 
     {
         return "bbdata";
     }
@@ -38,10 +38,10 @@ public abstract class BBDataTable extends DBTable {
     
     public BBDataTable() {
         if (!tableExists()) {
-            BBLogging.info("Building `"+getRealTableName()+"` table...");
+            BBLogging.info("Building `"+getTableName()+"` table...");
             createTable();
         } else {
-            BBLogging.debug("`"+getRealTableName()+"` table already exists");
+            BBLogging.debug("`"+getTableName()+"` table already exists");
 
         }
         
@@ -49,7 +49,7 @@ public abstract class BBDataTable extends DBTable {
     }
     
     public String getPreparedDataBlockStatement(Connection conn) throws SQLException {
-        return "INSERT INTO " + getRealTableName()
+        return "INSERT INTO " + getTableName()
                 + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)";
     }
 }

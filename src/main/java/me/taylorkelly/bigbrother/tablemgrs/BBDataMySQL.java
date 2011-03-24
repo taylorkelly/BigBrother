@@ -37,7 +37,7 @@ public class BBDataMySQL extends BBDataTable {
     
     @Override
     public String getPreparedDataBlockStatement(Connection conn) throws SQLException {
-        return "INSERT "+getMySQLIgnore()+" INTO " + getRealTableName()
+        return "INSERT "+getMySQLIgnore()+" INTO " + getTableName()
                 + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)";
     }
 
@@ -46,7 +46,7 @@ public class BBDataMySQL extends BBDataTable {
      */
     @Override
     public String getCreateSyntax() {
-        return "CREATE TABLE `"+getRealTableName()+"` ("
+        return "CREATE TABLE `"+getTableName()+"` ("
         + "`id` INT NOT NULL AUTO_INCREMENT," 
         + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," 
         + "`player` varchar(32) NOT NULL DEFAULT 'Player'," 
@@ -81,7 +81,7 @@ public class BBDataMySQL extends BBDataTable {
     @Override
     public void onLoad() {
         // bbdata needs to be MyISAM, but the conversion takes forever.
-        checkDBEngine(getRealTableName(), "MyISAM", true);
+        checkDBEngine(getTableName(), "MyISAM", true);
     }
     
     /**

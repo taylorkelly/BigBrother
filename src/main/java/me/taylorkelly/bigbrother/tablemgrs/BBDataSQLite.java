@@ -28,7 +28,7 @@ public class BBDataSQLite extends BBDataTable {
     public String getCreateSyntax() {
         // TODO Auto-generated method stub
         return 
-        "CREATE TABLE `"+getTableName()+"` (" 
+        "CREATE TABLE `"+getActualTableName()+"` (" 
         + "`id` INTEGER PRIMARY KEY," 
         + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," 
         + "`player` varchar(32) NOT NULL DEFAULT 'Player'," 

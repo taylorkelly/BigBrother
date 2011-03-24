@@ -55,7 +55,7 @@ public class BBSettings {
     public static String mysqlHost = "localhost";
     public static int mysqlPort = 3306;
     public static String mysqlEngine = "MyISAM";
-    public static String mysqlPrefix = ""; // Table Prefix ("bb_" would turn
+    private static String mysqlPrefix = ""; // Table Prefix ("bb_" would turn
     // bbdata into bb_bbdata)
     public static String mysqlDatabase = "minecraft";
     // The presence of mysqlDSN overrides the above (except for password), the
@@ -321,10 +321,29 @@ public class BBSettings {
             return "";
         }
     }
+    
+    /**
+     * Prefixify table names.
+     * @param tablename
+     * @return
+     */
+    public static String applyPrefix(String tablename) {
+        return BBSettings.mysqlPrefix+tablename;
+    }
 
     public enum DBMS {
 
         SQLITE, MYSQL,
         // POSTGRES,
+    }
+
+    /**
+     * Replace placeholder with the table prefix.
+     * @param sql
+     * @param placeholder
+     * @return
+     */
+    public static String replaceWithPrefix(String sql, String placeholder) {
+        return sql.replace(placeholder, mysqlPrefix);
     }
 }

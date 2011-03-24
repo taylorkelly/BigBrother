@@ -16,7 +16,7 @@ public abstract class DBTable {
      * Get the name of the table, minus prefix.
      * @return
      */
-    protected abstract String getTableName();
+    protected abstract String getActualTableName();
     
     /**
      * Specify your on-load procedures in here.
@@ -29,8 +29,8 @@ public abstract class DBTable {
      */
     public abstract String getCreateSyntax();
     
-    public String getRealTableName() {
-        return BBSettings.mysqlPrefix+getTableName();
+    public String getTableName() {
+        return BBSettings.applyPrefix(getActualTableName());
     }
     
     public boolean tableExists() {
@@ -39,13 +39,13 @@ public abstract class DBTable {
         try {
             conn = ConnectionManager.getConnection();
             DatabaseMetaData dbm = conn.getMetaData();
-            rs = dbm.getTables(null, null, getRealTableName(), null);
+            rs = dbm.getTables(null, null, getTableName(), null);
             if (!rs.next()) {
                 return false;
             }
             return true;
         } catch (SQLException ex) {
-            BBLogging.severe("Couldn't check if "+getRealTableName()+" exists!", ex);
+            BBLogging.severe("Couldn't check if "+getTableName()+" exists!", ex);
             return false;
         } finally {
             ConnectionManager.cleanup( "Table Check",  conn, null, rs );
@@ -61,7 +61,7 @@ public abstract class DBTable {
             st.executeUpdate(getCreateSyntax());
             conn.commit();
         } catch (SQLException e) {
-            BBLogging.severe("Can't create the "+getRealTableName()+" table", e);
+            BBLogging.severe("Can't create the "+getTableName()+" table", e);
         } finally {
             ConnectionManager.cleanup( "Create Table",  conn, st, null );
         }

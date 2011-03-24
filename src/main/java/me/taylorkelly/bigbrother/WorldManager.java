@@ -24,7 +24,7 @@ public class WorldManager {
             createWorldTable();
         } else {
             if (BBSettings.debugMode) {
-                BBLogging.debug("`"+BBSettings.mysqlPrefix+"bbworlds` table already exists");
+                BBLogging.debug("`" + BBSettings.applyPrefix(WORLD_TABLE_NAME) + "` table already exists");
             }
         }
         worldMap = loadWorlds();
@@ -73,7 +73,7 @@ public class WorldManager {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("INSERT INTO "+BBSettings.mysqlPrefix+"bbworlds (id, name) VALUES (?,?)");
+            ps = conn.prepareStatement("INSERT INTO " + BBSettings.applyPrefix(WORLD_TABLE_NAME) + " (id, name) VALUES (?,?)");
             ps.setInt(1, index);
             ps.setString(2, world);
             ps.executeUpdate();
@@ -96,7 +96,7 @@ public class WorldManager {
             conn = ConnectionManager.getConnection();
 
             statement = conn.createStatement();
-            set = statement.executeQuery("SELECT * FROM `"+BBSettings.mysqlPrefix+"bbworlds`;");
+            set = statement.executeQuery("SELECT * FROM `" + BBSettings.applyPrefix(WORLD_TABLE_NAME) + "`;");
             int size = 0;
             while (set.next()) {
                 size++;
@@ -120,7 +120,7 @@ public class WorldManager {
         try {
             conn = ConnectionManager.getConnection();
             DatabaseMetaData dbm = conn.getMetaData();
-            rs = dbm.getTables(null, null, BBSettings.mysqlPrefix+WORLD_TABLE_NAME, null);
+            rs = dbm.getTables(null, null, BBSettings.applyPrefix(WORLD_TABLE_NAME), null);
             if (!rs.next()) {
                 return false;
             }
@@ -139,7 +139,7 @@ public class WorldManager {
         try {
             conn = ConnectionManager.getConnection();
             st = conn.createStatement();
-            st.executeUpdate(WORLD_TABLE_SQL.replace("{P}", BBSettings.mysqlPrefix));
+            st.executeUpdate(BBSettings.replaceWithPrefix(WORLD_TABLE_SQL,"{P}"));
             conn.commit();
         } catch (SQLException e) {
             BBLogging.severe("Create World Table SQL Exception", e);

@@ -28,7 +28,7 @@ public abstract class BBUsersTable extends DBTable {
     /**
      * Get table name + prefix
      */
-    public String getTableName() 
+    public String getActualTableName() 
     {
         return "bbdata";
     }
@@ -46,10 +46,10 @@ public abstract class BBUsersTable extends DBTable {
     
     public BBUsersTable() {
         if (!tableExists()) {
-            BBLogging.info("Building `"+getTableName()+"` table...");
+            BBLogging.info("Building `"+getActualTableName()+"` table...");
             createTable();
         } else {
-            BBLogging.debug("`"+getTableName()+"` table already exists");
+            BBLogging.debug("`"+getActualTableName()+"` table already exists");
 
         }
         

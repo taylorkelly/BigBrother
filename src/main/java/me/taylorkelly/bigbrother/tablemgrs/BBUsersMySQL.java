@@ -35,7 +35,7 @@ public class BBUsersMySQL extends BBUsersTable {
      */
     @Override
     public String getCreateSyntax() {
-        return "CREATE TABLE `"+getRealTableName()+"` ("
+        return "CREATE TABLE `"+getTableName()+"` ("
         + "`id` INT NOT NULL AUTO_INCREMENT," 
         + "`name` varchar(32) NOT NULL DEFAULT 'Player'," 
         + "`flags` INT NOT NULL DEFAULT '0',"
@@ -51,7 +51,7 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM "+getRealTableName()+" WHERE LOWER(`name`)=LOWER(?);");
+            ps = conn.prepareStatement("SELECT id,name,flags FROM "+getTableName()+" WHERE LOWER(`name`)=LOWER(?);");
             ps.setString(0,name);
             rs=ps.executeQuery();
             
