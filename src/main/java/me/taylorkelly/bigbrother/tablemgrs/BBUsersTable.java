@@ -1,7 +1,5 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.Hashtable;
 
 import org.bukkit.entity.Player;

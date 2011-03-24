@@ -4,15 +4,37 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Scanner;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 
 import me.taylorkelly.util.TimeParser;
+import net.minecraft.server.ItemStack;
 
 import org.bukkit.Server;
+import org.bukkit.craftbukkit.entity.CraftItem;
+import org.bukkit.entity.Item;
+
+import com.sk89q.worldedit.blocks.ItemType;
 
 // TODO: Split all these vars into seperate classes in anticipation of yamlification.
 public class BBSettings {
+    protected static class BlockDef
+    {
+        public int id;
+        public int damage=-1;
+        
+        public BlockDef(int id) {
+            this.id=id;
+        }
+        
+        public BlockDef(int id,int damage) {
+            this.id=id;
+            this.damage=damage;
+        }
+    }
+    
     // TODO: Disabled until we can get a way for it to not break rollbacks -
     // tkelly
     // public static int maxRollbackRadius; // Maximum rollback radius. - N3X
@@ -75,11 +97,13 @@ public class BBSettings {
     public static long deletesPerCleansing = 20000L;
     private static ArrayList<String> watchList;
     private static ArrayList<String> seenList;
+    private static ArrayList<Integer> blockExclusionList;
     public static int rollbacksPerTick;
 
     public static void initialize(File dataFolder) {
         watchList = new ArrayList<String>();
         seenList = new ArrayList<String>();
+        blockExclusionList = new ArrayList<Integer>();
 
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();
@@ -106,7 +130,16 @@ public class BBSettings {
 
         loadDBSettings(yml);
         loadWatchSettings(yml);
-
+        
+        for (Object o : yml.getList("general.excluded-blocks")) {
+            int id = 0;
+            if(o instanceof Integer)
+                id = (int)(Integer)o;
+            else if(o instanceof String) {
+                id = ItemType.lookup((String)o).getID();
+            }
+            blockExclusionList.add(id);
+        }
         stickItem = yml.getInt("general.stick-item", 280);// "The item used for /bb stick");
         restoreFire = yml.getBoolean("general.restore-fire", false);// "Restore fire when rolling back");
         autoWatch = yml.getBoolean("general.auto-watch", true);// "Automatically start watching players");
@@ -345,5 +378,14 @@ public class BBSettings {
      */
     public static String replaceWithPrefix(String sql, String placeholder) {
         return sql.replace(placeholder, mysqlPrefix);
+    }
+    
+    /**
+     * Check if a blocktype is being ignored.
+     * @param type
+     * @return
+     */
+    public static boolean isBlockIgnored(int type) {
+        return blockExclusionList.contains(type);
     }
 }
