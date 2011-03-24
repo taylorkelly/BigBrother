@@ -4,36 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.Scanner;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 
 import me.taylorkelly.util.TimeParser;
-import net.minecraft.server.ItemStack;
-
 import org.bukkit.Server;
-import org.bukkit.craftbukkit.entity.CraftItem;
-import org.bukkit.entity.Item;
-
 import com.sk89q.worldedit.blocks.ItemType;
 
 // TODO: Split all these vars into seperate classes in anticipation of yamlification.
 public class BBSettings {
-    protected static class BlockDef
-    {
-        public int id;
-        public int damage=-1;
-        
-        public BlockDef(int id) {
-            this.id=id;
-        }
-        
-        public BlockDef(int id,int damage) {
-            this.id=id;
-            this.damage=damage;
-        }
-    }
     
     // TODO: Disabled until we can get a way for it to not break rollbacks -
     // tkelly
