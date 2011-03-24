@@ -38,11 +38,9 @@ import org.bukkit.event.block.SignChangeEvent;
 public class BBBlockListener extends BlockListener {
 
     private BigBrother plugin;
-    //private List<World> worlds; // Not used - N3X
 
     public BBBlockListener(BigBrother plugin) {
         this.plugin = plugin;
-        //this.worlds = plugin.getServer().getWorlds();
     }
 
     @Override
@@ -77,6 +75,7 @@ public class BBBlockListener extends BlockListener {
         }
     }
 
+    /*
     @Override
     public void onBlockInteract(BlockInteractEvent event) {
         Block block = event.getBlock();
@@ -113,7 +112,8 @@ public class BBBlockListener extends BlockListener {
             }
         }
     }
-
+    */
+    
     @Override
     public void onLeavesDecay(LeavesDecayEvent event) {
         if (BBSettings.leafDrops && !event.isCancelled()) {

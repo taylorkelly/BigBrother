@@ -1,6 +1,10 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.Hashtable;
+
+import org.bukkit.entity.Player;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
@@ -54,11 +58,31 @@ public abstract class BBUsersTable extends DBTable {
     
     public BBPlayerInfo getUser(String name) {
         name=name.toLowerCase();
+        
+        // Check cache first.
         if(knownPlayers.containsKey(name))
             return knownPlayers.get(name);
         
         return getUserFromDB(name);
     }
+    
+    public void addOrUpdateUser(Player p) {
+        String name=p.getName().toLowerCase();
+        
+        BBPlayerInfo pi = null;
+        // Check cache first.
+        if(knownPlayers.containsKey(name))
+        {
+            pi = knownPlayers.get(name);
+            knownPlayers.remove(name);
+        } else {
+            pi = new BBPlayerInfo(name);
+        }
+        
+        do_addOrUpdatePlayer(pi);
+    }
+
+    protected abstract void do_addOrUpdatePlayer(BBPlayerInfo pi);
 
     /**
      * Get user from the database based on name.

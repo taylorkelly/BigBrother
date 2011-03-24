@@ -67,5 +67,11 @@ public class BBUsersMySQL extends BBUsersTable {
         }
         return null;
     }
+
+    @Override
+    protected void do_addOrUpdatePlayer(BBPlayerInfo pi) {
+        // TODO Auto-generated method stub
+        
+    }
     
 }

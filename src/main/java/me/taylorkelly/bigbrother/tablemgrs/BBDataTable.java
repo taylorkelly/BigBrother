@@ -20,7 +20,7 @@ public abstract class BBDataTable extends DBTable {
     /**
      * Get table name + prefix
      */
-    public String getTableName() 
+    protected String getTableName() 
     {
         return "bbdata";
     }

@@ -21,5 +21,11 @@ public class BBUsersSQLite extends BBUsersTable {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    protected void do_addOrUpdatePlayer(BBPlayerInfo pi) {
+        // TODO Auto-generated method stub
+        
+    }
     
 }

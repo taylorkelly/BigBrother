@@ -5,11 +5,16 @@ import me.taylorkelly.bigbrother.BBPermissions;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.LavaFlowLogger;
+import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
+import me.taylorkelly.bigbrother.datablock.ButtonPress;
 import me.taylorkelly.bigbrother.datablock.Chat;
+import me.taylorkelly.bigbrother.datablock.ChestOpen;
 import me.taylorkelly.bigbrother.datablock.Command;
 import me.taylorkelly.bigbrother.datablock.Disconnect;
+import me.taylorkelly.bigbrother.datablock.DoorOpen;
 import me.taylorkelly.bigbrother.datablock.DropItem;
+import me.taylorkelly.bigbrother.datablock.LeverSwitch;
 import me.taylorkelly.bigbrother.datablock.Login;
 import me.taylorkelly.bigbrother.datablock.PickupItem;
 import me.taylorkelly.bigbrother.datablock.PlacedBlock;
@@ -18,10 +23,11 @@ import me.taylorkelly.bigbrother.datablock.Teleport;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -119,8 +125,9 @@ public class BBPlayerListener extends PlayerListener {
         }
     }
 
+    
     @Override
-    public void onPlayerItem(PlayerItemEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event) {
         //plugin.processPsuedotick();
         if (BBSettings.blockPlace && plugin.watching(event.getPlayer()) && !event.isCancelled()) {
             int x;
@@ -129,32 +136,58 @@ public class BBPlayerListener extends PlayerListener {
             int type;
             PlacedBlock dataBlock;
             World world;
+            Block block = event.getClickedBlock();
             switch (event.getMaterial()) {
                 //TODO Door logging
+            case WOODEN_DOOR:
+            //case IRON_DOOR:
+                if (BBSettings.doorOpen) {
+                    DoorOpen doorDataBlock = new DoorOpen(event.getPlayer().getName(), block, block.getWorld().getName());
+                    doorDataBlock.send();
+                }
+                break;
+            case LEVER:
+                if (BBSettings.leverSwitch) {
+                    LeverSwitch leverDataBlock = new LeverSwitch(event.getPlayer().getName(), block, block.getWorld().getName());
+                    leverDataBlock.send();
+                }
+                break;
+            case STONE_BUTTON:
+                if (BBSettings.buttonPress) {
+                    ButtonPress buttonDataBlock = new ButtonPress(event.getPlayer().getName(), block, block.getWorld().getName());
+                    buttonDataBlock.send();
+                }
+                break;
+            case CHEST:
+                if (BBSettings.chestChanges) {
+                    BBDataBlock chestDataBlock = new ChestOpen(event.getPlayer().getName(), block, block.getWorld().getName());
+                    chestDataBlock.send();
+                }
+                break;
                 case LAVA_BUCKET:
-                    x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
-                    y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
-                    z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
+                    x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
+                    y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
+                    z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
                     type = Material.LAVA.getId();
-                    world = event.getBlockClicked().getWorld();
+                    world = event.getClickedBlock().getWorld();
                     dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
                     LavaFlowLogger.log(new Location(world, x, y, z), event.getPlayer().getName());
                     dataBlock.send();
                     break;
                 case WATER_BUCKET:
-                    x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
-                    y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
-                    z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
+                    x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
+                    y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
+                    z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
                     type = Material.WATER.getId();
-                    world = event.getBlockClicked().getWorld();
+                    world = event.getClickedBlock().getWorld();
                     dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
                     dataBlock.send();
                     break;
                 case SIGN:
-                    x = event.getBlockClicked().getX() + event.getBlockFace().getModX();
-                    y = event.getBlockClicked().getY() + event.getBlockFace().getModY();
-                    z = event.getBlockClicked().getZ() + event.getBlockFace().getModZ();
-                    world = event.getBlockClicked().getWorld();
+                    x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
+                    y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
+                    z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
+                    world = event.getClickedBlock().getWorld();
 
                     int data = 0;
                     switch (event.getBlockFace()) {
@@ -185,22 +218,22 @@ public class BBPlayerListener extends PlayerListener {
                     break;
                 case BUCKET:
                     BrokenBlock dataBlock2;
-                    world = event.getBlockClicked().getWorld();
-                    switch (event.getBlockClicked().getType()) {
+                    world = event.getClickedBlock().getWorld();
+                    switch (event.getClickedBlock().getType()) {
                         case STATIONARY_LAVA:
                         case LAVA:
-                            x = event.getBlockClicked().getX();
-                            y = event.getBlockClicked().getY();
-                            z = event.getBlockClicked().getZ();
+                            x = event.getClickedBlock().getX();
+                            y = event.getClickedBlock().getY();
+                            z = event.getClickedBlock().getZ();
                             type = Material.LAVA.getId();
                             dataBlock2 = new BrokenBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
                             dataBlock2.send();
                             break;
                         case STATIONARY_WATER:
                         case WATER:
-                            x = event.getBlockClicked().getX();
-                            y = event.getBlockClicked().getY();
-                            z = event.getBlockClicked().getZ();
+                            x = event.getClickedBlock().getX();
+                            y = event.getClickedBlock().getY();
+                            z = event.getClickedBlock().getZ();
                             type = Material.WATER.getId();
                             dataBlock2 = new BrokenBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
                             dataBlock2.send();
@@ -209,7 +242,8 @@ public class BBPlayerListener extends PlayerListener {
             }
         }
     }
-
+    
+    
     private double distance(Location from, Location to) {
         return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
     }
