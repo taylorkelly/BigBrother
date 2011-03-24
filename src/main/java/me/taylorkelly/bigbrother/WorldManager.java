@@ -14,7 +14,7 @@ public class WorldManager {
 
     public final static String WORLD_TABLE_NAME = "bbworlds";
     private final static String WORLD_TABLE_SQL =
-            "CREATE TABLE `bbworlds` ("
+            "CREATE TABLE `{P}bbworlds` ("
             + "`id` INTEGER PRIMARY KEY,"
             + "`name` varchar(50) NOT NULL DEFAULT 'world');";
     private HashMap<String, Integer> worldMap;
@@ -24,7 +24,7 @@ public class WorldManager {
             createWorldTable();
         } else {
             if (BBSettings.debugMode) {
-                BBLogging.debug("`bbworlds` table already exists");
+                BBLogging.debug("`"+BBSettings.mysqlPrefix+"bbworlds` table already exists");
             }
         }
         worldMap = loadWorlds();
@@ -73,7 +73,7 @@ public class WorldManager {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("INSERT INTO bbworlds (id, name) VALUES (?,?)");
+            ps = conn.prepareStatement("INSERT INTO "+BBSettings.mysqlPrefix+"bbworlds (id, name) VALUES (?,?)");
             ps.setInt(1, index);
             ps.setString(2, world);
             ps.executeUpdate();
@@ -96,7 +96,7 @@ public class WorldManager {
             conn = ConnectionManager.getConnection();
 
             statement = conn.createStatement();
-            set = statement.executeQuery("SELECT * FROM `bbworlds`;");
+            set = statement.executeQuery("SELECT * FROM `"+BBSettings.mysqlPrefix+"bbworlds`;");
             int size = 0;
             while (set.next()) {
                 size++;
@@ -120,7 +120,7 @@ public class WorldManager {
         try {
             conn = ConnectionManager.getConnection();
             DatabaseMetaData dbm = conn.getMetaData();
-            rs = dbm.getTables(null, null, WORLD_TABLE_NAME, null);
+            rs = dbm.getTables(null, null, BBSettings.mysqlPrefix+WORLD_TABLE_NAME, null);
             if (!rs.next()) {
                 return false;
             }
@@ -139,7 +139,7 @@ public class WorldManager {
         try {
             conn = ConnectionManager.getConnection();
             st = conn.createStatement();
-            st.executeUpdate(WORLD_TABLE_SQL);
+            st.executeUpdate(WORLD_TABLE_SQL.replace("{P}", BBSettings.mysqlPrefix));
             conn.commit();
         } catch (SQLException e) {
             BBLogging.severe("Create World Table SQL Exception", e);
