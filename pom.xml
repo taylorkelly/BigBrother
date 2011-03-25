@@ -27,20 +27,17 @@
     <dependency>
         <groupId>com.nijikokun.bukkit</groupId>
         <artifactId>Permissions</artifactId>
-        <version>2.5.4</version>
         <type>jar</type>
     </dependency>
     <dependency>
         <groupId>me.taylorkelly</groupId>
-        <artifactId>help</artifactId>
-        <version>1</version><!-- idfk - N3X15 -->
+        <artifactId>help</artifactId><!-- idfk - N3X15 -->
         <type>jar</type>
 		<scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>org.anjocaido.groupmanager</groupId>
         <artifactId>GroupManager</artifactId>
-        <version>1.0alpha-3</version>
         <type>jar</type>
     </dependency>
   </dependencies>
