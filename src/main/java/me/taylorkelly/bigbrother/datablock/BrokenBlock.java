@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 import org.bukkit.Material;
 
@@ -56,8 +57,8 @@ public class BrokenBlock extends BBDataBlock {
         }
     }
 
-    public BrokenBlock(String player, String world, int x, int y, int z, int type, byte data) {
-        super(player, Action.BLOCK_BROKEN, world, x, y, z, type, Byte.toString(data));
+    public BrokenBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, byte data) {
+        super(pi, Action.BLOCK_BROKEN, world, x, y, z, type, Byte.toString(data));
         bystanders = new ArrayList<BBDataBlock>();
     }
 
@@ -91,11 +92,11 @@ public class BrokenBlock extends BBDataBlock {
         currWorld.getBlockAt(x, y, z).setTypeId(0);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new BrokenBlock(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new BrokenBlock(pi, world, x, y, z, type, data);
     }
 
-    private BrokenBlock(String player, String world, int x, int y, int z, int type, String data) {
+    private BrokenBlock(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.BLOCK_BROKEN, world, x, y, z, type, data);
     }
 

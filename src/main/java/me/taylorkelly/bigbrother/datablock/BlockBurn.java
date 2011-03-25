@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 
 import org.bukkit.Server;
@@ -61,11 +62,11 @@ public class BlockBurn extends BBDataBlock {
         currWorld.getBlockAt(x, y, z).setTypeId(0);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new BlockBurn(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new BlockBurn(pi, world, x, y, z, type, data);
     }
 
-    private BlockBurn(String player, String world, int x, int y, int z, int type, String data) {
+    private BlockBurn(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.BLOCK_BURN, world, x, y, z, type, data);
     }
 

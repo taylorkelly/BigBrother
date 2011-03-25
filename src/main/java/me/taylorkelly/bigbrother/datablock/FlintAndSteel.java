@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -9,7 +11,7 @@ public class FlintAndSteel extends BBDataBlock {
         super(player, Action.FLINT_AND_STEEL, world, block.getX(), block.getY(), block.getZ(), block.getTypeId(), "");
     }
 
-    private FlintAndSteel(String player, String world, int x, int y, int z, int type, String data) {
+    private FlintAndSteel(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.FLINT_AND_STEEL, world, x, y, z, type, data);
     }
 
@@ -19,8 +21,8 @@ public class FlintAndSteel extends BBDataBlock {
     public void redo(Server server) {
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new FlintAndSteel(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new FlintAndSteel(pi, world, x, y, z, type, data);
     }
 
 }

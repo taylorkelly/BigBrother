@@ -1,6 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -15,7 +16,7 @@ public class DeltaChest extends BBDataBlock {
         super(player, Action.DELTA_CHEST, world, chest.getX(), chest.getY(), chest.getZ(), chest.getTypeId(), changes);
     }
 
-    private DeltaChest(String player, String world, int x, int y, int z, int type, String data) {
+    private DeltaChest(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.DELTA_CHEST, world, x, y, z, type, data);
     }
 
@@ -145,7 +146,7 @@ public class DeltaChest extends BBDataBlock {
         }
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new DeltaChest(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new DeltaChest(pi, world, x, y, z, type, data);
     }
 }

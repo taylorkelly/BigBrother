@@ -1,6 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -33,11 +34,11 @@ public class CreateSignText extends BBDataBlock {
         return message.toString();
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new CreateSignText(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new CreateSignText(pi, world, x, y, z, type, data);
     }
 
-    private CreateSignText(String player, String world, int x, int y, int z, int type, String data) {
+    private CreateSignText(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.CREATE_SIGN_TEXT, world, x, y, z, type, data);
     }
 

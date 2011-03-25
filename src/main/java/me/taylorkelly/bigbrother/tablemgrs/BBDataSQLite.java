@@ -4,7 +4,7 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
 /**
- * @author Rob
+ * @author N3X15
  *
  */
 public class BBDataSQLite extends BBDataTable {
@@ -28,10 +28,10 @@ public class BBDataSQLite extends BBDataTable {
     public String getCreateSyntax() {
         // TODO Auto-generated method stub
         return 
-        "CREATE TABLE `"+getActualTableName()+"` (" 
+        "CREATE TABLE `"+getTableName()+"` (" 
         + "`id` INTEGER PRIMARY KEY," 
         + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," 
-        + "`player` varchar(32) NOT NULL DEFAULT 'Player'," 
+        + "`player` INT UNSIGNED NOT NULL DEFAULT '0'," 
         + "`action` tinyint NOT NULL DEFAULT '0'," 
         + "`world` tinyint NOT NULL DEFAULT '0'," 
         + "`x` int NOT NULL DEFAULT '0'," 

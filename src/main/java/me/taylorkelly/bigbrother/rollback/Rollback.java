@@ -165,7 +165,7 @@ public class Rollback {
 
                 int rollbackSize = 0;
                 while (set.next()) {
-                    listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getString("player"), Action.values()[set.getInt("action")], set.getString("world"), set.getInt("x"),
+                    listBlocks.addLast(BBDataBlock.getBBDataBlock(set.getInt("player"), Action.values()[set.getInt("action")], set.getString("world"), set.getInt("x"),
                             set.getInt("y"), set.getInt("z"), set.getInt("type"), set.getString("data")));
                     rollbackSize++;
                 }

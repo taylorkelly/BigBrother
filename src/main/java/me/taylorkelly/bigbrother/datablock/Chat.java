@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -11,11 +13,11 @@ public class Chat extends BBDataBlock {
 	public void rollback(Server server) {}
 	public void redo(Server server) {}
 
-	public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-		return new Chat(player, world, x, y, z, type, data);
+	public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+		return new Chat(pi, world, x, y, z, type, data);
 	}
 
-	private Chat(String player, String world, int x, int y, int z, int type, String data) {
+	private Chat(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
 		super(player, Action.CHAT, world, x, y, z, type, data);
 	}
 }

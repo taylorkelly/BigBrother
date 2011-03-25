@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -13,11 +15,11 @@ public class Command extends BBDataBlock {
 	public void redo(Server server) {}
 
 
-	public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-		return new Command(player, world, x, y, z, type, data);
+	public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+		return new Command(pi, world, x, y, z, type, data);
 	}
 
-	private Command(String player, String world, int x, int y, int z, int type, String data) {
+	private Command(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
 		super(player, Action.COMMAND, world, x, y, z, type, data);
 	}
 

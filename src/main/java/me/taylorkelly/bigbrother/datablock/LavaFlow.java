@@ -2,6 +2,8 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
+
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -28,7 +30,7 @@ public class LavaFlow extends BBDataBlock {
         super.send();
     }
 
-    private LavaFlow(String player, String world, int x, int y, int z, int type, String data) {
+    private LavaFlow(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.LAVA_FLOW, world, x, y, z, type, data);
     }
 
@@ -44,7 +46,7 @@ public class LavaFlow extends BBDataBlock {
     public void redo(Server server) {
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new LavaFlow(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new LavaFlow(pi, world, x, y, z, type, data);
     }
 }

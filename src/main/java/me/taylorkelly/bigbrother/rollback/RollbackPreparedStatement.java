@@ -6,7 +6,6 @@ import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.WorldManager;
 
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
-import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 public class RollbackPreparedStatement {
 

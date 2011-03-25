@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 
 import org.bukkit.Server;
@@ -66,11 +67,11 @@ public class LeafDecay extends BBDataBlock {
         currWorld.getBlockAt(x, y, z).setTypeId(0);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new LeafDecay(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new LeafDecay(pi, world, x, y, z, type, data);
     }
 
-    private LeafDecay(String player, String world, int x, int y, int z, int type, String data) {
+    private LeafDecay(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.LEAF_DECAY, world, x, y, z, type, data);
     }
 

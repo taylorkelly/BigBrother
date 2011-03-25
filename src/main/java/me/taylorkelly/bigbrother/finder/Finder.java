@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
-import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
+import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -97,7 +98,7 @@ public class Finder {
         PreparedStatement ps = null;
         ResultSet rs = null;
         Connection conn = null;
-        HashMap<String, Integer> modifications = new HashMap<String, Integer>();
+        HashMap<BBPlayerInfo, Integer> modifications = new HashMap<BBPlayerInfo, Integer>();
         try {
             conn = ConnectionManager.getConnection();
 
@@ -118,15 +119,15 @@ public class Finder {
 
             int size = 0;
             while (rs.next()) {
-                String player = rs.getString("player");
+                BBPlayerInfo player = BBUsersTable.getInstance().getUser(rs.getInt("player"));
                 int mods = rs.getInt("modifications");
                 modifications.put(player, mods);
                 size++;
             }
             if (size > 0) {
                 StringBuilder playerList = new StringBuilder();
-                for (Entry<String, Integer> entry : modifications.entrySet()) {
-                    playerList.append(entry.getKey());
+                for (Entry<BBPlayerInfo, Integer> entry : modifications.entrySet()) {
+                    playerList.append(entry.getKey().getName());
                     playerList.append(" (");
                     playerList.append(entry.getValue());
                     playerList.append("), ");
@@ -151,6 +152,9 @@ public class Finder {
     }
 
     private static final void mysqlFind(final Plugin plugin, final String playerName, final Location location, final int radius, final WorldManager manager, final ArrayList<Player> players) {
+        
+        BBPlayerInfo hunted = BBUsersTable.getInstance().getUser(playerName);
+        
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -175,7 +179,7 @@ public class Finder {
             ps.setInt(4, location.getBlockY() - radius);
             ps.setInt(5, location.getBlockZ() + radius);
             ps.setInt(6, location.getBlockZ() - radius);
-            ps.setString(7, playerName);
+            ps.setInt(7, hunted.getID());
             ps.setInt(8, manager.getWorld(location.getWorld().getName()));
             rs = ps.executeQuery();
             conn.commit();

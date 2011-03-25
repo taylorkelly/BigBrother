@@ -49,7 +49,7 @@ public class BBDataMySQL extends BBDataTable {
         return "CREATE TABLE `"+getTableName()+"` ("
         + "`id` INT NOT NULL AUTO_INCREMENT," 
         + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," 
-        + "`player` varchar(32) NOT NULL DEFAULT 'Player'," 
+        + "`player` INT UNSIGNED NOT NULL DEFAULT 0," 
         + "`action` tinyint NOT NULL DEFAULT '0'," 
         + "`world` tinyint NOT NULL DEFAULT '0'," 
         + "`x` int NOT NULL DEFAULT '0'," 

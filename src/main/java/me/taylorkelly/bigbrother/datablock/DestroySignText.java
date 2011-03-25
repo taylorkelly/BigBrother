@@ -1,6 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -25,12 +26,16 @@ public class DestroySignText extends BBDataBlock {
         return message.toString();
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new DestroySignText(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new DestroySignText(pi, world, x, y, z, type, data);
     }
 
-    private DestroySignText(String player, String world, int x, int y, int z, int type, String data) {
+    private DestroySignText(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.DESTROY_SIGN_TEXT, world, x, y, z, type, data);
+    }
+
+    public DestroySignText(BBPlayerInfo player, Sign sign, String world) {
+        super(player, Action.DESTROY_SIGN_TEXT, world, sign.getX(), sign.getY(), sign.getZ(), 323, getText(sign));
     }
 
     @Override

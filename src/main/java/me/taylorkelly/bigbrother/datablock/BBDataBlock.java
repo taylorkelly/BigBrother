@@ -1,16 +1,18 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.datablock.explosions.CreeperExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.MiscExplosion;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTExplosion;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
+import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.Server;
 
 public abstract class BBDataBlock {
 
     public final static String ENVIRONMENT = "Environment";
-    public String player;
+    public BBPlayerInfo player;
     public Action action;
     public int x;
     public int y;
@@ -49,6 +51,17 @@ public abstract class BBDataBlock {
 
     public BBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
         this.date = System.currentTimeMillis() / 1000;
+        this.player = BBUsersTable.getInstance().getUser(player);
+        this.action = action;
+        this.world = world;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.type = type;
+        this.data = data;
+    }
+    public BBDataBlock(BBPlayerInfo player, Action action, String world, int x, int y, int z, int type, String data) {
+        this.date = System.currentTimeMillis() / 1000;
         this.player = player;
         this.action = action;
         this.world = world;
@@ -71,56 +84,59 @@ public abstract class BBDataBlock {
         return null;
     }
 
-    public static BBDataBlock getBBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, Action action, String world, int x, int y, int z, int type, String data) {
         switch (action) {
             case BLOCK_BROKEN:
-                return BrokenBlock.getBBDataBlock(player, world, x, y, z, type, data);
+                return BrokenBlock.getBBDataBlock(pi, world, x, y, z, type, data);
             case BLOCK_PLACED:
-                return PlacedBlock.getBBDataBlock(player, world, x, y, z, type, data);
+                return PlacedBlock.getBBDataBlock(pi, world, x, y, z, type, data);
             case DESTROY_SIGN_TEXT:
-                return DestroySignText.getBBDataBlock(player, world, x, y, z, type, data);
+                return DestroySignText.getBBDataBlock(pi, world, x, y, z, type, data);
             case TELEPORT:
-                return Teleport.getBBDataBlock(player, world, x, y, z, type, data);
+                return Teleport.getBBDataBlock(pi, world, x, y, z, type, data);
             case DELTA_CHEST:
-                return DeltaChest.getBBDataBlock(player, world, x, y, z, type, data);
+                return DeltaChest.getBBDataBlock(pi, world, x, y, z, type, data);
             case COMMAND:
-                return Command.getBBDataBlock(player, world, x, y, z, type, data);
+                return Command.getBBDataBlock(pi, world, x, y, z, type, data);
             case CHAT:
-                return Chat.getBBDataBlock(player, world, x, y, z, type, data);
+                return Chat.getBBDataBlock(pi, world, x, y, z, type, data);
             case DISCONNECT:
-                return Disconnect.getBBDataBlock(player, world, x, y, z, type, data);
+                return Disconnect.getBBDataBlock(pi, world, x, y, z, type, data);
             case LOGIN:
-                return Login.getBBDataBlock(player, world, x, y, z, type, data);
+                return Login.getBBDataBlock(pi, world, x, y, z, type, data);
             case DOOR_OPEN:
-                return DoorOpen.getBBDataBlock(player, world, x, y, z, type, data);
+                return DoorOpen.getBBDataBlock(pi, world, x, y, z, type, data);
             case BUTTON_PRESS:
-                return ButtonPress.getBBDataBlock(player, world, x, y, z, type, data);
+                return ButtonPress.getBBDataBlock(pi, world, x, y, z, type, data);
             case LEVER_SWITCH:
-                return LeverSwitch.getBBDataBlock(player, world, x, y, z, type, data);
+                return LeverSwitch.getBBDataBlock(pi, world, x, y, z, type, data);
             case CREATE_SIGN_TEXT:
-                return CreateSignText.getBBDataBlock(player, world, x, y, z, type, data);
+                return CreateSignText.getBBDataBlock(pi, world, x, y, z, type, data);
             case LEAF_DECAY:
-                return LeafDecay.getBBDataBlock(player, world, x, y, z, type, data);
+                return LeafDecay.getBBDataBlock(pi, world, x, y, z, type, data);
             case FLINT_AND_STEEL:
-                return FlintAndSteel.getBBDataBlock(player, world, x, y, z, type, data);
+                return FlintAndSteel.getBBDataBlock(pi, world, x, y, z, type, data);
             case TNT_EXPLOSION:
-                return TNTExplosion.getBBDataBlock(player, world, x, y, z, type, data);
+                return TNTExplosion.getBBDataBlock(pi, world, x, y, z, type, data);
             case CREEPER_EXPLOSION:
-                return CreeperExplosion.getBBDataBlock(player, world, x, y, z, type, data);
+                return CreeperExplosion.getBBDataBlock(pi, world, x, y, z, type, data);
             case MISC_EXPLOSION:
-                return MiscExplosion.getBBDataBlock(player, world, x, y, z, type, data);
+                return MiscExplosion.getBBDataBlock(pi, world, x, y, z, type, data);
             case OPEN_CHEST:
-                return ChestOpen.getBBDataBlock(player, world, x, y, z, type, data);
+                return ChestOpen.getBBDataBlock(pi, world, x, y, z, type, data);
             case BLOCK_BURN:
-                return BlockBurn.getBBDataBlock(player, world, x, y, z, type, data);
+                return BlockBurn.getBBDataBlock(pi, world, x, y, z, type, data);
             case LAVA_FLOW:
-                return LavaFlow.getBBDataBlock(player, world, x, y, z, type, data);
+                return LavaFlow.getBBDataBlock(pi, world, x, y, z, type, data);
             case DROP_ITEM:
-                return DropItem.getBBDataBlock(player, world, x, y, z, type, data);
+                return DropItem.getBBDataBlock(pi, world, x, y, z, type, data);
             case PICKUP_ITEM:
-                return PickupItem.getBBDataBlock(player, world, x, y, z, type, data);
+                return PickupItem.getBBDataBlock(pi, world, x, y, z, type, data);
             default:
                 return null;
         }
+    }
+    public static BBDataBlock getBBDataBlock(int plyID, Action action, String world, int x, int y, int z, int type, String data) {
+        return getBBDataBlock(BBUsersTable.getInstance().getUser(plyID),action,world,x,y,z,type,data);
     }
 }

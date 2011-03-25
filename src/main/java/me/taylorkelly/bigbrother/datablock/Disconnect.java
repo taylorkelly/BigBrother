@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
+
 import org.bukkit.Location;
 import org.bukkit.Server;
 
@@ -8,11 +10,11 @@ public class Disconnect extends BBDataBlock {
 		super(player, Action.DISCONNECT, world, location.getBlockX(), location.getBlockY(), location.getBlockZ(), 0, "");
 	}
 
-	public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-		return new Disconnect(player, world, x, y, z, type, data);
+	public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+		return new Disconnect(pi, world, x, y, z, type, data);
 	}
 
-	private Disconnect(String player, String world, int x, int y, int z, int type, String data) {
+	private Disconnect(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
 		super(player, Action.DISCONNECT, world, x, y, z, type, data);
 	}
 

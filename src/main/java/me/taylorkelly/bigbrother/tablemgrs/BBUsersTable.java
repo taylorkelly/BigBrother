@@ -12,28 +12,27 @@ import me.taylorkelly.bigbrother.BBSettings.DBMS;
 /**
  * Handle the user tracking table.
  * BBUsers(_id_,name,flags)
- * @author Rob
+ * @author N3X15
  * @todo Handle INSERT/SELECT/DELETE stuff through here.
  */
 public abstract class BBUsersTable extends DBTable {
     
-    public Hashtable<String,BBPlayerInfo> knownPlayers = new Hashtable<String,BBPlayerInfo>();
-    
+    public Hashtable<Integer,BBPlayerInfo> knownPlayers = new Hashtable<Integer,BBPlayerInfo>();
+    public Hashtable<String,Integer> knownNames = new Hashtable<String,Integer>();
     
     // Singletons :D
     private static BBUsersTable instance=null;
     
     /**
-     * Get table name + prefix
+     * Get table name
      */
     public String getActualTableName() 
     {
-        return "bbdata";
+        return "bbusers";
     }
-    
     public static BBUsersTable getInstance() {
         if(instance==null) {
-            //BBLogging.info("BBSettings.databaseSystem="+BBSettings.databaseSystem.toString());
+            BBLogging.debug("BBSettings.databaseSystem="+BBSettings.databaseSystem.toString());
             if(BBSettings.usingDBMS(DBMS.MYSQL))
                 instance=new BBUsersMySQL();
             else
@@ -44,23 +43,25 @@ public abstract class BBUsersTable extends DBTable {
     
     public BBUsersTable() {
         if (!tableExists()) {
-            BBLogging.info("Building `"+getActualTableName()+"` table...");
+            BBLogging.info("Building `"+getTableName()+"` table...");
             createTable();
         } else {
-            BBLogging.debug("`"+getActualTableName()+"` table already exists");
+            BBLogging.debug("`"+getTableName()+"` table already exists");
 
         }
         
         onLoad();
     }
     
+    public abstract void importRecords();
+
     public BBPlayerInfo getUser(String name) {
         name=name.toLowerCase();
         
         // Check cache first.
-        if(knownPlayers.containsKey(name))
-            return knownPlayers.get(name);
-        
+        if(knownNames.containsKey(name))
+            return getUser(knownNames.get(name));
+
         return getUserFromDB(name);
     }
     
@@ -69,17 +70,38 @@ public abstract class BBUsersTable extends DBTable {
         
         BBPlayerInfo pi = null;
         // Check cache first.
-        if(knownPlayers.containsKey(name))
+        if(knownNames.containsKey(name))
         {
-            pi = knownPlayers.get(name);
-            knownPlayers.remove(name);
+            int id = knownNames.get(name);
+            pi = knownPlayers.get(id);
+            knownPlayers.remove(id);
+            knownNames.remove(name);
         } else {
             pi = new BBPlayerInfo(name);
         }
         
         do_addOrUpdatePlayer(pi);
+        pi.refresh();
+        knownPlayers.put(pi.getID(), pi);
+        knownNames.put(name, pi.getID());
     }
 
+    public void addOrUpdatePlayer(BBPlayerInfo pi) {
+        // Update cache
+        if(knownPlayers.containsKey(pi.getID()))
+        {
+            pi = knownPlayers.get(pi.getID());
+            knownPlayers.remove(pi.getID());
+        }
+        
+        do_addOrUpdatePlayer(pi);
+        knownPlayers.put(pi.getID(), pi);
+    }
+
+    /**
+     * UPDATE or INSERT user.
+     * @param pi
+     */
     protected abstract void do_addOrUpdatePlayer(BBPlayerInfo pi);
 
     /**
@@ -88,4 +110,12 @@ public abstract class BBUsersTable extends DBTable {
      * @return
      */
     protected abstract BBPlayerInfo getUserFromDB(String name);
+
+    public BBPlayerInfo getUser(int id) {
+        if(!knownPlayers.containsKey(id))
+            return knownPlayers.get(id);
+        return this.getUserFromDB(id);
+    }
+
+    protected abstract BBPlayerInfo getUserFromDB(int id);
 }

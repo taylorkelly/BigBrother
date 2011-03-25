@@ -63,11 +63,7 @@ public class DataBlockSender {
             ps = conn.prepareStatement(statementSql);
             for (BBDataBlock block : collection) {
                 ps.setLong(1, block.date);
-                if (block.player.length() > 32) {
-                    ps.setString(2, block.player.substring(0, 32));
-                } else {
-                    ps.setString(2, block.player);
-                }
+                ps.setInt(2, block.player.getID());
                 ps.setInt(3, block.action.ordinal());
                 ps.setInt(4, manager.getWorld(block.world));
                 ps.setInt(5, block.x);
@@ -107,7 +103,7 @@ public class DataBlockSender {
         FileWriter fwriter = null;
         try {
             for (BBDataBlock block : collection) {
-                File file = new File(dir, fixName(block.player) + ".log");
+                File file = new File(dir, fixName(block.player.getName()) + ".log");
                 StringBuilder builder = new StringBuilder(Long.toString(System.currentTimeMillis()));
                 builder.append(" - ");
                 builder.append(getAction(block.action));

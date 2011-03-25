@@ -1,5 +1,6 @@
 package me.taylorkelly.bigbrother.datablock.explosions;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.block.Block;
@@ -19,11 +20,11 @@ public class TNTExplosion extends Explosion {
         return new TNTExplosion(player, block, block.getWorld().getName());
     }
 
-    private TNTExplosion(String player, String world, int x, int y, int z, int type, String data) {
+    private TNTExplosion(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.TNT_EXPLOSION, world, x, y, z, type, data);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new TNTExplosion(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new TNTExplosion(pi, world, x, y, z, type, data);
     }
 }

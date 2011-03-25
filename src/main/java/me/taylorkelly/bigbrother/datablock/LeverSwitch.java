@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
+
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 
@@ -13,11 +15,11 @@ public class LeverSwitch extends BBDataBlock {
 	public void redo(Server server) {}
 
 
-	public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-		return new LeverSwitch(player, world, x, y, z, type, data);
+	public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+		return new LeverSwitch(pi, world, x, y, z, type, data);
 	}
 
-	private LeverSwitch(String player, String world, int x, int y, int z, int type, String data) {
+	private LeverSwitch(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
 		super(player, Action.LEVER_SWITCH, world, x, y, z, type, data);
 	}
 

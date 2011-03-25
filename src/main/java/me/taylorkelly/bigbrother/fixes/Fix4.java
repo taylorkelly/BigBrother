@@ -12,7 +12,7 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 /**
  * Drop ungrouped x, y, and z indices and then create posIndex index.
- * @author Rob
+ * @author N3X15
  *
  */
 public class Fix4 extends Fix {

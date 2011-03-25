@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.datablock.explosions;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.DeltaChest;
@@ -179,7 +180,7 @@ public abstract class Explosion extends BBDataBlock {
 
     protected abstract Explosion newInstance(String player, Block block);
 
-    protected Explosion(String player, Action dataType, String world, int x, int y, int z, int type, String data) {
+    protected Explosion(BBPlayerInfo player, Action dataType, String world, int x, int y, int z, int type, String data) {
         super(player, dataType, world, x, y, z, type, data);
     }
 }

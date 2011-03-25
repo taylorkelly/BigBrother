@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.datablock.explosions;
 
 import java.util.List;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 import org.bukkit.Location;
@@ -32,11 +33,11 @@ public class CreeperExplosion extends Explosion {
         }
     }
 
-    private CreeperExplosion(String player, String world, int x, int y, int z, int type, String data) {
+    private CreeperExplosion(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.CREEPER_EXPLOSION, world, x, y, z, type, data);
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         return new CreeperExplosion(player, world, x, y, z, type, data);
     }
 }

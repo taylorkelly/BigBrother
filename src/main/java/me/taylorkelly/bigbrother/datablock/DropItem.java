@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.datablock;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Item;
 
@@ -15,11 +17,11 @@ public class DropItem extends BBDataBlock {
     public void redo(Server server) {
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new DropItem(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new DropItem(pi, world, x, y, z, type, data);
     }
 
-    private DropItem(String player, String world, int x, int y, int z, int type, String data) {
+    private DropItem(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.DROP_ITEM, world, x, y, z, type, data);
     }
 }

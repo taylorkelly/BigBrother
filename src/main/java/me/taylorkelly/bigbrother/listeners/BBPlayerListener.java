@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.listeners;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBPermissions;
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.LavaFlowLogger;
@@ -19,6 +20,7 @@ import me.taylorkelly.bigbrother.datablock.Login;
 import me.taylorkelly.bigbrother.datablock.PickupItem;
 import me.taylorkelly.bigbrother.datablock.PlacedBlock;
 import me.taylorkelly.bigbrother.datablock.Teleport;
+import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,14 +57,17 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerJoin(PlayerEvent event) {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        
+        /*
         if (!plugin.haveSeen(player)) {
             plugin.markSeen(player);
             if (BBSettings.autoWatch) {
                 plugin.watchPlayer(player);
             }
         }
-        
-        if (BBSettings.login && plugin.watching(player)) {
+        */
+        if (BBSettings.login && pi.getWatched()) {
             Login dataBlock = new Login(player, player.getWorld().getName());
             dataBlock.send();
         }
@@ -201,7 +206,7 @@ public class BBPlayerListener extends PlayerListener {
                     y = event.getClickedBlock().getY();
                     z = event.getClickedBlock().getZ();
                     type = Material.LAVA.getId();
-                    dataBlock2 = new BrokenBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                    dataBlock2 = new BrokenBlock(BBUsersTable.getInstance().getUser(event.getPlayer().getName()), world.getName(), x, y, z, type, (byte) 0);
                     dataBlock2.send();
                     break;
                 case STATIONARY_WATER:
@@ -210,7 +215,7 @@ public class BBPlayerListener extends PlayerListener {
                     y = event.getClickedBlock().getY();
                     z = event.getClickedBlock().getZ();
                     type = Material.WATER.getId();
-                    dataBlock2 = new BrokenBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                    dataBlock2 = new BrokenBlock(BBUsersTable.getInstance().getUser(event.getPlayer().getName()), world.getName(), x, y, z, type, (byte) 0);
                     dataBlock2.send();
                 }
                 break;

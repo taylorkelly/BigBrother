@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.datablock;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 
 import org.bukkit.Server;
@@ -32,7 +33,7 @@ public class PlacedBlock extends BBDataBlock {
         super.send();
     }
 
-    private PlacedBlock(String player, String world, int x, int y, int z, int type, String data) {
+    private PlacedBlock(BBPlayerInfo player, String world, int x, int y, int z, int type, String data) {
         super(player, Action.BLOCK_PLACED, world, x, y, z, type, data);
     }
 
@@ -58,7 +59,7 @@ public class PlacedBlock extends BBDataBlock {
         }
     }
 
-    public static BBDataBlock getBBDataBlock(String player, String world, int x, int y, int z, int type, String data) {
-        return new PlacedBlock(player, world, x, y, z, type, data);
+    public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {
+        return new PlacedBlock(pi, world, x, y, z, type, data);
     }
 }

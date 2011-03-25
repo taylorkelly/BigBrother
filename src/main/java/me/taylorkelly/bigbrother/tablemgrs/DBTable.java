@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother.tablemgrs;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -67,4 +68,27 @@ public abstract class DBTable {
         }
     }
 
+    protected boolean executeUpdate(String desc, String sql, Object[] args) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            ps = conn.prepareStatement(sql);
+            for(int i = 0;i<args.length;i++)
+                ps.setObject(i, args[i]);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            BBLogging.severe("Could not executeUpdate for "+desc+":", e);
+        } finally {
+            ConnectionManager.cleanup(desc,conn, ps, null );
+        }
+        return false;
+    }
+    
+
+
+    protected boolean executeUpdate(String desc, String sql) {
+        return executeUpdate(desc,sql,new Object[]{});
+    }
 }
