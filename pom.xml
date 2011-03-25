@@ -3,13 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.taylorkelly</groupId>
   <artifactId>bigbrother</artifactId>
-  <version>1.6.3-SNAPSHOT</version>
+  <version>1.7.2-SNAPSHOT</version>
   <name>BigBrother</name>
   <url>http://www.bukkit.org</url>
   <repositories>
     <repository>
-      <id>bukkut-repo</id>
+      <id>bukkit-repo</id>
       <url>http://artifacts.lukegb.com/artifactory/repo</url>
+    </repository>
+    <repository>
+    	<id>nexisonline-repo</id>
+    	<url>http://ci.nexisonline.net:8080/nexus/content/repositories/snapshots/</url>
     </repository>
   </repositories>
   <dependencies>
