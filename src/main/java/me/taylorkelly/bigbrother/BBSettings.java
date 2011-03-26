@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 
@@ -105,21 +106,28 @@ public class BBSettings {
 
     private static void loadYaml(File yamlfile) {
         final BetterConfig yml = new BetterConfig(yamlfile);
-        // Fix NPE
+        
+        // If the file's not there, don't load it
         if(yamlfile.exists())
             yml.load();
 
         loadDBSettings(yml);
         loadWatchSettings(yml);
         
-        for (Object o : yml.getList("general.excluded-blocks")) {
-            int id = 0;
-            if(o instanceof Integer)
-                id = (int)(Integer)o;
-            else if(o instanceof String) {
-                id = ItemType.lookup((String)o).getID();
+        List<Object> excluded = yml.getList("general.excluded-blocks");
+        // Dodge NPE reported by Mineral (and set a default)
+        if(excluded==null) {
+            yml.setProperty("general.excluded-blocks", blockExclusionList);
+        } else {
+            for (Object o : excluded) {
+                int id = 0;
+                if(o instanceof Integer)
+                    id = (int)(Integer)o;
+                else if(o instanceof String) {
+                    id = ItemType.lookup((String)o).getID();
+                }
+                blockExclusionList.add(id);
             }
-            blockExclusionList.add(id);
         }
         stickItem = yml.getInt("general.stick-item", 280);// "The item used for /bb stick");
         restoreFire = yml.getBoolean("general.restore-fire", false);// "Restore fire when rolling back");
