@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-class Updatr {
+public class Updatr {
 
     public static void updateAvailable(Player player) {
         URLReader reader = new URLReader();

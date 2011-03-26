@@ -21,6 +21,22 @@ import java.io.File;
 import java.sql.Connection;
 import java.util.List;
 
+import me.taylorkelly.bigbrother.commands.CleanseCommand;
+import me.taylorkelly.bigbrother.commands.ConfirmCommand;
+import me.taylorkelly.bigbrother.commands.DeleteCommand;
+import me.taylorkelly.bigbrother.commands.DoneCommand;
+import me.taylorkelly.bigbrother.commands.FindCommand;
+import me.taylorkelly.bigbrother.commands.HelpCommand;
+import me.taylorkelly.bigbrother.commands.HereCommand;
+import me.taylorkelly.bigbrother.commands.LogCommand;
+import me.taylorkelly.bigbrother.commands.RollbackCommand;
+import me.taylorkelly.bigbrother.commands.StickCommand;
+import me.taylorkelly.bigbrother.commands.UndoCommand;
+import me.taylorkelly.bigbrother.commands.UnwatchedCommand;
+import me.taylorkelly.bigbrother.commands.UpdateCommand;
+import me.taylorkelly.bigbrother.commands.VersionCommand;
+import me.taylorkelly.bigbrother.commands.WatchCommand;
+import me.taylorkelly.bigbrother.commands.WatchedCommand;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.finder.Finder;
@@ -62,8 +78,8 @@ public class BigBrother extends JavaPlugin {
     private BBEntityListener entityListener;
     private StickListener stickListener;
     private Watcher watcher;
-    Sticker sticker;
-    WorldManager worldManager;
+    public Sticker sticker;
+    public WorldManager worldManager;
     public static String name;
     public static String version;
     public final static String premessage = ChatColor.AQUA + "[BBROTHER]: " + ChatColor.WHITE;
@@ -201,8 +217,24 @@ public class BigBrother extends JavaPlugin {
         // These events are used for Super Sticks
         pm.registerEvent(Event.Type.PLAYER_INTERACT, stickListener, Priority.Low, this);
         pm.registerEvent(Event.Type.BLOCK_PLACE, stickListener, Priority.Low, this);
-        
-        getCommand("bb").setExecutor(new BBCommand(this));
+        BBCommand bbc = new BBCommand(this);
+        bbc.registerExecutor("version", new VersionCommand(this));
+        bbc.registerExecutor("update", new UpdateCommand(this));
+        bbc.registerExecutor("watch", new WatchCommand(this));
+        bbc.registerExecutor("watched", new WatchedCommand(this));
+        bbc.registerExecutor("unwatched", new UnwatchedCommand(this));
+        bbc.registerExecutor("cleanse", new CleanseCommand(this));
+        bbc.registerExecutor("rollback", new RollbackCommand(this));
+        bbc.registerExecutor("confirm", new ConfirmCommand(this));
+        bbc.registerExecutor("delete", new DeleteCommand(this));
+        bbc.registerExecutor("undo", new UndoCommand(this));
+        bbc.registerExecutor("stick", new StickCommand(this));
+        bbc.registerExecutor("log", new LogCommand(this));
+        bbc.registerExecutor("done", new DoneCommand(this)); // TODO: Add to yml
+        bbc.registerExecutor("here", new HereCommand(this));
+        bbc.registerExecutor("find", new FindCommand(this));
+        bbc.registerExecutor("help", new HelpCommand(this));
+        getCommand("bb").setExecutor(bbc);
     }
 
     public boolean watching(Player player) {
@@ -240,7 +272,7 @@ public class BigBrother extends JavaPlugin {
      * @param player Player to talk to about their stick/log
      * @author N3X15
      */
-    void reportStickMode(Player player, int stickLevel) {
+    public void reportStickMode(Player player, int stickLevel) {
         if (stickLevel > 0) {
             player.sendMessage(BigBrother.premessage + "Your current stick mode is " + sticker.descMode(player));
             player.sendMessage("Use " + ChatColor.RED + "/bb stick 0" + ChatColor.WHITE + " to turn it off");

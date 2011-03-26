@@ -15,7 +15,7 @@ public class Cleanser {
 
     private static CleanupThread cleanupThread = null;
 
-    static boolean needsCleaning() {
+    public static boolean needsCleaning() {
         return BBSettings.cleanseAge != -1 || BBSettings.maxRecords != -1;
     }
 
