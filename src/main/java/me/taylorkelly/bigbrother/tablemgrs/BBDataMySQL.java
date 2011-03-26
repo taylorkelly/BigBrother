@@ -61,7 +61,7 @@ public class BBDataMySQL extends BBDataTable {
         + "PRIMARY KEY (`id`)," 
         + "INDEX(`world`)," 
         + "INDEX(`x`,`y`,`z`)," 
-        + "INDEX(`player`(10))," 
+        + "INDEX(`player`),"
         + "INDEX(`action`)," 
         + "INDEX(`date`)," 
         + "INDEX(`type`)," 
