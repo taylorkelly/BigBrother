@@ -105,7 +105,9 @@ public class BBSettings {
 
     private static void loadYaml(File yamlfile) {
         final BetterConfig yml = new BetterConfig(yamlfile);
-        yml.load();
+        // Fix NPE
+        if(yamlfile.exists())
+            yml.load();
 
         loadDBSettings(yml);
         loadWatchSettings(yml);
