@@ -37,8 +37,8 @@ public class BBUsersMySQL extends BBUsersTable {
         + "`id` INT NOT NULL AUTO_INCREMENT," 
         + "`name` varchar(32) NOT NULL DEFAULT 'Player'," 
         + "`flags` INT NOT NULL DEFAULT '0',"
-        + "PRIMARY KEY (`id`));" //Engine doesn't matter, really.
-        + "CREATE UNIQUE INDEX idxUsername ON `"+getTableName()+"` (`name`)";
+        + "PRIMARY KEY (`id`),"
+        + "UNIQUE(`name`));"; //Engine doesn't matter, really.
     }
 
     @Override
