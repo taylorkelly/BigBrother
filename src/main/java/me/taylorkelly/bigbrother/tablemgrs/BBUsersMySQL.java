@@ -26,8 +26,6 @@ public class BBUsersMySQL extends BBUsersTable {
      */
     @Override
     protected void onLoad() {
-        // TODO Auto-generated method stub
-        
     }
     
     /* (non-Javadoc)
@@ -40,7 +38,7 @@ public class BBUsersMySQL extends BBUsersTable {
         + "`name` varchar(32) NOT NULL DEFAULT 'Player'," 
         + "`flags` INT NOT NULL DEFAULT '0',"
         + "PRIMARY KEY (`id`));" //Engine doesn't matter, really.
-        + "CREATE UNIQUE INDEX idxUsername ON `name`;";
+        + "CREATE UNIQUE INDEX idxUsername ON `"+getTableName()+"` (`name`)";
     }
 
     @Override

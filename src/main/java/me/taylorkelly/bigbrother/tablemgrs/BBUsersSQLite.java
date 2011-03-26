@@ -49,7 +49,7 @@ public class BBUsersSQLite extends BBUsersTable {
         + "`name` varchar(32) NOT NULL DEFAULT 'Player'," 
         + "`flags` INT NOT NULL DEFAULT '0',"
         + "PRIMARY KEY (`id`));" //Engine doesn't matter, really.
-        + "CREATE UNIQUE INDEX idxUsername ON `name`;";
+        + "CREATE UNIQUE INDEX idxUsername ON `"+getTableName()+"` (`name`)"; // ANSI
     }
 
     @Override
