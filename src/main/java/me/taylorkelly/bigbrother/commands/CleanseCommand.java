@@ -12,10 +12,7 @@ import org.bukkit.entity.Player;
 
 public class CleanseCommand implements CommandExecutor {
     
-    private BigBrother plugin;
-    
     public CleanseCommand(BigBrother plugin) {
-        this.plugin=plugin;
     }
     
     @Override

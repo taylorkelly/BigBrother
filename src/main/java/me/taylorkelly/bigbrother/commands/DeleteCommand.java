@@ -12,10 +12,7 @@ import org.bukkit.entity.Player;
 
 public class DeleteCommand implements CommandExecutor {
     
-    private BigBrother plugin;
-    
     public DeleteCommand(BigBrother plugin) {
-        this.plugin=plugin;
     }
     
     @Override

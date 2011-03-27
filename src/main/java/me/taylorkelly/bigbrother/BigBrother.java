@@ -19,8 +19,6 @@ package me.taylorkelly.bigbrother;
 
 import java.io.File;
 import java.sql.Connection;
-import java.util.List;
-
 import me.taylorkelly.bigbrother.commands.CleanseCommand;
 import me.taylorkelly.bigbrother.commands.ConfirmCommand;
 import me.taylorkelly.bigbrother.commands.DeleteCommand;
@@ -39,7 +37,6 @@ import me.taylorkelly.bigbrother.commands.WatchCommand;
 import me.taylorkelly.bigbrother.commands.WatchedCommand;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
-import me.taylorkelly.bigbrother.finder.Finder;
 import me.taylorkelly.bigbrother.finder.Sticker;
 import me.taylorkelly.bigbrother.fixes.Fix;
 import me.taylorkelly.bigbrother.fixes.Fix1;
@@ -51,19 +48,9 @@ import me.taylorkelly.bigbrother.griefcraft.util.Updater;
 import me.taylorkelly.bigbrother.listeners.BBBlockListener;
 import me.taylorkelly.bigbrother.listeners.BBEntityListener;
 import me.taylorkelly.bigbrother.listeners.BBPlayerListener;
-import me.taylorkelly.bigbrother.rollback.Rollback;
-import me.taylorkelly.bigbrother.rollback.RollbackConfirmation;
-import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
 import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
-import me.taylorkelly.util.Numbers;
-
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;

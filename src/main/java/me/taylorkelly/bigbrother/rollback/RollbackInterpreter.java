@@ -7,12 +7,13 @@ import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.util.TimeParser;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 
 public class RollbackInterpreter {
-
+    
     private Rollback rollback;
     private Calendar dateSearch;
     private ArrayList<Integer> blockTypes;
@@ -23,7 +24,7 @@ public class RollbackInterpreter {
     private WorldManager manager;
     private int radius = 0;
     private Plugin plugin;
-
+    
     public RollbackInterpreter(Player player, String[] split, Server server, WorldManager manager, Plugin plugin) {
         this.manager = manager;
         this.player = player;
@@ -54,7 +55,7 @@ public class RollbackInterpreter {
             }
         }
     }
-
+    
     private void parseRadius(String radius) {
         try {
             int radInt = Integer.parseInt(radius);
@@ -67,7 +68,7 @@ public class RollbackInterpreter {
             player.sendMessage(ChatColor.RED + "Ignoring invalid radius: " + radius);
         }
     }
-
+    
     private void parseId(String id) {
         if (id.contains(",")) {
             String[] ids = id.split(",");
@@ -75,21 +76,23 @@ public class RollbackInterpreter {
                 if (actId.equals("")) {
                     continue;
                 }
-                try {
-                    blockTypes.add(Integer.parseInt(actId));
-                } catch (Exception e) {
+                Material m = Material.matchMaterial(actId);
+                if (m != null)
+                    blockTypes.add(m.getId());
+                else {
                     player.sendMessage(ChatColor.RED + "Ignoring invalid block id: " + actId);
                 }
             }
         } else {
-            try {
-                blockTypes.add(Integer.parseInt(id));
-            } catch (Exception e) {
+            Material m = Material.matchMaterial(id);
+            if (m != null)
+                blockTypes.add(m.getId());
+            else {
                 player.sendMessage(ChatColor.RED + "Ignoring invalid block id: " + id);
             }
         }
     }
-
+    
     public Boolean interpret() {
         rollback = new Rollback(server, manager, plugin);
         rollback.addReciever(player);
@@ -116,11 +119,12 @@ public class RollbackInterpreter {
             return true;
         }
     }
-//	public Rollback getAndInitializeRollback() {
-//		rollback.prepareRollback();
-//		return rollback;
-//	}
-
+    
+    // public Rollback getAndInitializeRollback() {
+    // rollback.prepareRollback();
+    // return rollback;
+    // }
+    
     public void send() {
         rollback.rollback();
     }

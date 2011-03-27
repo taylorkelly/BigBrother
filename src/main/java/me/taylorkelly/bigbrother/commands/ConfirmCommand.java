@@ -13,10 +13,7 @@ import org.bukkit.entity.Player;
 
 public class ConfirmCommand implements CommandExecutor {
     
-    private BigBrother plugin;
-    
     public ConfirmCommand(BigBrother plugin) {
-        this.plugin = plugin;
     }
     
     @Override

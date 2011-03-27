@@ -9,16 +9,13 @@ import org.bukkit.command.CommandSender;
 
 public class HelpCommand implements CommandExecutor {
     
-    private BigBrother plugin;
-    
     public HelpCommand(BigBrother plugin) {
-        this.plugin=plugin;
     }
     
     @Override
     public boolean onCommand(CommandSender player, Command arg1, String arg2, String[] arg3) {
         // TODO: Modular help system
-        player.sendMessage(BigBrother.premessage + "BigBrother version " + plugin.version + " help");
+        player.sendMessage(BigBrother.premessage + "BigBrother version " + BigBrother.version + " help");
         player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb watch (name)" + ChatColor.WHITE + " - Toggles the whether BB is watching (name)");
         player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb watched" + ChatColor.WHITE + " - Shows which users are being watched by BB");
         player.sendMessage(BigBrother.premessage + " " + ChatColor.RED + "/bb unwatched" + ChatColor.WHITE + " - Shows which users that are logged in are unwatched");

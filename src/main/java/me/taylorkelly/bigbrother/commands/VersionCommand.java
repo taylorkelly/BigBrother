@@ -9,15 +9,12 @@ import org.bukkit.command.CommandSender;
 
 public class VersionCommand implements CommandExecutor {
     
-    private BigBrother plugin;
-    
     public VersionCommand(BigBrother plugin) {
-        this.plugin=plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender player, Command arg1, String arg2, String[] arg3) {
-        player.sendMessage("You're running: " + ChatColor.AQUA.toString() + plugin.name + " " + plugin.version);
+        player.sendMessage("You're running: " + ChatColor.AQUA.toString() + BigBrother.name + " " + BigBrother.version);
         return true;
     }
     

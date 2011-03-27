@@ -1,17 +1,8 @@
 package me.taylorkelly.bigbrother;
 
 import java.util.HashMap;
-import java.util.List;
-
-import me.taylorkelly.bigbrother.finder.Finder;
-import me.taylorkelly.bigbrother.rollback.Rollback;
-import me.taylorkelly.bigbrother.rollback.RollbackConfirmation;
-import me.taylorkelly.bigbrother.rollback.RollbackInterpreter;
-import me.taylorkelly.util.Numbers;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,11 +11,9 @@ import org.bukkit.entity.Player;
 
 public class BBCommand implements CommandExecutor {
     
-    private BigBrother plugin;
     private HashMap<String, CommandExecutor> executors = new HashMap<String, CommandExecutor>();
     
     public BBCommand(BigBrother plugin) {
-        this.plugin = plugin;
     }
     
     public void registerExecutor(String subcmd, CommandExecutor cmd) {
@@ -38,7 +27,6 @@ public class BBCommand implements CommandExecutor {
         String subcommandName = args[0].toLowerCase();
         
         if (sender instanceof Player) {
-            Player player = (Player) sender;
             if (commandName.equals("bb")) {
                 if (args.length == 0)
                     return false;
@@ -54,7 +42,7 @@ public class BBCommand implements CommandExecutor {
                 if (split.length == 0) {
                     return false;
                 } else if (split[0].equalsIgnoreCase("version")) {
-                    console.sendMessage("You're running: " + ChatColor.AQUA.toString() + plugin.name + " " + plugin.version);
+                    console.sendMessage("You're running: " + ChatColor.AQUA.toString() + BigBrother.name + " " + BigBrother.version);
                 } else if (split[0].equalsIgnoreCase("update")) {
                     Updatr.updateAvailable(console);
                 }
