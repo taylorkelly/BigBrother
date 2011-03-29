@@ -22,6 +22,7 @@ public class Fix5 extends Fix {
             BBLogging.info("Updating tables for 1.7.2");
             
             BBUsersTable.getInstance().importRecords();
+            updateVersion(version);
         }
     }
 
