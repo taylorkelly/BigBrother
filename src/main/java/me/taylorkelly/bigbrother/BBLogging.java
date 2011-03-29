@@ -73,7 +73,7 @@ public class BBLogging {
 
     public static void debug(String string) {
         if (BBSettings.debugMode) {
-            log.log(Level.FINE, "[BBDEBUG] " + string);
+            log.log(Level.INFO, "[BBDEBUG] " + string);
         }
     }
 }
