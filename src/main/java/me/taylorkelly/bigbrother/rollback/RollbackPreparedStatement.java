@@ -13,7 +13,7 @@ public class RollbackPreparedStatement {
         StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
         statement.append(" FROM ");
         statement.append(BBSettings.applyPrefix("bbdata") + " AS bbdata");
-        statement.append(" INNER JOIN bbworlds ON bbworlds.id = bbdata.world");
+        statement.append(" INNER JOIN "+BBSettings.applyPrefix("bbworlds")+" AS bbworlds ON bbworlds.id = bbdata.world");
         statement.append(" WHERE ");
         statement.append(getActionString());
         if (!rollback.rollbackAll) {
