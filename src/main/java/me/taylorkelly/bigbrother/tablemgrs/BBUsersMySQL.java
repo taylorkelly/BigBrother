@@ -50,7 +50,7 @@ public class BBUsersMySQL extends BBUsersTable {
         try {
             conn = ConnectionManager.getConnection();
             String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`='?';";
-            BBLogging.debug(sql);
+            BBLogging.info(sql);
             ps = conn.prepareStatement(sql);
             ps.setString(1,name.toLowerCase());
             rs=ps.executeQuery();
@@ -100,7 +100,7 @@ public class BBUsersMySQL extends BBUsersTable {
         try {
             String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;";
             conn = ConnectionManager.getConnection();
-            BBLogging.debug(sql);
+            BBLogging.info(sql);
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs=ps.executeQuery();
