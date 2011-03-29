@@ -79,6 +79,7 @@ public abstract class BBUsersTable extends DBTable {
             pi = knownPlayers.get(id);
             knownPlayers.remove(id);
             knownNames.remove(name);
+            pi.setNew(false); // If we're getting it from cache, it ain't new.
         } else {
             pi = new BBPlayerInfo(name);
         }
