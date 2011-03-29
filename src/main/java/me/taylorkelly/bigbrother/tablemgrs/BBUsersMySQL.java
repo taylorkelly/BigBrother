@@ -49,7 +49,9 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM "+getTableName()+" WHERE `name`='?';");
+            String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`=?;";
+            BBLogging.debug(sql);
+            ps = conn.prepareStatement(sql);
             ps.setString(1,name.toLowerCase());
             rs=ps.executeQuery();
             
@@ -96,7 +98,7 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `name`=?;");
+            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;");
             ps.setInt(1,id);
             rs=ps.executeQuery();
             
