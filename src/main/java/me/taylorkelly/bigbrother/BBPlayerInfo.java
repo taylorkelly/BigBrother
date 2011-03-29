@@ -72,6 +72,7 @@ public class BBPlayerInfo {
      * Reload from the database.
      */
     public void refresh() {
+        BBLogging.info("REFRESH #"+Integer.valueOf(id));
         BBPlayerInfo clone = BBUsersTable.getInstance().getUserFromDB(id);
         this.id=clone.id;
         this.flags=clone.flags;
