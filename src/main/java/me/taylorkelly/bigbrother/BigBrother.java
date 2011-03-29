@@ -187,12 +187,12 @@ public class BigBrother extends JavaPlugin {
         pm.registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, playerListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, playerListener, Priority.Monitor, this);
+        pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
 
         pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.Monitor, this);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, blockListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.LEAVES_DECAY, blockListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.Monitor, this);
         pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Monitor, this);
@@ -204,6 +204,8 @@ public class BigBrother extends JavaPlugin {
         // These events are used for Super Sticks
         pm.registerEvent(Event.Type.PLAYER_INTERACT, stickListener, Priority.Low, this);
         pm.registerEvent(Event.Type.BLOCK_PLACE, stickListener, Priority.Low, this);
+        
+        
         BBCommand bbc = new BBCommand(this);
         bbc.registerExecutor("version", new VersionCommand(this));
         bbc.registerExecutor("update", new UpdateCommand(this));
@@ -217,7 +219,7 @@ public class BigBrother extends JavaPlugin {
         bbc.registerExecutor("undo", new UndoCommand(this));
         bbc.registerExecutor("stick", new StickCommand(this));
         bbc.registerExecutor("log", new LogCommand(this));
-        bbc.registerExecutor("done", new DoneCommand(this)); // TODO: Add to yml
+        bbc.registerExecutor("done", new DoneCommand(this));
         bbc.registerExecutor("here", new HereCommand(this));
         bbc.registerExecutor("find", new FindCommand(this));
         bbc.registerExecutor("help", new HelpCommand(this));

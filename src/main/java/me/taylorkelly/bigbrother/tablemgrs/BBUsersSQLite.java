@@ -21,7 +21,7 @@ public class BBUsersSQLite extends BBUsersTable {
         try {
             conn = ConnectionManager.getConnection();
             ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE LOWER(`name`)=LOWER(?);");
-            ps.setString(0, name);
+            ps.setString(1, name); // Cardinal?
             rs = ps.executeQuery();
             
             if (!rs.next())
