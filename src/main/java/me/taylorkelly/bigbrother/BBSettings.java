@@ -318,7 +318,7 @@ public class BBSettings {
     }
 
     public static Watcher getWatcher(Server server, File dataFolder) {
-        return new Watcher(watchList, seenList, server, dataFolder);
+        return new Watcher(server);
     }
 
     /**

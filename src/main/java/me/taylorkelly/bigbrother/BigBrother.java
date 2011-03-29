@@ -19,6 +19,7 @@ package me.taylorkelly.bigbrother;
 
 import java.io.File;
 import java.sql.Connection;
+
 import me.taylorkelly.bigbrother.commands.CleanseCommand;
 import me.taylorkelly.bigbrother.commands.ConfirmCommand;
 import me.taylorkelly.bigbrother.commands.DeleteCommand;
@@ -49,6 +50,7 @@ import me.taylorkelly.bigbrother.listeners.BBBlockListener;
 import me.taylorkelly.bigbrother.listeners.BBEntityListener;
 import me.taylorkelly.bigbrother.listeners.BBPlayerListener;
 import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -225,8 +227,8 @@ public class BigBrother extends JavaPlugin {
         bbc.registerExecutor("find", new FindCommand(this));
         bbc.registerExecutor("help", new HelpCommand(this));
         getCommand("bb").setExecutor(bbc);
-    }
-
+    } 
+    
     public boolean watching(Player player) {
         return watcher.watching(player);
     }
@@ -241,10 +243,6 @@ public class BigBrother extends JavaPlugin {
 
     public boolean haveSeen(Player player) {
         return watcher.haveSeen(player);
-    }
-
-    public void markSeen(Player player) {
-        watcher.markSeen(player);
     }
 
     public void watchPlayer(Player player) {

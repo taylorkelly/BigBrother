@@ -51,7 +51,8 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         //plugin.processPsuedotick();
         Player player = event.getPlayer();
-        if (BBSettings.commands && plugin.watching(player)) {
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        if (BBSettings.commands && pi.getWatched()) {
             Command dataBlock = new Command(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
         }
@@ -89,7 +90,8 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
-        if (BBSettings.disconnect && plugin.watching(player)) {
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        if (BBSettings.disconnect && pi.getWatched()) {
             Disconnect dataBlock = new Disconnect(player.getName(), player.getLocation(), player.getWorld().getName());
             dataBlock.send();
         }
@@ -102,7 +104,8 @@ public class BBPlayerListener extends PlayerListener {
         Location to = event.getTo();
         
         final Player player = event.getPlayer();
-        if (BBSettings.teleport && plugin.watching(player) && distance(from, to) > 5 && !event.isCancelled()) {
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        if (BBSettings.teleport && pi.getWatched() && distance(from, to) > 5 && !event.isCancelled()) {
             Teleport dataBlock = new Teleport(player.getName(), event.getTo());
             dataBlock.send();
         }
@@ -112,7 +115,8 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerChat(PlayerChatEvent event) {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
-        if (BBSettings.chat && plugin.watching(player)) {
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        if (BBSettings.chat && pi.getWatched()) {
             Chat dataBlock = new Chat(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
         }
@@ -121,7 +125,8 @@ public class BBPlayerListener extends PlayerListener {
     @Override
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         final Player player = event.getPlayer();
-        if (BBSettings.pickupItem && plugin.watching(player)) {
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        if (BBSettings.pickupItem && pi.getWatched()) {
             PickupItem dataBlock = new PickupItem(player.getName(), event.getItem(), event.getItem().getWorld().getName());
             dataBlock.send();
         }
@@ -130,7 +135,8 @@ public class BBPlayerListener extends PlayerListener {
     @Override
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         final Player player = event.getPlayer();
-        if (BBSettings.dropItem && plugin.watching(player)) {
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        if (BBSettings.dropItem && pi.getWatched()) {
             DropItem dataBlock = new DropItem(player.getName(), event.getItemDrop(), event.getItemDrop().getWorld().getName());
             dataBlock.send();
         }
@@ -155,6 +161,7 @@ public class BBPlayerListener extends PlayerListener {
 
         // Process stick/log events first.
         Player player = event.getPlayer();
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
         if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
             // Get info
             plugin.stick(player, event.getClickedBlock());
@@ -167,7 +174,7 @@ public class BBPlayerListener extends PlayerListener {
                 event.setCancelled(true);
             }
         // Otherwise...
-        } else if (BBSettings.blockPlace && plugin.watching(event.getPlayer())) {
+        } else if (BBSettings.blockPlace && pi.getWatched()) {
             int x;
             int y;
             int z;

@@ -1,6 +1,7 @@
 package me.taylorkelly.bigbrother.listeners;
 
 import me.taylorkelly.bigbrother.BBLogging;
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.BlockBurnLogger;
@@ -14,6 +15,7 @@ import me.taylorkelly.bigbrother.datablock.LavaFlow;
 import me.taylorkelly.bigbrother.datablock.LeafDecay;
 import me.taylorkelly.bigbrother.datablock.PlacedBlock;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
+import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,10 +34,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public class BBBlockListener extends BlockListener {
 
-    private BigBrother plugin;
-
     public BBBlockListener(BigBrother plugin) {
-        this.plugin = plugin;
     }
 
     @Override
@@ -49,9 +48,10 @@ public class BBBlockListener extends BlockListener {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
         if (!event.isCancelled()) {
-            BBLogging.debug("onBlockDamage");
+            BBLogging.debug("onBlockBreak");
             Player player = event.getPlayer();
-            if (BBSettings.blockBreak && plugin.watching(player)) {
+            BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+            if (BBSettings.blockBreak && pi.getWatched()) {
                 Block block = event.getBlock();
                 BrokenBlock dataBlock = new BrokenBlock(player.getName(), block, block.getWorld().getName());
                 dataBlock.send();
@@ -62,8 +62,9 @@ public class BBBlockListener extends BlockListener {
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        if (BBSettings.blockPlace && plugin.watching(player) && !event.isCancelled()) {
-            BBLogging.debug("onBlockDamage");
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        if (BBSettings.blockPlace && pi.getWatched() && !event.isCancelled()) {
+            BBLogging.debug("onBlockPlace");
             Block block = event.getBlockPlaced();
             if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                 LavaFlowLogger.log(block, player.getName());
@@ -80,7 +81,7 @@ public class BBBlockListener extends BlockListener {
         LivingEntity entity = event.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if (plugin.watching(player) && !event.isCancelled()) {
+            if (pi.getWatched() && !event.isCancelled()) {
                 switch (block.getType()) {
                     case WOODEN_DOOR:
                         if (BBSettings.doorOpen) {
