@@ -49,7 +49,7 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`='?';";
+            String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`=?";
             BBLogging.info(sql);
             ps = conn.prepareStatement(sql);
             ps.setString(1,name.toLowerCase());
@@ -57,12 +57,11 @@ public class BBUsersMySQL extends BBUsersTable {
             
             if(!rs.next())
                 return null;
-            conn.commit();
             
             return new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
             
         } catch (SQLException e) {
-            BBLogging.severe("Can't find the user `"+name+"`.", e);
+            BBLogging.severe("Error trying to find the user `"+name+"`.", e);
         } finally {
             ConnectionManager.cleanup( "BBUsersMySQL.getUserFromDB(string)",conn, ps, rs );
         }
