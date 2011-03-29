@@ -13,7 +13,7 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 public class BBUsersSQLite extends BBUsersTable {
     
     @Override
-    protected BBPlayerInfo getUserFromDB(String name) {
+    public BBPlayerInfo getUserFromDB(String name) {
         
         Connection conn = null;
         ResultSet rs = null;

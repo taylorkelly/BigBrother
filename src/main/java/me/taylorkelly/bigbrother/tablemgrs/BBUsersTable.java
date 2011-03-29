@@ -109,13 +109,13 @@ public abstract class BBUsersTable extends DBTable {
      * @param name
      * @return
      */
-    protected abstract BBPlayerInfo getUserFromDB(String name);
+    public abstract BBPlayerInfo getUserFromDB(String name);
+
+    public abstract BBPlayerInfo getUserFromDB(int id);
 
     public BBPlayerInfo getUser(int id) {
         if(!knownPlayers.containsKey(id))
             return knownPlayers.get(id);
         return this.getUserFromDB(id);
     }
-
-    public abstract BBPlayerInfo getUserFromDB(int id);
 }

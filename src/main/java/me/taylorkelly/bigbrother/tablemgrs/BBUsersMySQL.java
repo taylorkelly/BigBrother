@@ -42,7 +42,7 @@ public class BBUsersMySQL extends BBUsersTable {
     }
 
     @Override
-    protected BBPlayerInfo getUserFromDB(String name) {
+    public BBPlayerInfo getUserFromDB(String name) {
 
         Connection conn = null;
         ResultSet rs = null;
