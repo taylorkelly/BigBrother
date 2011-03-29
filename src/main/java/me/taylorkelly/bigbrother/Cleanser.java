@@ -91,7 +91,7 @@ public class Cleanser {
                 stmt = conn.createStatement();
                 long start = System.currentTimeMillis() / 1000;
 
-                String cleansql = "DELETE FROM `bbdata` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge));
+                String cleansql = "DELETE FROM `"+BBSettings.applyPrefix("bbdata")+"` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge));
                 if (BBSettings.deletesPerCleansing > 0 && !BBSettings.usingDBMS(DBMS.SQLITE)) {
                     cleansql += " LIMIT " + Long.valueOf(BBSettings.deletesPerCleansing);
                 }
@@ -131,7 +131,7 @@ public class Cleanser {
                     stmt = conn.createStatement();
                     long start = System.currentTimeMillis() / 1000;
 
-                    String cleansql = "DELETE FROM `bbdata` LEFT OUTER JOIN (SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0," + Long.valueOf(BBSettings.maxRecords) + ") AS `savedValues` ON `savedValues`.`id`=`bbdata`.`id` WHERE `savedValues`.`id` IS NULL";
+                    String cleansql = "DELETE FROM `"+BBSettings.applyPrefix("bbdata")+"` LEFT OUTER JOIN (SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0," + Long.valueOf(BBSettings.maxRecords) + ") AS `savedValues` ON `savedValues`.`id`=`bbdata`.`id` WHERE `savedValues`.`id` IS NULL";
                     System.out.println(cleansql);
                     if (BBSettings.deletesPerCleansing > 0) {
                         cleansql += " LIMIT " + Long.valueOf(BBSettings.deletesPerCleansing);

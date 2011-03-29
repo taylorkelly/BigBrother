@@ -117,5 +117,5 @@ public abstract class BBUsersTable extends DBTable {
         return this.getUserFromDB(id);
     }
 
-    protected abstract BBPlayerInfo getUserFromDB(int id);
+    public abstract BBPlayerInfo getUserFromDB(int id);
 }
