@@ -202,7 +202,8 @@ public class BigBrother extends JavaPlugin {
         pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, Priority.Monitor, this);
 
         // These events are used for Super Sticks
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, stickListener, Priority.Low, this);
+        // Moved to playerListener.  God help us. - N3X15
+        //pm.registerEvent(Event.Type.PLAYER_INTERACT, stickListener, Priority.Low, this);
         pm.registerEvent(Event.Type.BLOCK_PLACE, stickListener, Priority.Low, this);
         
         
