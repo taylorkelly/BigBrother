@@ -74,7 +74,7 @@ public abstract class DBTable {
         try {
             conn = ConnectionManager.getConnection();
             ps = conn.prepareStatement(sql);
-            for(int i = 0;i<args.length;i++)
+            for(int i = 1;i<args.length+1;i++)
                 ps.setObject(i, args[i]);
             ps.executeUpdate();
             return true;

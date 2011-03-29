@@ -58,12 +58,12 @@ public class BBUsersSQLite extends BBUsersTable {
             conn = ConnectionManager.getConnection();
             if (pi.getNew()) {
                 ps = conn.prepareStatement("INSERT INTO " + getTableName() + " (name,flags) VALUES (?,?)");
-                ps.setString(0, pi.getName());
-                ps.setInt(1, pi.getFlags());
+                ps.setString(1, pi.getName());
+                ps.setInt(2, pi.getFlags());
             } else {
                 ps = conn.prepareStatement("UPDATE " + getTableName() + " SET flags = ? WHERE id=?");
-                ps.setInt(0, pi.getFlags());
-                ps.setInt(1, pi.getID());
+                ps.setInt(1, pi.getFlags());
+                ps.setInt(2, pi.getID());
             }
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -81,7 +81,7 @@ public class BBUsersSQLite extends BBUsersTable {
         try {
             conn = ConnectionManager.getConnection();
             ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;");
-            ps.setInt(0, id);
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             
             if (!rs.next())
