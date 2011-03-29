@@ -43,7 +43,11 @@ public class BBUsersSQLite extends BBUsersTable {
     
     @Override
     public String getCreateSyntax() {
-        return "CREATE TABLE `" + getTableName() + "` (" + "`id` INT PRIMARY KEY," + "`name` varchar(32) NOT NULL DEFAULT 'Player'," + "`flags` INT NOT NULL DEFAULT '0'," + "PRIMARY KEY (`id`));" + "CREATE UNIQUE INDEX idxUsername ON `" + getTableName() + "` (`name`)"; // ANSI
+        return "CREATE TABLE `" + getTableName() + "` (" 
+        + "`id` INT PRIMARY KEY," 
+        + "`name` varchar(32) NOT NULL DEFAULT 'Player'," 
+        + "`flags` INT NOT NULL DEFAULT '0');" 
+        + "CREATE UNIQUE INDEX idxUsername ON `" + getTableName() + "` (`name`)"; // ANSI
     }
     
     @Override
@@ -113,7 +117,28 @@ public class BBUsersSQLite extends BBUsersTable {
             return;
         
         BBLogging.info(" * Stage 4/8: Creating new bbdata table.");
-        if (!executeUpdate("importRecords(sqlite) - Create bbdata", "CREATE TABLE `" + getTableName() + "` (" + "`id` INTEGER PRIMARY KEY," + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," + "`player` INT UNSIGNED NOT NULL DEFAULT '0'," + "`action` tinyint NOT NULL DEFAULT '0'," + "`world` tinyint NOT NULL DEFAULT '0'," + "`x` int NOT NULL DEFAULT '0'," + "`y` tinyint UNSIGNED NOT NULL DEFAULT '0'," + "`z` int NOT NULL DEFAULT '0'," + "`type` smallint NOT NULL DEFAULT '0'," + "`data` varchar(500) NOT NULL DEFAULT ''," + "`rbacked` boolean NOT NULL DEFAULT '0'" + ");" + "CREATE INDEX dateIndex on bbdata (date);" + "CREATE INDEX playerIndex on bbdata (player);" + "CREATE INDEX actionIndex on bbdata (action);" + "CREATE INDEX worldIndex on bbdata (world);" + "CREATE INDEX posIndex on bbdata (x,y,z);" + "CREATE INDEX typeIndex on bbdata (type);" + "CREATE INDEX rbackedIndex on bbdata (rbacked);"))
+        if (!executeUpdate("importRecords(sqlite) - Create bbdata", 
+                "CREATE TABLE `" + getTableName() 
+                + "` (" 
+                + "`id` INTEGER PRIMARY KEY," 
+                + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," 
+                + "`player` INT UNSIGNED NOT NULL DEFAULT '0'," 
+                + "`action` tinyint NOT NULL DEFAULT '0'," 
+                + "`world` tinyint NOT NULL DEFAULT '0'," 
+                + "`x` int NOT NULL DEFAULT '0'," 
+                + "`y` tinyint UNSIGNED NOT NULL DEFAULT '0'," 
+                + "`z` int NOT NULL DEFAULT '0'," 
+                + "`type` smallint NOT NULL DEFAULT '0'," 
+                + "`data` varchar(500) NOT NULL DEFAULT ''," 
+                + "`rbacked` boolean NOT NULL DEFAULT '0'" 
+                + ");" 
+                + "CREATE INDEX dateIndex on bbdata (date);" 
+                + "CREATE INDEX playerIndex on bbdata (player);" 
+                + "CREATE INDEX actionIndex on bbdata (action);" 
+                + "CREATE INDEX worldIndex on bbdata (world);" 
+                + "CREATE INDEX posIndex on bbdata (x,y,z);" 
+                + "CREATE INDEX typeIndex on bbdata (type);" 
+                + "CREATE INDEX rbackedIndex on bbdata (rbacked);"))
             return;
         
         BBLogging.info(" * Stage 5/8: Creating new bbusers table.");
