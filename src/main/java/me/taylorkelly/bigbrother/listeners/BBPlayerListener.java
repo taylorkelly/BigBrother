@@ -61,6 +61,8 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
+        
+        BBUsersTable.getInstance().addOrUpdateUser(player);
         BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
         
         /*
