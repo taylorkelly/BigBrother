@@ -167,7 +167,7 @@ public class BBSettings {
     // Database configuration
     private static void loadDBSettings(BetterConfig yml) {
         // Database type (Database Management System = DBMS :V)
-        final String dbms = yml.getString("database.type", DBMS.MYSQL.name());
+        final String dbms = yml.getString("database.type", DBMS.SQLITE.name());
         setDBMS(dbms);
 
         deletesPerCleansing = Long.valueOf(yml.getString("database.deletes-per-cleansing", Long.toString(deletesPerCleansing))); // "The maximum number of records to delete per cleansing (0 to disable).");
@@ -206,7 +206,7 @@ public class BBSettings {
         flatLog = yml.getBoolean("general.personal-log-files", propsPf.getBoolean("flatFileLogs", false, "If true, will also log actions to .logs (one for each player)"));
 
 
-        if (propsPf.getBoolean("MySQL", true, "If true, uses MySQL. If false, uses Sqlite")) {
+        if (propsPf.getBoolean("MySQL", false, "If true, uses MySQL. If false, uses Sqlite")) {
             final String dbms = yml.getString("database.type", DBMS.MYSQL.name());
             setDBMS(dbms);
         } else {
@@ -214,7 +214,7 @@ public class BBSettings {
             setDBMS(dbms);
         }
 
-        deletesPerCleansing = Long.valueOf(yml.getString("database.deletes-per-cleansing", Long.toString(propsPf.getLong("deletesPerCleansing", 1000L, "The maximum number of records to delete per cleansing (0 to disable).")))); // "The maximum number of records to delete per cleansing (0 to disable).");
+        deletesPerCleansing = Long.valueOf(yml.getString("database.deletes-per-cleansing", Long.toString(propsPf.getLong("deletesPerCleansing", 100000L, "The maximum number of records to delete per cleansing (0 to disable).")))); // "The maximum number of records to delete per cleansing (0 to disable).");
         cleanseAge = TimeParser.parseInterval(yml.getString("database.cleanse-age", "3d"));// "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
         maxRecords = Long.valueOf(yml.getString("database.max-records", Long.toString(3000000l)));// "The maximum number of records that you want in your database (-1 to disable)");
         sendDelay = yml.getInt("database.send-delay", propsPf.getInt("send-delay", 4, "Delay in seconds to batch send updates to database (4-5 recommended)"));// "Delay in seconds to batch send updates to database (4-5 recommended)");
