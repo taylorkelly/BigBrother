@@ -1,5 +1,6 @@
 package me.taylorkelly.bigbrother.listeners;
 
+import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.BlockBurnLogger;
@@ -39,6 +40,7 @@ public class BBBlockListener extends BlockListener {
 
     @Override
     public void onBlockDamage(BlockDamageEvent event) {
+        BBLogging.debug("onBlockDamage");
         if (event.getBlock().getType() == Material.TNT) {
             TNTLogger.log(event.getPlayer().getName(), event.getBlock());
         }
@@ -47,6 +49,7 @@ public class BBBlockListener extends BlockListener {
     @Override
     public void onBlockBreak(BlockBreakEvent event) {
         if (!event.isCancelled()) {
+            BBLogging.debug("onBlockDamage");
             Player player = event.getPlayer();
             if (BBSettings.blockBreak && plugin.watching(player)) {
                 Block block = event.getBlock();
@@ -60,6 +63,7 @@ public class BBBlockListener extends BlockListener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (BBSettings.blockPlace && plugin.watching(player) && !event.isCancelled()) {
+            BBLogging.debug("onBlockDamage");
             Block block = event.getBlockPlaced();
             if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                 LavaFlowLogger.log(block, player.getName());
