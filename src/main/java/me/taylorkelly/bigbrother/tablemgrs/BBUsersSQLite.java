@@ -87,7 +87,7 @@ public class BBUsersSQLite extends BBUsersTable {
             if (!rs.next())
                 return null;
             
-            return new BBPlayerInfo(rs.getInt(0), rs.getString(1), rs.getInt(2));
+            return new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
             
         } catch (SQLException e) {
             BBLogging.severe("Can't find user #" + id + ".", e);
