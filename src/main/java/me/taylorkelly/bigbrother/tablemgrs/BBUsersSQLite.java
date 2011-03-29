@@ -20,7 +20,7 @@ public class BBUsersSQLite extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `name`=?;");
+            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `name`=?");
             ps.setString(1, name.toLowerCase()); // Cardinal?
             rs = ps.executeQuery();
             
@@ -80,7 +80,7 @@ public class BBUsersSQLite extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;");
+            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
             
@@ -95,6 +95,32 @@ public class BBUsersSQLite extends BBUsersTable {
             ConnectionManager.cleanup("BBUsersSQLite.getUserFromDB(int)", conn, ps, rs);
         }
         return null;
+    }
+    
+
+
+    @Override
+    protected void loadCache() {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "SELECT id,name,flags FROM "+getTableName();
+            BBLogging.debug(sql);
+            ps = conn.prepareStatement(sql);
+            rs=ps.executeQuery();
+            
+            while(rs.next()){
+                BBPlayerInfo pi = new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
+                this.knownPlayers.put(pi.getID(), pi);
+                this.knownNames.put(pi.getName(),pi.getID());
+            }
+        } catch (SQLException e) {
+            BBLogging.severe("Error trying to load the user/name cache.", e);
+        } finally {
+            ConnectionManager.cleanup( "BBUsersMySQL.getUserFromDB(string)",conn, ps, rs );
+        }
     }
     
     /**

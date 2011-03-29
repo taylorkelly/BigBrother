@@ -37,9 +37,12 @@ public abstract class BBUsersTable extends DBTable {
                 instance=new BBUsersMySQL();
             else
                 instance=new BBUsersSQLite();
+            instance.loadCache();
         }
         return instance;
     }
+    
+    protected abstract void loadCache();
     
     public BBUsersTable() {
         if (!tableExists()) {

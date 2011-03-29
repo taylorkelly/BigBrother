@@ -50,7 +50,7 @@ public class BBUsersMySQL extends BBUsersTable {
         try {
             conn = ConnectionManager.getConnection();
             String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`=?";
-            BBLogging.info(sql);
+            BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
             ps.setString(1,name.toLowerCase());
             rs=ps.executeQuery();
@@ -99,7 +99,7 @@ public class BBUsersMySQL extends BBUsersTable {
         try {
             String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;";
             conn = ConnectionManager.getConnection();
-            BBLogging.info(sql);
+            BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs=ps.executeQuery();
@@ -169,5 +169,29 @@ public class BBUsersMySQL extends BBUsersTable {
                 "ALTER TABLE "+bbdata+" DROP COLUMN playerName;"))
             return;
         
+    }
+
+    @Override
+    protected void loadCache() {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "SELECT id,name,flags FROM "+getTableName();
+            BBLogging.debug(sql);
+            ps = conn.prepareStatement(sql);
+            rs=ps.executeQuery();
+            
+            while(rs.next()){
+                BBPlayerInfo pi = new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
+                this.knownPlayers.put(pi.getID(), pi);
+                this.knownNames.put(pi.getName(),pi.getID());
+            }
+        } catch (SQLException e) {
+            BBLogging.severe("Error trying to load the user/name cache.", e);
+        } finally {
+            ConnectionManager.cleanup( "BBUsersMySQL.getUserFromDB(string)",conn, ps, rs );
+        }
     }
 }
