@@ -57,6 +57,7 @@ public class BBUsersMySQL extends BBUsersTable {
             
             if(!rs.next())
                 return null;
+            conn.commit();
             
             return new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
             
@@ -97,11 +98,13 @@ public class BBUsersMySQL extends BBUsersTable {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
+            String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;";
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;");
+            BBLogging.debug(sql);
+            ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs=ps.executeQuery();
-            
+            conn.commit();
             if(!rs.next())
                 return null;
             
