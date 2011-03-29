@@ -1,5 +1,7 @@
 package me.taylorkelly.bigbrother.listeners;
 
+import java.util.ArrayList;
+
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBPermissions;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
@@ -28,12 +30,14 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class BBPlayerListener extends PlayerListener {
     
@@ -44,7 +48,7 @@ public class BBPlayerListener extends PlayerListener {
     }
     
     @Override
-    public void onPlayerCommandPreprocess(PlayerChatEvent event) {
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         //plugin.processPsuedotick();
         Player player = event.getPlayer();
         if (BBSettings.commands && plugin.watching(player)) {
@@ -54,7 +58,7 @@ public class BBPlayerListener extends PlayerListener {
     }
     
     @Override
-    public void onPlayerJoin(PlayerEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
@@ -80,7 +84,7 @@ public class BBPlayerListener extends PlayerListener {
     }
     
     @Override
-    public void onPlayerQuit(PlayerEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         if (BBSettings.disconnect && plugin.watching(player)) {
@@ -90,7 +94,7 @@ public class BBPlayerListener extends PlayerListener {
     }
     
     @Override
-    public void onPlayerTeleport(PlayerMoveEvent event) {
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
         //plugin.processPsuedotick();
         Location from = event.getFrom();
         Location to = event.getTo();
@@ -130,11 +134,38 @@ public class BBPlayerListener extends PlayerListener {
         }
     }
     
+    /*
+     * 
+    public void onBlockRightClick(BlockRightClickEvent event) {
+        Player player = event.getPlayer();
+        if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
+            plugin.stick(player, event.getBlock());
+        }
+    }
+    public void onBlockInteract(BlockInteractEvent event) {
+    }
+    */
     
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
         //plugin.processPsuedotick();
-        if (BBSettings.blockPlace && plugin.watching(event.getPlayer()) && !event.isCancelled()) {
+        if(event.isCancelled()) return;
+
+        // Process stick/log events first.
+        Player player = event.getPlayer();
+        if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
+            // Get info
+            plugin.stick(player, event.getClickedBlock());
+            
+            // Cancel any interactions.
+            ArrayList<Material> nonInteracts = new ArrayList<Material>();
+            nonInteracts.add(Material.WOOD_PLATE);
+            nonInteracts.add(Material.STONE_PLATE);
+            if (!nonInteracts.contains(event.getClickedBlock().getType())) {
+                event.setCancelled(true);
+            }
+        // Otherwise...
+        } else if (BBSettings.blockPlace && plugin.watching(event.getPlayer())) {
             int x;
             int y;
             int z;

@@ -1,15 +1,8 @@
 package me.taylorkelly.bigbrother;
 
-import java.util.ArrayList;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockInteractEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockRightClickEvent;
 
 public class StickListener extends BlockListener {
 
@@ -19,13 +12,14 @@ public class StickListener extends BlockListener {
         this.plugin = plugin;
     }
 
+    /*
+    These are all Player events now.
     public void onBlockRightClick(BlockRightClickEvent event) {
         Player player = event.getPlayer();
         if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
             plugin.stick(player, event.getBlock());
         }
     }
-
     public void onBlockInteract(BlockInteractEvent event) {
         ArrayList<Material> nonInteracts = new ArrayList<Material>();
         nonInteracts.add(Material.WOOD_PLATE);
@@ -41,6 +35,7 @@ public class StickListener extends BlockListener {
             }
         }
     }
+    */
 
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();

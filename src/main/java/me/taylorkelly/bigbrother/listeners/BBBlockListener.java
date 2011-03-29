@@ -137,7 +137,7 @@ public class BBBlockListener extends BlockListener {
     }
 
     @Override
-    public void onBlockFlow(BlockFromToEvent event) {
+    public void onBlockFromTo(BlockFromToEvent event) {
         Block blockFrom = event.getBlock();
         Block blockTo = event.getToBlock();
         boolean lava = blockFrom.getType() == Material.LAVA || blockFrom.getType() == Material.STATIONARY_LAVA;
