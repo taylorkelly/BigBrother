@@ -96,14 +96,14 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM "+getTableName()+" WHERE `id`=?;");
+            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `name`=?;");
             ps.setInt(1,id);
             rs=ps.executeQuery();
             
             if(!rs.next())
                 return null;
             
-            return new BBPlayerInfo(rs.getInt(0),rs.getString(1),rs.getInt(2));
+            return new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
             
         } catch (SQLException e) {
             BBLogging.severe("Can't find user #"+id+".", e);
