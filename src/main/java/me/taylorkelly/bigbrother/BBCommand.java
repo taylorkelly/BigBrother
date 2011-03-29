@@ -34,7 +34,7 @@ public class BBCommand implements CommandExecutor {
                 if (!executors.containsKey(subcommandName))
                     return false;
                 
-                executors.get(subcommandName).onCommand(sender, command, commandLabel, args);
+                return executors.get(subcommandName).onCommand(sender, command, commandLabel, args);
             }
         } else if (sender instanceof ConsoleCommandSender) {
             if (commandName.equals("bb")) {
