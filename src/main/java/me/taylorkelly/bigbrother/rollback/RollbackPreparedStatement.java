@@ -12,8 +12,8 @@ public class RollbackPreparedStatement {
     public static String create(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
         statement.append(" FROM");
-        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata");
-        statement.append(" "+BBSettings.applyPrefix("bbworlds")+" AS bbworlds ");
+        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata,");
+        statement.append(" "+BBSettings.applyPrefix("bbworlds")+" AS bbworlds, ");
         statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
         statement.append(" WHERE ");
         statement.append(" bbworlds.id = bbdata.world AND bbdata.player = usr.id AND ");
