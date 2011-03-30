@@ -69,6 +69,7 @@ public abstract class DBTable {
     }
 
     protected boolean executeUpdate(String desc, String sql, Object[] args) {
+        BBLogging.debug(sql);
         Connection conn = null;
         PreparedStatement ps = null;
         try {
