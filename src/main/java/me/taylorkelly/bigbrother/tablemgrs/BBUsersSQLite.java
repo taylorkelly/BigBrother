@@ -13,31 +13,6 @@ import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 public class BBUsersSQLite extends BBUsersTable {
     
     @Override
-    public BBPlayerInfo getUserFromDB(String name) {
-        
-        Connection conn = null;
-        ResultSet rs = null;
-        PreparedStatement ps = null;
-        try {
-            conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `name`=?");
-            ps.setString(1, name.toLowerCase()); // Cardinal?
-            rs = ps.executeQuery();
-            
-            if (!rs.next())
-                return null;
-            
-            return new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
-            
-        } catch (SQLException e) {
-            BBLogging.severe("Can't find the user `" + name + "`.", e);
-        } finally {
-            ConnectionManager.cleanup("BBUsersSQLite.getUserFromDB(string)", conn, ps, rs);
-        }
-        return null;
-    }
-    
-    @Override
     protected void onLoad() {
     }
     
@@ -49,53 +24,83 @@ public class BBUsersSQLite extends BBUsersTable {
         + "`flags` INT NOT NULL DEFAULT '0');" 
         + "CREATE UNIQUE INDEX idxUsername ON `" + getTableName() + "` (`name`)"; // ANSI
     }
-    
+
+    @Override
+    public BBPlayerInfo getUserFromDB(String name) {
+
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`=?";
+            BBLogging.debug(sql);
+            ps = conn.prepareStatement(sql);
+            ps.setString(1,name.toLowerCase());
+            rs=ps.executeQuery();
+            
+            if(!rs.next())
+                return null;
+            
+            return new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
+            
+        } catch (SQLException e) {
+            BBLogging.severe("Error trying to find the user `"+name+"`.", e);
+        } finally {
+            ConnectionManager.cleanup( "BBUsersSQLite.getUserFromDB(string)",conn, ps, rs );
+        }
+        return null;
+    }
+
     @Override
     protected void do_addOrUpdatePlayer(BBPlayerInfo pi) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            if (pi.getNew()) {
-                ps = conn.prepareStatement("INSERT INTO " + getTableName() + " (name,flags) VALUES (?,?)");
-                ps.setString(1, pi.getName());
-                ps.setInt(2, pi.getFlags());
+            if(pi.getNew()) {
+                ps = conn.prepareStatement("INSERT INTO "+getTableName()+" (name,flags) VALUES (?,?)");
+                ps.setString(1,pi.getName());
+                ps.setInt(2,pi.getFlags());
             } else {
-                ps = conn.prepareStatement("UPDATE " + getTableName() + " SET flags = ? WHERE id=?");
+                ps = conn.prepareStatement("UPDATE "+getTableName()+" SET flags = ? WHERE id=?");
                 ps.setInt(1, pi.getFlags());
                 ps.setInt(2, pi.getID());
             }
             ps.executeUpdate();
         } catch (SQLException e) {
-            BBLogging.severe("Can't update the user `" + pi.getName() + "`.", e);
+            BBLogging.severe("Can't update the user `"+pi.getName()+"`.", e);
         } finally {
-            ConnectionManager.cleanup("BBUsersSQLite.do_addOrUpdatePlayer", conn, ps, null);
+            ConnectionManager.cleanup( "BBUsersSQLite.do_addOrUpdatePlayer",conn, ps, null );
         }
     }
-    
+
     @Override
     public BBPlayerInfo getUserFromDB(int id) {
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
+            String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;";
             conn = ConnectionManager.getConnection();
-            ps = conn.prepareStatement("SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?");
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            
-            if (!rs.next())
+            BBLogging.debug(sql);
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1,id);
+            rs=ps.executeQuery();
+            conn.commit();
+            if(!rs.next())
                 return null;
             
             return new BBPlayerInfo(rs.getInt("id"), rs.getString("name"), rs.getInt("flags"));
             
         } catch (SQLException e) {
-            BBLogging.severe("Can't find user #" + id + ".", e);
+            BBLogging.severe("Can't find user #"+id+".", e);
         } finally {
-            ConnectionManager.cleanup("BBUsersSQLite.getUserFromDB(int)", conn, ps, rs);
+            ConnectionManager.cleanup( "BBUsersSQLite.getUserFromDB(int)",conn, ps, rs );
         }
         return null;
     }
+
     
 
 
@@ -119,7 +124,7 @@ public class BBUsersSQLite extends BBUsersTable {
         } catch (SQLException e) {
             BBLogging.severe("Error trying to load the user/name cache.", e);
         } finally {
-            ConnectionManager.cleanup( "BBUsersMySQL.getUserFromDB(string)",conn, ps, rs );
+            ConnectionManager.cleanup( "BBUsersSQLite.getUserFromDB(string)",conn, ps, rs );
         }
     }
     

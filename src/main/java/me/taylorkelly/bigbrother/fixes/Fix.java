@@ -10,6 +10,7 @@ import me.taylorkelly.bigbrother.BBLogging;
 
 public abstract class Fix {
     protected int currVersion = -1;
+    protected final int LATEST_VERSION=5;
     protected File dataFolder;
 
     public Fix(File dataFolder) {
@@ -29,7 +30,7 @@ public abstract class Fix {
     private int getCurrVersion() {
         File file = new File(dataFolder, "VERSION");
         if (!file.exists()) {
-            return 0;
+            return LATEST_VERSION; // If the file's inexistant, just shut up and create the tables :|
         } else {
             try {
                 Scanner scan = new Scanner(file);
