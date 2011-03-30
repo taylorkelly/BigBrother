@@ -148,4 +148,17 @@ public class BBPlayerInfo {
     public boolean getHasOpenedChest(boolean b) {
         return isScrewingWithChest;
     }
+    
+    /**
+     * Format username, colorize if necessary
+     */
+    public String toString() {
+        String player=this.getName();
+        /* TODO: Future consideration, working to get this hunk of bugs out the door atm. - N3X
+        if(BBSettings.colorPlayerNames) {
+            player=BBPermissions.getPrefix(player)+player+BBPermissions.getSuffix(player);
+        }
+        */
+        return player;
+    }
 }
