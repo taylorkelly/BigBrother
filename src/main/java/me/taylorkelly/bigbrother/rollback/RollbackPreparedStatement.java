@@ -89,7 +89,7 @@ public class RollbackPreparedStatement {
     }
 
     private static StringBuilder getPlayerString(ArrayList<String> players) {
-        StringBuilder ret = new StringBuilder("usr.name IN(");
+        StringBuilder ret = new StringBuilder("usr.name IN (");
         for (int i = 0; i < players.size(); i++) {
             ret.append("'");
             ret.append(players.get(i));
@@ -133,9 +133,11 @@ public class RollbackPreparedStatement {
 
     public static String update(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(BBSettings.applyPrefix("bbdata"));
+        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata,");
+        statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
         statement.append(" SET rbacked = '1'");
         statement.append(" WHERE ");
+        statement.append(" bbdata.player = usr.id AND ");
         statement.append(getActionString());
         if (!rollback.rollbackAll) {
             statement.append(" AND ");
