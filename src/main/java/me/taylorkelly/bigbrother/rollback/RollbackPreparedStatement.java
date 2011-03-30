@@ -11,10 +11,12 @@ public class RollbackPreparedStatement {
 
     public static String create(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
-        statement.append(" FROM ");
-        statement.append(BBSettings.applyPrefix("bbdata") + " AS bbdata");
-        statement.append(" INNER JOIN "+BBSettings.applyPrefix("bbworlds")+" AS bbworlds ON bbworlds.id = bbdata.world");
+        statement.append(" FROM");
+        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata");
+        statement.append(" "+BBSettings.applyPrefix("bbworlds")+" AS bbworlds ");
+        statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
         statement.append(" WHERE ");
+        statement.append(" bbworlds.id = bbdata.world AND bbdata.player = usr.id AND ");
         statement.append(getActionString());
         if (!rollback.rollbackAll) {
             statement.append(" AND ");
@@ -87,7 +89,7 @@ public class RollbackPreparedStatement {
     }
 
     private static StringBuilder getPlayerString(ArrayList<String> players) {
-        StringBuilder ret = new StringBuilder("player IN(");
+        StringBuilder ret = new StringBuilder("usr.name IN(");
         for (int i = 0; i < players.size(); i++) {
             ret.append("'");
             ret.append(players.get(i));
