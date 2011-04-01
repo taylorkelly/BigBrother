@@ -64,6 +64,9 @@ public abstract class DBTable {
             st.executeUpdate(getCreateSyntax());
             conn.commit();
         } catch (SQLException e) {
+            // Ignore H2 being a dildo. - N3X
+            if(e.getMessage().startsWith("Table \"") && e.getMessage().contains("\" already exists"))
+                return;
             BBLogging.severe("Can't create the "+getTableName()+" table", e);
         } finally {
             ConnectionManager.cleanup( "Create Table",  conn, st, null );
