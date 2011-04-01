@@ -132,7 +132,7 @@ public class BBSettings {
         stickItem = yml.getInt("general.stick-item", 280);// "The item used for /bb stick");
         restoreFire = yml.getBoolean("general.restore-fire", false);// "Restore fire when rolling back");
         autoWatch = yml.getBoolean("general.auto-watch", true);// "Automatically start watching players");
-        defaultSearchRadius = yml.getInt("general.default-search-radius", 2);// "Default search radius for bbhere and bbfind");
+        defaultSearchRadius = yml.getInt("general.default-search-radius", 5);// "Default search radius for bbhere and bbfind");
         flatLog = yml.getBoolean("general.personal-log-files", false);// "If true, will also log actions to .logs (one for each player)");
         rollbacksPerTick = yml.getInt("general.rollbacks-per-tick", 2000);// "If true, will also log actions to .logs (one for each player)");
         debugMode = yml.getBoolean("general.debug-mode", false);// "If true, will also log actions to .logs (one for each player)");

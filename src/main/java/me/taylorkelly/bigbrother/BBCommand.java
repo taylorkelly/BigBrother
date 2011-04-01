@@ -22,14 +22,14 @@ public class BBCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        String[] split = args;
         String commandName = command.getName().toLowerCase();
-        String subcommandName = args[0].toLowerCase();
         
         if (sender instanceof Player) {
             if (commandName.equals("bb")) {
-                if (args.length <= 1)
+                if (args.length == 0)
                     return false;
+                
+                String subcommandName = args[0].toLowerCase();
                 
                 if (!executors.containsKey(subcommandName))
                     return false;
@@ -39,11 +39,11 @@ public class BBCommand implements CommandExecutor {
         } else if (sender instanceof ConsoleCommandSender) {
             if (commandName.equals("bb")) {
                 ConsoleCommandSender console = (ConsoleCommandSender) sender;
-                if (split.length == 0) {
+                if (args.length == 0) {
                     return false;
-                } else if (split[0].equalsIgnoreCase("version")) {
+                } else if (args[0].equalsIgnoreCase("version")) {
                     console.sendMessage("You're running: " + ChatColor.AQUA.toString() + BigBrother.name + " " + BigBrother.version);
-                } else if (split[0].equalsIgnoreCase("update")) {
+                } else if (args[0].equalsIgnoreCase("update")) {
                     Updatr.updateAvailable(console);
                 }
                 return true;
