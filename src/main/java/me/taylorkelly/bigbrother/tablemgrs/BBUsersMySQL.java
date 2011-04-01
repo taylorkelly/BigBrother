@@ -186,12 +186,13 @@ public class BBUsersMySQL extends BBUsersTable {
                         
                         String desc = String.format("Player %s -> %d",pi.getName(),pi.getID());
                         BBLogging.info("Converting "+desc+"...");
-                        executeUpdate(desc,
-                                "UPDATE "+bbdata+" SET `player`=? WHERE LOWER(playerName)=LOWER('?')", new Object[]{
+                        if(executeUpdate(desc,
+                                "UPDATE "+bbdata+" SET `player`=? WHERE LOWER(playerName)=LOWER(?)", new Object[]{
                                 pi.getID(),
                                 pi.getName()
                         }
-                        );
+                        ))
+                            return false;
                     }
                     
                 } catch (SQLException e) {
