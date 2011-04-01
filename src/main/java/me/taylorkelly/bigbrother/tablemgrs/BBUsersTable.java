@@ -65,7 +65,11 @@ public abstract class BBUsersTable extends DBTable {
         if(knownNames.containsKey(name))
             return getUser(knownNames.get(name));
 
-        return getUserFromDB(name);
+        BBPlayerInfo pi = getUserFromDB(name);
+        if(pi==null) {
+            pi=new BBPlayerInfo(name);
+        }
+        return pi;
     }
     
     public void addOrUpdateUser(Player p) {
