@@ -132,8 +132,7 @@ public class BBUsersMySQL extends BBUsersTable {
 
         BBLogging.info(" * Stage 2/4: Add player column with the new integer format (WILL TAKE A LONG TIME).");
         if(!executeUpdate("importRecords(mysql) - Add player column",
-                                                   //              INT UNSIGNED NOT NULL DEFAULT 0
-                "ALTER TABLE "+bbdata+" ADD COLUMN player AUTO_INCREMENT INT UNSIGNED NOT NULL DEFAULT 0;"))
+                "ALTER TABLE "+bbdata+" ADD COLUMN player INT UNSIGNED NOT NULL AUTO_INCREMENT;"))
             return;
         
 
