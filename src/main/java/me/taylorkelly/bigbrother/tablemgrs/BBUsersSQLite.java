@@ -81,7 +81,7 @@ public class BBUsersSQLite extends BBUsersTable {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-            String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;";
+            String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?";
             conn = ConnectionManager.getConnection();
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
