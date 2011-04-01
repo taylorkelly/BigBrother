@@ -22,7 +22,7 @@ public class BBUsersH2 extends BBUsersTable {
     @Override
     public String getCreateSyntax() {
         return "CREATE TABLE `" + getTableName() + "` (" 
-        + "`id` INT PRIMARY KEY," 
+        + "`id` INT AUTO_INCREMENT PRIMARY KEY," 
         + "`name` varchar(32) NOT NULL DEFAULT 'Player'," 
         + "`flags` INT NOT NULL DEFAULT '0');" 
         + "CREATE UNIQUE INDEX idxUsername ON `" + getTableName() + "` (`name`)"; // ANSI
