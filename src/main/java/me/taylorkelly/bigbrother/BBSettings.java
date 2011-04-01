@@ -167,7 +167,7 @@ public class BBSettings {
     // Database configuration
     private static void loadDBSettings(BetterConfig yml) {
         // Database type (Database Management System = DBMS :V)
-        final String dbms = yml.getString("database.type", DBMS.MYSQL.name());
+        final String dbms = yml.getString("database.type", DBMS.H2.name());
         setDBMS(dbms);
 
         deletesPerCleansing = Long.valueOf(yml.getString("database.deletes-per-cleansing", Long.toString(deletesPerCleansing))); // "The maximum number of records to delete per cleansing (0 to disable).");
@@ -193,7 +193,7 @@ public class BBSettings {
         try {
             databaseSystem = DBMS.valueOf(name.toUpperCase());
         } catch(IllegalArgumentException e) {
-            databaseSystem = DBMS.MYSQL;
+            databaseSystem = DBMS.H2;
         }
     }
 
