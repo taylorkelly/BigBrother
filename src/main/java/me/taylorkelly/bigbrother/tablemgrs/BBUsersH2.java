@@ -21,11 +21,11 @@ public class BBUsersH2 extends BBUsersTable {
     
     @Override
     public String getCreateSyntax() {
-        return "CREATE TABLE `" + getTableName() + "` (" 
+        return "CREATE TABLE `" + getActualTableName() + "` (" 
         + "`id` INT AUTO_INCREMENT PRIMARY KEY," 
         + "`name` varchar(32) NOT NULL DEFAULT 'Player'," 
         + "`flags` INT NOT NULL DEFAULT '0');" 
-        + "CREATE UNIQUE INDEX idxUsername ON `" + getTableName() + "` (`name`)"; // ANSI
+        + "CREATE UNIQUE INDEX idxUsername ON `" + getActualTableName() + "` (`name`)"; // ANSI
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BBUsersH2 extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`=?";
+            String sql = "SELECT id,name,flags FROM "+getActualTableName()+" WHERE `name`=?";
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
             ps.setString(1,name.toLowerCase());
@@ -62,11 +62,11 @@ public class BBUsersH2 extends BBUsersTable {
         try {
             conn = ConnectionManager.getConnection();
             if(pi.getNew()) {
-                ps = conn.prepareStatement("INSERT INTO "+getTableName()+" (name,flags) VALUES (?,?)");
+                ps = conn.prepareStatement("INSERT INTO "+getActualTableName()+" (name,flags) VALUES (?,?)");
                 ps.setString(1,pi.getName());
                 ps.setInt(2,pi.getFlags());
             } else {
-                ps = conn.prepareStatement("UPDATE "+getTableName()+" SET flags = ? WHERE id=?");
+                ps = conn.prepareStatement("UPDATE "+getActualTableName()+" SET flags = ? WHERE id=?");
                 ps.setInt(1, pi.getFlags());
                 ps.setInt(2, pi.getID());
             }
@@ -85,7 +85,7 @@ public class BBUsersH2 extends BBUsersTable {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-            String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?";
+            String sql = "SELECT id,name,flags FROM " + getActualTableName() + " WHERE `id`=?";
             conn = ConnectionManager.getConnection();
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
@@ -115,7 +115,7 @@ public class BBUsersH2 extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "SELECT id,name,flags FROM "+getTableName();
+            String sql = "SELECT id,name,flags FROM "+getActualTableName();
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
             rs=ps.executeQuery();
