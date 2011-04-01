@@ -342,7 +342,7 @@ public class BBSettings {
         if (usingDBMS(DBMS.MYSQL)) {
             return String.format("jdbc:mysql://%s:%d/%s", mysqlHost, mysqlPort, mysqlDatabase);
         } else if (usingDBMS(DBMS.H2)) {
-            return "jdbc:h2:plugins" + File.separator + "BigBrother" + File.separator + "bigbrother.h2";
+            return "jdbc:h2:plugins" + File.separator + "BigBrother" + File.separator + "bigbrother";
         } else {
             return "";
         }
