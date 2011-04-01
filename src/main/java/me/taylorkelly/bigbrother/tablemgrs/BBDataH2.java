@@ -29,7 +29,7 @@ public class BBDataH2 extends BBDataTable {
         // TODO Auto-generated method stub
         return 
         "CREATE TABLE `"+getTableName()+"` (" 
-        + "`id` INTEGER PRIMARY KEY," 
+        + "`id` INTEGER AUTO_INCREMENT PRIMARY KEY," 
         + "`date` INT UNSIGNED NOT NULL DEFAULT '0'," 
         + "`player` INT UNSIGNED NOT NULL DEFAULT '0'," 
         + "`action` tinyint NOT NULL DEFAULT '0'," 
