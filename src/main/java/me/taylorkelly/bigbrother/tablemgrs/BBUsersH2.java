@@ -134,7 +134,8 @@ public class BBUsersH2 extends BBUsersTable {
     }
 
     @Override
-    public void importRecords() {
+    public boolean importRecords() {
+        return true;
     }
     
 }

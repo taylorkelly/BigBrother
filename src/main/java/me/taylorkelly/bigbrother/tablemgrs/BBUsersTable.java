@@ -56,7 +56,7 @@ public abstract class BBUsersTable extends DBTable {
         onLoad();
     }
     
-    public abstract void importRecords();
+    public abstract boolean importRecords();
 
     public BBPlayerInfo getUser(String name) {
         name=name.toLowerCase();

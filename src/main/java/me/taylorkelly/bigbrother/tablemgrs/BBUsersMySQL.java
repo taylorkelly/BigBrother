@@ -3,10 +3,17 @@
  */
 package me.taylorkelly.bigbrother.tablemgrs;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
+
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -119,60 +126,124 @@ public class BBUsersMySQL extends BBUsersTable {
         }
         return null;
     }
+    
+    public int getSubversion(File file) {
+        try {
+            Scanner scan = new Scanner(file);
+            String version = scan.nextLine();
+            try {
+                int numVersion = Integer.parseInt(version);
+                return numVersion;
+            } catch (Exception e) {
+                return 0;
+            }
+            
+        } catch (FileNotFoundException e) {
+            return 0;
+        }
+    }
 
     @Override
-    public void importRecords() {
+    public boolean importRecords() {
         String bbdata = BBDataTable.getInstance().getTableName();
         BBLogging.info("Importing users into new table!");
-
-        BBLogging.info(" * Stage 1/4: Rename the old player column to PlayerName");
-        if(!executeUpdate("importRecords(mysql) - Rename old player column",
-                "ALTER TABLE "+bbdata+" CHANGE player playerName varchar(32) NOT NULL DEFAULT 'Player'"))
-            return;
-
-        BBLogging.info(" * Stage 2/4: Add player column with the new integer format (WILL TAKE A LONG TIME).");
-        if(!executeUpdate("importRecords(mysql) - Add player column",
-                "ALTER TABLE "+bbdata+" ADD COLUMN player INT UNSIGNED NOT NULL AUTO_INCREMENT;"))
-            return;
         
-
-        BBLogging.info(" * Stage 3/4: Convert player name -> player ID in bbdata while adding users to bbusers (WILL TAKE A LONG TIME).");
-        {
-            Connection conn = null;
-            ResultSet rs = null;
-            PreparedStatement ps = null;
-            try {
-                conn = ConnectionManager.getConnection();
-                ps = conn.prepareStatement("SELECT DISTINCT playerName FROM "+bbdata);
-                rs=ps.executeQuery();
-                
-                while(rs.next()) {
-                    BBPlayerInfo pi = getUser(rs.getString("playerName"));
-
-                    String desc = String.format("Player %s -> %d",pi.getName(),pi.getID());
-                    BBLogging.info("Converting "+desc+"...");
-                    executeUpdate(desc,
-                            "UPDATE "+bbdata+" SET `player`=? WHERE LOWER(playerName)=LOWER('?')", new Object[]{
-                                pi.getID(),
-                                pi.getName()
-                            }
-                    );
-                }
-                
-            } catch (SQLException e) {
-                BBLogging.severe("Can't import old user records.", e);
-                return;
-            } finally {
-                ConnectionManager.cleanup( "BBUsersMySQL.getUserFromDB(int)",conn, ps, rs );
-            }
+        int stage = 0;
+        File f = new File("MySQLUpgradeStage");
+        if(f.exists()) {
+            stage=getSubversion(f);
+            BBLogging.info("Resuming from stage "+Integer.valueOf(stage));
         }
         
-
-        BBLogging.info(" * Stage 4/4: Drop playerName column.");
-        if(!executeUpdate("importRecords(mysql) - Add player column",
-                "ALTER TABLE "+bbdata+" DROP COLUMN playerName;"))
-            return;
+        if(stage<1) {
+            BBLogging.info(" * Stage 1/4: Rename the old player column to PlayerName");
+            if(!executeUpdate("importRecords(mysql) - Rename old player column",
+                    "ALTER TABLE "+bbdata+" CHANGE player playerName varchar(32) NOT NULL DEFAULT 'Player'"))
+                return false;
+            setSubversion(f,1);
+        }
+        if(stage<2) {
+            BBLogging.info(" * Stage 2/4: Add player column with the new integer format (WILL TAKE A LONG TIME).");
+            if(!executeUpdate("importRecords(mysql) - Add player column",
+                    "ALTER TABLE "+bbdata+" ADD COLUMN player INT UNSIGNED NOT NULL DEFAULT 0;"))
+                return false;
+            setSubversion(f,2);
+        }
         
+        if(stage<3) {
+            BBLogging.info(" * Stage 3/4: Convert player name -> player ID in bbdata while adding users to bbusers (WILL TAKE A LONG TIME).");
+            {
+                Connection conn = null;
+                ResultSet rs = null;
+                PreparedStatement ps = null;
+                try {
+                    conn = ConnectionManager.getConnection();
+                    ps = conn.prepareStatement("SELECT DISTINCT playerName FROM "+bbdata);
+                    rs=ps.executeQuery();
+                    
+                    while(rs.next()) {
+                        BBPlayerInfo pi = getUser(rs.getString("playerName"));
+                        
+                        String desc = String.format("Player %s -> %d",pi.getName(),pi.getID());
+                        BBLogging.info("Converting "+desc+"...");
+                        executeUpdate(desc,
+                                "UPDATE "+bbdata+" SET `player`=? WHERE LOWER(playerName)=LOWER('?')", new Object[]{
+                                pi.getID(),
+                                pi.getName()
+                        }
+                        );
+                    }
+                    
+                } catch (SQLException e) {
+                    BBLogging.severe("Can't import old user records.", e);
+                    return false;
+                } finally {
+                    ConnectionManager.cleanup( "BBUsersMySQL.getUserFromDB(int)",conn, ps, rs );
+                }
+            }
+            setSubversion(f,3);
+        }        
+        
+        if(stage<4) {
+            BBLogging.info(" * Stage 4/4: Drop playerName column.");
+            if(!executeUpdate("importRecords(mysql) - Add player column",
+                    "ALTER TABLE "+bbdata+" DROP COLUMN playerName;"))
+                return false;
+            setSubversion(f,0);
+        }
+        return true;
+    }
+
+    private void setSubversion(File file, int version) {
+        if(version==0)
+        {
+            file.delete();
+            return;
+        }
+        BufferedWriter bwriter = null;
+        FileWriter fwriter = null;
+        try {
+            if (!file.exists())
+                file.createNewFile();
+            fwriter = new FileWriter(file);
+            bwriter = new BufferedWriter(fwriter);
+            bwriter.write(version + "");
+            bwriter.flush();
+        } catch (IOException e) {
+            BBLogging.severe("IO Exception with file " + file.getName());
+        } finally {
+            try {
+                if (bwriter != null) {
+                    bwriter.flush();
+                    bwriter.close();
+                }
+                if (fwriter != null) {
+                    fwriter.close();
+                }
+            } catch (IOException e) {
+                BBLogging.severe("IO Exception with file " + file.getName() + " (on close)");
+            }
+        }
     }
 
     @Override
