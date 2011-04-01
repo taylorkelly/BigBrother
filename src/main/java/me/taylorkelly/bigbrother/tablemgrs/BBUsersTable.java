@@ -36,7 +36,7 @@ public abstract class BBUsersTable extends DBTable {
             if(BBSettings.usingDBMS(DBMS.MYSQL))
                 instance=new BBUsersMySQL();
             else
-                instance=new BBUsersSQLite();
+                instance=new BBUsersH2();
             instance.loadCache();
         }
         return instance;

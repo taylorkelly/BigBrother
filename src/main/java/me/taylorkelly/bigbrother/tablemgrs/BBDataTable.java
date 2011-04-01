@@ -31,7 +31,7 @@ public abstract class BBDataTable extends DBTable {
             if(BBSettings.usingDBMS(DBMS.MYSQL))
                 instance=new BBDataMySQL();
             else
-                instance=new BBDataSQLite();
+                instance=new BBDataH2();
         }
         return instance;
     }

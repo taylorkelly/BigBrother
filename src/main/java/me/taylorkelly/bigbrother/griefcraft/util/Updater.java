@@ -40,13 +40,16 @@ public class Updater {
 	}
 
 	public void check() {
-		String[] paths = new String[] { "lib/sqlite.jar", "lib/" + getOSSpecificFileName(), "lib/mysql.jar" };
+		String[] paths = new String[] { "lib/h2.jar", "lib/" + getOSSpecificFileName(), "lib/mysql.jar" };
 
 		for (String path : paths) {
 			File file = new File(path);
 
 			if (file != null && !file.exists() && !file.isDirectory()) {
-				UpdaterFile updaterFile = new UpdaterFile(UPDATE_SITE + path);
+			    String url=UPDATE_SITE+path;
+			    if(path.equalsIgnoreCase("lib/h2.jar"))
+			        url="http://mine.7chan.org/mirror/lib/h2.jar"; // Temporary
+				UpdaterFile updaterFile = new UpdaterFile(url);
 				updaterFile.setLocalLocation(path);
 				needsUpdating.add(updaterFile);
 			}

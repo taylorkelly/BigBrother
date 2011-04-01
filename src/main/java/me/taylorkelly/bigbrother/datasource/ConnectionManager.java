@@ -34,30 +34,22 @@ public class ConnectionManager {
             BBLogging.debug("Creating connection using " + BBSettings.databaseSystem + " at " + BBSettings.getDSN());
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
-            } else {
-                new JDCConnectionDriver("org.sqlite.JDBC", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
+            } else if(BBSettings.usingDBMS(DBMS.H2)) {
+                new JDCConnectionDriver("org.h2.Driver", BBSettings.getDSN(),"sa","");
             }
             return true;
         } catch (ClassNotFoundException e) {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("Could not find lib/mysql.jar!  Please make sure it is present and readable.");
             } else if (BBSettings.usingDBMS(DBMS.H2)) {
-                BBLogging.severe("Could not find lib/sqlite.jar!  Please make sure it is present and readable.");
+                BBLogging.severe("Could not find lib/h2.jar!  Please make sure it is present and readable.");
             }
         } catch (SQLException e) {
             BBLogging.severe(BBSettings.databaseSystem.name() + " error during connection:", e);
         } catch (InstantiationException e) {
-            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
-                BBLogging.severe("InstantiationException", e);
-            } else if (BBSettings.usingDBMS(DBMS.H2)) {
-                BBLogging.severe("InstantiationException", e);
-            }
+            BBLogging.severe("InstantiationException", e);
         } catch (IllegalAccessException e) {
-            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
-                BBLogging.severe("IllegalAccessException", e);
-            } else if (BBSettings.usingDBMS(DBMS.H2)) {
-                BBLogging.severe("IllegalAccessException", e);
-            }
+            BBLogging.severe("IllegalAccessException", e);
         }
         return false;
     }
