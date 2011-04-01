@@ -72,6 +72,7 @@ public class BBUsersH2 extends BBUsersTable {
             }
             BBLogging.debug(ps.toString());
             ps.executeUpdate();
+            conn.commit();
         } catch (SQLException e) {
             BBLogging.severe("Can't update the user `"+pi.getName()+"`.", e);
         } finally {

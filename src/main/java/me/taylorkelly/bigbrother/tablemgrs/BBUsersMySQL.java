@@ -54,6 +54,7 @@ public class BBUsersMySQL extends BBUsersTable {
             ps = conn.prepareStatement(sql);
             ps.setString(1,name.toLowerCase());
             rs=ps.executeQuery();
+            conn.commit();
             
             if(!rs.next())
                 return null;
@@ -85,6 +86,7 @@ public class BBUsersMySQL extends BBUsersTable {
             }
             BBLogging.debug(ps.toString());
             ps.executeUpdate();
+            conn.commit();
         } catch (SQLException e) {
             BBLogging.severe("Can't update the user `"+pi.getName()+"`.", e);
         } finally {
