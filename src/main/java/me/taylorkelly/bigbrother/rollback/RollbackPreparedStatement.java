@@ -201,7 +201,8 @@ public class RollbackPreparedStatement {
 
     public static String undoStatement(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(BBSettings.applyPrefix("bbdata"));
+        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata,");
+        statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
         statement.append(" SET rbacked = '0'");
         statement.append(" WHERE ");
         statement.append(getActionString());

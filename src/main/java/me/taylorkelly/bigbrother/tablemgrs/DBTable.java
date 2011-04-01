@@ -1,5 +1,6 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -9,6 +10,7 @@ import java.sql.Statement;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 public abstract class DBTable {
@@ -35,6 +37,12 @@ public abstract class DBTable {
     }
     
     public boolean tableExists() {
+        // Workaround for H2 wonkiness regarding table metadata.
+        if(BBSettings.usingDBMS(DBMS.H2))
+        {
+            File f = new File("plugins/BigBrother/bigbrother.h2.db");
+            return f.exists();
+        }
         Connection conn = null;
         ResultSet rs = null;
         try {
