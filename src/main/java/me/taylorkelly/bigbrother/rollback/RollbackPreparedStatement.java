@@ -205,6 +205,7 @@ public class RollbackPreparedStatement {
         statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
         statement.append(" SET rbacked = '0'");
         statement.append(" WHERE ");
+        statement.append(" bbdata.player = usr.id AND ");
         statement.append(getActionString());
         if (!rollback.rollbackAll) {
             statement.append(" AND ");
