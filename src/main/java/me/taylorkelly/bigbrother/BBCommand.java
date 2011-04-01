@@ -28,7 +28,7 @@ public class BBCommand implements CommandExecutor {
         
         if (sender instanceof Player) {
             if (commandName.equals("bb")) {
-                if (args.length == 0)
+                if (args.length <= 1)
                     return false;
                 
                 if (!executors.containsKey(subcommandName))
