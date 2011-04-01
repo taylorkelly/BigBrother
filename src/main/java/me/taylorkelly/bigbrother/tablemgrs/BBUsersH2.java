@@ -61,7 +61,7 @@ public class BBUsersH2 extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
-            if(pi.getNew()) {
+            if(pi.getNew() && getUserFromDB(pi.getName())==null) {
                 ps = conn.prepareStatement("INSERT INTO "+getActualTableName()+" (name,flags) VALUES (?,?)");
                 ps.setString(1,pi.getName());
                 ps.setInt(2,pi.getFlags());
