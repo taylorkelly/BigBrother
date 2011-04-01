@@ -37,12 +37,6 @@ public abstract class DBTable {
     }
     
     public boolean tableExists() {
-        // Workaround for H2 wonkiness regarding table metadata.
-        if(BBSettings.usingDBMS(DBMS.H2))
-        {
-            File f = new File("plugins/BigBrother/bigbrother.h2.db");
-            return f.exists();
-        }
         Connection conn = null;
         ResultSet rs = null;
         try {

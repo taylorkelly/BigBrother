@@ -121,10 +121,13 @@ public class BigBrother extends JavaPlugin {
         } else {
             ConnectionManager.cleanup("onEnable", conn, null, null);
         }
+        
+        
 
         // Initialize tables
         BBLogging.info(BBDataTable.getInstance().toString()+" loaded!");
         worldManager = new WorldManager();
+        BBPlayerInfo.ENVIRONMENT = new BBPlayerInfo("Environment");
 
         // Initialize Listeners
         playerListener = new BBPlayerListener(this);

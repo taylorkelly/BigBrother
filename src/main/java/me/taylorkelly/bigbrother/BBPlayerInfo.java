@@ -13,6 +13,8 @@ public class BBPlayerInfo {
     enum PlayerField {
         WATCHED
     }
+
+    public static BBPlayerInfo ENVIRONMENT;
     
     /**
      * New guy? (INSERT instead of UPDATE)
