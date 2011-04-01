@@ -96,11 +96,12 @@ public abstract class BBUsersTable extends DBTable {
 
     public void addOrUpdatePlayer(BBPlayerInfo pi) {
         // Update cache
-        if(knownPlayers.containsKey(pi.getID()))
-        {
-            pi = knownPlayers.get(pi.getID());
-            knownPlayers.remove(pi.getID());
-        }
+        if(pi.getID()!=-1)
+            if(knownPlayers.containsKey(pi.getID()))
+            {
+                pi = knownPlayers.get(pi.getID());
+                knownPlayers.remove(pi.getID());
+            }
         
         do_addOrUpdatePlayer(pi);
         knownPlayers.put(pi.getID(), pi);
