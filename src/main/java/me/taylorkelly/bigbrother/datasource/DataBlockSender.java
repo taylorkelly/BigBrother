@@ -44,7 +44,7 @@ public class DataBlockSender {
         // Try to refactor most of these into the table managers.
 
         //SQLite fix...
-        if (BBSettings.databaseSystem == DBMS.SQLITE) {
+        if (BBSettings.databaseSystem == DBMS.H2) {
             for (BBDataBlock block : collection) {
                 manager.getWorld(block.world);
             }

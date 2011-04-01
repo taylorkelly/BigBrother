@@ -36,7 +36,7 @@ public class Fix4 extends Fix {
     public void apply() {
         if (needsUpdate(version)) {
             BBLogging.info("Updating table for 1.7");
-            boolean sqlite = BBSettings.databaseSystem == DBMS.SQLITE;
+            boolean sqlite = BBSettings.databaseSystem == DBMS.H2;
 
             updateVersion(version);
             updateTable(sqlite);

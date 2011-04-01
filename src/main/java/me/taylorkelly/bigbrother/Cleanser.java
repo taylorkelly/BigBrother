@@ -92,7 +92,7 @@ public class Cleanser {
                 long start = System.currentTimeMillis() / 1000;
 
                 String cleansql = "DELETE FROM `"+BBSettings.applyPrefix("bbdata")+"` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge));
-                if (BBSettings.deletesPerCleansing > 0 && !BBSettings.usingDBMS(DBMS.SQLITE)) {
+                if (BBSettings.deletesPerCleansing > 0 && !BBSettings.usingDBMS(DBMS.H2)) {
                     cleansql += " LIMIT " + Long.valueOf(BBSettings.deletesPerCleansing);
                 }
                 cleansql += ";";

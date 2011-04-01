@@ -41,7 +41,7 @@ public class ConnectionManager {
         } catch (ClassNotFoundException e) {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("Could not find lib/mysql.jar!  Please make sure it is present and readable.");
-            } else if (BBSettings.usingDBMS(DBMS.SQLITE)) {
+            } else if (BBSettings.usingDBMS(DBMS.H2)) {
                 BBLogging.severe("Could not find lib/sqlite.jar!  Please make sure it is present and readable.");
             }
         } catch (SQLException e) {
@@ -49,13 +49,13 @@ public class ConnectionManager {
         } catch (InstantiationException e) {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("InstantiationException", e);
-            } else if (BBSettings.usingDBMS(DBMS.SQLITE)) {
+            } else if (BBSettings.usingDBMS(DBMS.H2)) {
                 BBLogging.severe("InstantiationException", e);
             }
         } catch (IllegalAccessException e) {
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 BBLogging.severe("IllegalAccessException", e);
-            } else if (BBSettings.usingDBMS(DBMS.SQLITE)) {
+            } else if (BBSettings.usingDBMS(DBMS.H2)) {
                 BBLogging.severe("IllegalAccessException", e);
             }
         }

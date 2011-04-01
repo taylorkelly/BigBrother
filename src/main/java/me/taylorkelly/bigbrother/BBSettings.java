@@ -51,7 +51,7 @@ public class BBSettings {
     public static boolean flatLog = false;
     public static boolean mysqlLowPrioInserts = true;
     public static int defaultSearchRadius = 2;
-    public static DBMS databaseSystem = DBMS.SQLITE;
+    public static DBMS databaseSystem = DBMS.H2;
     public static String mysqlUser = "minecraft";
     public static String mysqlPass = "";
     public static String mysqlHost = "localhost";
@@ -167,7 +167,7 @@ public class BBSettings {
     // Database configuration
     private static void loadDBSettings(BetterConfig yml) {
         // Database type (Database Management System = DBMS :V)
-        final String dbms = yml.getString("database.type", DBMS.SQLITE.name());
+        final String dbms = yml.getString("database.type", DBMS.MYSQL.name());
         setDBMS(dbms);
 
         deletesPerCleansing = Long.valueOf(yml.getString("database.deletes-per-cleansing", Long.toString(deletesPerCleansing))); // "The maximum number of records to delete per cleansing (0 to disable).");
@@ -184,13 +184,17 @@ public class BBSettings {
             mysqlEngine = yml.getString("database.mysql.engine", mysqlEngine);
             mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
             mysqlLowPrioInserts = yml.getBoolean("database.mysql.low-priority-insert", mysqlLowPrioInserts);
-        } else if (databaseSystem == DBMS.SQLITE) {
+        } else if (databaseSystem == DBMS.H2) {
             // SQLite stuff here
         }
     }
 
     private static void setDBMS(String name) {
-        databaseSystem = DBMS.valueOf(name.toUpperCase());
+        try {
+            databaseSystem = DBMS.valueOf(name.toUpperCase());
+        } catch(IllegalArgumentException e) {
+            databaseSystem = DBMS.MYSQL;
+        }
     }
 
     private static void convertPropFile(File props, File watching, File yamlfile) {
@@ -210,7 +214,7 @@ public class BBSettings {
             final String dbms = yml.getString("database.type", DBMS.MYSQL.name());
             setDBMS(dbms);
         } else {
-            final String dbms = yml.getString("database.type", DBMS.SQLITE.name());
+            final String dbms = yml.getString("database.type", DBMS.H2.name());
             setDBMS(dbms);
         }
 
@@ -337,7 +341,7 @@ public class BBSettings {
     public static String getDSN() {
         if (usingDBMS(DBMS.MYSQL)) {
             return String.format("jdbc:mysql://%s:%d/%s", mysqlHost, mysqlPort, mysqlDatabase);
-        } else if (usingDBMS(DBMS.SQLITE)) {
+        } else if (usingDBMS(DBMS.H2)) {
             return "jdbc:sqlite:plugins" + File.separator + "BigBrother" + File.separator + "bigbrother.db";
         } else {
             return "";
@@ -355,7 +359,8 @@ public class BBSettings {
 
     public enum DBMS {
 
-        SQLITE, MYSQL,
+        H2, 
+        MYSQL,
         // POSTGRES,
     }
 
