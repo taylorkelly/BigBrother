@@ -83,6 +83,7 @@ public class BBUsersMySQL extends BBUsersTable {
                 ps.setInt(1, pi.getFlags());
                 ps.setInt(2, pi.getID());
             }
+            BBLogging.debug(ps.toString());
             ps.executeUpdate();
         } catch (SQLException e) {
             BBLogging.severe("Can't update the user `"+pi.getName()+"`.", e);
