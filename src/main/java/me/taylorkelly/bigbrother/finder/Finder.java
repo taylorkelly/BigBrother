@@ -135,10 +135,12 @@ public class Finder {
             if (size > 0) {
                 StringBuilder playerList = new StringBuilder();
                 for (Entry<BBPlayerInfo, Integer> entry : modifications.entrySet()) {
-                    playerList.append(entry.getKey().getName());
-                    playerList.append(" (");
-                    playerList.append(entry.getValue());
-                    playerList.append("), ");
+                    if(entry.getKey()!=null) {
+                        playerList.append(entry.getKey().getName());
+                        playerList.append(" (");
+                        playerList.append(entry.getValue());
+                        playerList.append("), ");
+                    }
                 }
                 playerList.delete(playerList.lastIndexOf(","), playerList.length());
                 //TODO Put into sync'd runnable
