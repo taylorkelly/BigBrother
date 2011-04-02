@@ -57,7 +57,7 @@
 			<!-- Grabs from 3rdparty repo -->
 			<groupId>org.anjocaido.groupmanager</groupId>
 			<artifactId>GroupManager</artifactId>
-			<version>1.0alpha-3</version>
+			<version>1.0-alpha5</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>
