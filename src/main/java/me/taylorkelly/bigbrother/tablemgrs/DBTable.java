@@ -65,7 +65,7 @@ public abstract class DBTable {
             conn.commit();
         } catch (SQLException e) {
             // Ignore H2 being a dildo. - N3X
-            if(e.getMessage().startsWith("Table \"") && e.getMessage().contains("\" already exists"))
+            if(BBSettings.usingDBMS(DBMS.H2) && !BBSettings.debugMode)
                 return;
             BBLogging.severe("Can't create the "+getTableName()+" table", e);
         } finally {
