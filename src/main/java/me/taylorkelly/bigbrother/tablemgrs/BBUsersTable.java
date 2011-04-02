@@ -68,6 +68,8 @@ public abstract class BBUsersTable extends DBTable {
         if(pi==null) {
             pi=new BBPlayerInfo(name);
         }
+        knownPlayers.put(pi.getID(), pi);
+        knownNames.put(pi.getName(), pi.getID());
         return pi;
     }
     
@@ -104,6 +106,7 @@ public abstract class BBUsersTable extends DBTable {
         
         do_addOrUpdatePlayer(pi);
         knownPlayers.put(pi.getID(), pi);
+        knownNames.put(pi.getName(), pi.getID());
     }
 
     /**
@@ -124,6 +127,9 @@ public abstract class BBUsersTable extends DBTable {
     public BBPlayerInfo getUser(int id) {
         if(!knownPlayers.containsKey(id))
             return knownPlayers.get(id);
-        return this.getUserFromDB(id);
+        BBPlayerInfo pi= this.getUserFromDB(id);
+        knownPlayers.put(pi.getID(), pi);
+        knownNames.put(pi.getName(), pi.getID());
+        return pi;
     }
 }
