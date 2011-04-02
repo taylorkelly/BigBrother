@@ -59,7 +59,7 @@ public class BBUsersMySQL extends BBUsersTable {
             String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`=?";
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
-            ps.setString(1,name.toLowerCase());
+            ps.setString(1,name);
             rs=ps.executeQuery();
             conn.commit();
             
@@ -146,7 +146,7 @@ public class BBUsersMySQL extends BBUsersTable {
     @Override
     public boolean importRecords() {
         String bbdata = BBDataTable.getInstance().getTableName();
-        BBLogging.info("Importing users into new table!");
+        BBLogging.info("Importing users into new table! If this breaks, DROP your tables and restart.");
         
         int stage = 0;
         File f = new File("MySQLUpgradeStage");
@@ -187,7 +187,7 @@ public class BBUsersMySQL extends BBUsersTable {
                         String desc = String.format("Player %s -> %d",pi.getName(),pi.getID());
                         BBLogging.info("Converting "+desc+"...");
                         if(executeUpdate(desc,
-                                "UPDATE "+bbdata+" SET `player`=? WHERE LOWER(playerName)=LOWER(?)", new Object[]{
+                                "UPDATE "+bbdata+" SET `player`=? WHERE playerName=?", new Object[]{
                                 pi.getID(),
                                 pi.getName()
                         }

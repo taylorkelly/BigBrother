@@ -59,7 +59,6 @@ public abstract class BBUsersTable extends DBTable {
     public abstract boolean importRecords();
 
     public BBPlayerInfo getUser(String name) {
-        name=name.toLowerCase();
         
         // Check cache first.
         if(knownNames.containsKey(name))
@@ -73,7 +72,7 @@ public abstract class BBUsersTable extends DBTable {
     }
     
     public void addOrUpdateUser(Player p) {
-        String name=p.getName().toLowerCase();
+        String name=p.getName();
         
         BBPlayerInfo pi = null;
         // Check cache first.

@@ -39,7 +39,7 @@ public class BBUsersH2 extends BBUsersTable {
             String sql = "SELECT id,name,flags FROM "+getActualTableName()+" WHERE `name`=?";
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
-            ps.setString(1,name.toLowerCase());
+            ps.setString(1,name);
             rs=ps.executeQuery();
             
             if(!rs.next())
