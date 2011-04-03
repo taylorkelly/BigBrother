@@ -274,11 +274,15 @@ public class BigBrother extends JavaPlugin {
         return sticker.hasStick(player, itemStack);
     }
 
-    public void stick(Player player, Block block) {
-        sticker.stick(player, block);
+    public void stick(Player player, Block block, boolean leftclick) {
+        sticker.stick(player, block, leftclick);
     }
 
     public boolean rightClickStick(Player player) {
         return sticker.rightClickStick(player);
+    }
+
+    public boolean leftClickStick(Player player) {
+        return sticker.leftClickStick(player);
     }
 }

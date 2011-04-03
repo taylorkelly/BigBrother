@@ -29,6 +29,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -158,112 +159,124 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         //plugin.processPsuedotick();
         if(event.isCancelled()) return;
-
-        // Process stick/log events first.
+        
         Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
-        if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
-            // Get info
-            plugin.stick(player, event.getClickedBlock());
-            
-            // Cancel any interactions.
-            ArrayList<Material> nonInteracts = new ArrayList<Material>();
-            nonInteracts.add(Material.WOOD_PLATE);
-            nonInteracts.add(Material.STONE_PLATE);
-            if (!nonInteracts.contains(event.getClickedBlock().getType())) {
-                event.setCancelled(true);
-            }
-        // Otherwise...
-        } else if (BBSettings.blockPlace && pi.getWatched()) {
-            int x;
-            int y;
-            int z;
-            int type;
-            PlacedBlock dataBlock;
-            World world;
-            Block block = event.getClickedBlock();
-            switch (event.getMaterial()) {
-            //TODO Door logging
-            case LAVA_BUCKET:
-                x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
-                y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
-                z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
-                type = Material.LAVA.getId();
-                world = event.getClickedBlock().getWorld();
-                dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
-                LavaFlowLogger.log(new Location(world, x, y, z), event.getPlayer().getName());
-                dataBlock.send();
-                break;
-            case WATER_BUCKET:
-                x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
-                y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
-                z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
-                type = Material.WATER.getId();
-                world = event.getClickedBlock().getWorld();
-                dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
-                dataBlock.send();
-                break;
-            case SIGN:
-                x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
-                y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
-                z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
-                world = event.getClickedBlock().getWorld();
+        
+        if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.leftClickStick(player)) {
+                // Process left-clicks (punch action on log, etc)
+                plugin.stick(player, event.getClickedBlock(),true);
                 
-                int data = 0;
-                switch (event.getBlockFace()) {
-                case UP:
-                    type = Material.SIGN_POST.getId();
+                event.setCancelled(true); // Cancel in case of 1-hit breakable stuff like flowers.
+            }
+        }
+        
+        // Process right-clicking stuff.
+        if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            // Process stick/log events first.
+            if (BBPermissions.info(player) && plugin.hasStick(player, player.getItemInHand()) && plugin.rightClickStick(player)) {
+                // Get info
+                plugin.stick(player, event.getClickedBlock(),false);
+                
+                // Cancel any interactions.
+                ArrayList<Material> nonInteracts = new ArrayList<Material>();
+                nonInteracts.add(Material.WOOD_PLATE);
+                nonInteracts.add(Material.STONE_PLATE);
+                if (!nonInteracts.contains(event.getClickedBlock().getType())) {
+                    event.setCancelled(true);
+                }
+                // Otherwise...
+            } else if (BBSettings.blockPlace && pi.getWatched()) {
+                int x;
+                int y;
+                int z;
+                int type;
+                PlacedBlock dataBlock;
+                World world;
+                Block block = event.getClickedBlock();
+                switch (event.getMaterial()) {
+                //TODO Door logging
+                case LAVA_BUCKET:
+                    x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
+                    y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
+                    z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
+                    type = Material.LAVA.getId();
+                    world = event.getClickedBlock().getWorld();
+                    dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                    LavaFlowLogger.log(new Location(world, x, y, z), event.getPlayer().getName());
+                    dataBlock.send();
                     break;
-                case NORTH:
-                    data = 4;
-                    type = Material.WALL_SIGN.getId();
+                case WATER_BUCKET:
+                    x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
+                    y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
+                    z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
+                    type = Material.WATER.getId();
+                    world = event.getClickedBlock().getWorld();
+                    dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) 0);
+                    dataBlock.send();
                     break;
-                case SOUTH:
-                    data = 5;
-                    type = Material.WALL_SIGN.getId();
+                case SIGN:
+                    x = event.getClickedBlock().getX() + event.getBlockFace().getModX();
+                    y = event.getClickedBlock().getY() + event.getBlockFace().getModY();
+                    z = event.getClickedBlock().getZ() + event.getBlockFace().getModZ();
+                    world = event.getClickedBlock().getWorld();
+                    
+                    int data = 0;
+                    switch (event.getBlockFace()) {
+                    case UP:
+                        type = Material.SIGN_POST.getId();
+                        break;
+                    case NORTH:
+                        data = 4;
+                        type = Material.WALL_SIGN.getId();
+                        break;
+                    case SOUTH:
+                        data = 5;
+                        type = Material.WALL_SIGN.getId();
+                        break;
+                    case EAST:
+                        data = 2;
+                        type = Material.WALL_SIGN.getId();
+                        break;
+                    case WEST:
+                        data = 3;
+                        type = Material.WALL_SIGN.getId();
+                        break;
+                    default:
+                        type = Material.SIGN.getId();
+                    }
+                    dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) data);
+                    dataBlock.send();
                     break;
-                case EAST:
-                    data = 2;
-                    type = Material.WALL_SIGN.getId();
-                    break;
-                case WEST:
-                    data = 3;
-                    type = Material.WALL_SIGN.getId();
+                case BUCKET:
+                    BrokenBlock dataBlock2;
+                    world = event.getClickedBlock().getWorld();
+                    switch (event.getClickedBlock().getType()) {
+                    case STATIONARY_LAVA:
+                    case LAVA:
+                        x = event.getClickedBlock().getX();
+                        y = event.getClickedBlock().getY();
+                        z = event.getClickedBlock().getZ();
+                        type = Material.LAVA.getId();
+                        dataBlock2 = new BrokenBlock(BBUsersTable.getInstance().getUser(event.getPlayer().getName()), world.getName(), x, y, z, type, (byte) 0);
+                        dataBlock2.send();
+                        break;
+                    case STATIONARY_WATER:
+                    case WATER:
+                        x = event.getClickedBlock().getX();
+                        y = event.getClickedBlock().getY();
+                        z = event.getClickedBlock().getZ();
+                        type = Material.WATER.getId();
+                        dataBlock2 = new BrokenBlock(BBUsersTable.getInstance().getUser(event.getPlayer().getName()), world.getName(), x, y, z, type, (byte) 0);
+                        dataBlock2.send();
+                    }
                     break;
                 default:
-                    type = Material.SIGN.getId();
-                }
-                dataBlock = new PlacedBlock(event.getPlayer().getName(), world.getName(), x, y, z, type, (byte) data);
-                dataBlock.send();
-                break;
-            case BUCKET:
-                BrokenBlock dataBlock2;
-                world = event.getClickedBlock().getWorld();
-                switch (event.getClickedBlock().getType()) {
-                case STATIONARY_LAVA:
-                case LAVA:
-                    x = event.getClickedBlock().getX();
-                    y = event.getClickedBlock().getY();
-                    z = event.getClickedBlock().getZ();
-                    type = Material.LAVA.getId();
-                    dataBlock2 = new BrokenBlock(BBUsersTable.getInstance().getUser(event.getPlayer().getName()), world.getName(), x, y, z, type, (byte) 0);
-                    dataBlock2.send();
-                    break;
-                case STATIONARY_WATER:
-                case WATER:
-                    x = event.getClickedBlock().getX();
-                    y = event.getClickedBlock().getY();
-                    z = event.getClickedBlock().getZ();
-                    type = Material.WATER.getId();
-                    dataBlock2 = new BrokenBlock(BBUsersTable.getInstance().getUser(event.getPlayer().getName()), world.getName(), x, y, z, type, (byte) 0);
-                    dataBlock2.send();
-                }
-                break;
-            default:
-                
-                switch (event.getClickedBlock().getType()) {
-                case WOODEN_DOOR:
-                    //case IRON_DOOR:
+                    
+                    switch (event.getClickedBlock().getType()) {
+                    case WOODEN_DOOR:
+                        //case IRON_DOOR:
                         if (BBSettings.doorOpen) {
                             DoorOpen doorDataBlock = new DoorOpen(event.getPlayer().getName(), block, block.getWorld().getName());
                             doorDataBlock.send();
@@ -287,8 +300,9 @@ public class BBPlayerListener extends PlayerListener {
                             chestDataBlock.send();
                         }
                         break;
+                    }
+                    break;
                 }
-                break;
             }
         }
     }

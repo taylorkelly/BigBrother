@@ -18,7 +18,7 @@ public abstract class StickMode {
      * @param manager The WorldManager (to get index)
      * @return The ArrayList of descriptions
      */
-    public abstract ArrayList<String> getInfoOnBlock(Block block, WorldManager manager);
+    public abstract ArrayList<String> getInfoOnBlock(Block block, WorldManager manager, boolean leftclick);
 
     /**
      * Returns the description of the stick... (polymorphism!)
@@ -57,4 +57,10 @@ public abstract class StickMode {
      * @return true if so, false if not
      */
     public abstract boolean rightClickStick();
+
+    /**
+     * Do we allow left-clicking?
+     * @return true if yes.
+     */
+    public abstract boolean leftClickStick();
 }

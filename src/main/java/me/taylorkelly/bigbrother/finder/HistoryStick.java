@@ -40,7 +40,7 @@ public class HistoryStick extends StickMode {
     }
 
     @Override
-    public ArrayList<String> getInfoOnBlock(Block block, WorldManager manager) {
+    public ArrayList<String> getInfoOnBlock(Block block, WorldManager manager, boolean ignored) {
         ArrayList<BBDataBlock> history = BlockHistory.hist(block, manager);
 
         ArrayList<String> msgs = new ArrayList<String>();
@@ -90,6 +90,11 @@ public class HistoryStick extends StickMode {
 
     @Override
     public boolean rightClickStick() {
+        return true;
+    }
+
+    @Override
+    public boolean leftClickStick() {
         return true;
     }
 

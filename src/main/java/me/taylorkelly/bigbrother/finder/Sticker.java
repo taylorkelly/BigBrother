@@ -99,11 +99,12 @@ public class Sticker {
      * Sends info on a block to a specific player based on their stick
      * @param player The player to send info to and to use their stick
      * @param block The block to get info about
+     * @param leftclick 
      */
-    private void blockInfo(Player player, Block block) {
+    private void blockInfo(Player player, Block block, boolean leftclick) {
         if (playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
-            ArrayList<String> info = mode.getInfoOnBlock(block, manager);
+            ArrayList<String> info = mode.getInfoOnBlock(block, manager, leftclick);
             for (String msg : info) {
                 player.sendMessage(msg);
             }
@@ -115,8 +116,8 @@ public class Sticker {
      * @param player The player to have their stick used.... >.>
      * @param block The block that the stick is interacting with
      */
-    public void stick(Player player, Block block) {
-        blockInfo(player, block);
+    public void stick(Player player, Block block, boolean leftclick) {
+        blockInfo(player, block, leftclick);
         if (playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             mode.update(player);
@@ -132,6 +133,14 @@ public class Sticker {
         if (playerModes.containsKey(player.getName())) {
             StickMode mode = playerModes.get(player.getName());
             return mode.rightClickStick();
+        }
+        return false;
+    }
+
+    public boolean leftClickStick(Player player) {
+        if (playerModes.containsKey(player.getName())) {
+            StickMode mode = playerModes.get(player.getName());
+            return mode.leftClickStick();
         }
         return false;
     }

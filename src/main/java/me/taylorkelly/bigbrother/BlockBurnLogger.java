@@ -11,6 +11,8 @@ import org.bukkit.block.Block;
 /**
  * This class is used to track the placement of lava so that flows can be
  * properly associated with a specific player
+ * 
+ * TODO: Use BlockFromTo
  */
 public class BlockBurnLogger {
     public static double THRESHOLD = 3.0;
@@ -18,20 +20,22 @@ public class BlockBurnLogger {
 
     public static BlockBurn create(Block block, String world) {
         String player = BBDataBlock.ENVIRONMENT;
+        /*
         Location bestLocation = null;
         double bestDistance = THRESHOLD;
         for (Location loc : lavaMap.keySet()) {
-            //double distance = distance(loc, blockFrom.getLocation());
-            /*if (distance < bestDistance) {
+            double distance = distance(loc, blockFrom.getLocation());
+            if (distance < bestDistance) {
                 bestLocation = loc;
                 bestDistance = distance;
                 break;
-            }*/
+            }
         }
         if (bestLocation != null) {
             player = lavaMap.get(bestLocation);
-            //log(blockTo.getLocation(), player);
+            log(blockTo.getLocation(), player);
         }
+        */
         return new BlockBurn(player, block, block.getWorld().getName());
     }
 
