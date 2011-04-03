@@ -26,7 +26,7 @@ public class BetterNode extends ConfigurationNode {
         } else if (o instanceof Byte) {
             return (long) (Byte) o;
         } else if (o instanceof Integer) {
-            return (Long) o;
+            return Long.valueOf((Integer)o);
         } else if (o instanceof Double) {
             return (long) (double) (Double) o;
         } else if (o instanceof Float) {
