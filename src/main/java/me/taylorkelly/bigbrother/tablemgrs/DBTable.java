@@ -1,6 +1,5 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
