@@ -174,6 +174,8 @@ public class BBSettings {
         cleanseAge = TimeParser.parseInterval(yml.getString("database.cleanse-age", "3d"));// "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
         maxRecords = Long.valueOf(yml.getString("database.max-records", Long.toString(maxRecords)));// "The maximum number of records that you want in your database (-1 to disable)");
         sendDelay = yml.getInt("database.send-delay", sendDelay);// "Delay in seconds to batch send updates to database (4-5 recommended)");
+        mysqlPersistant = yml.getBoolean("database.use-persistant-connection", mysqlPersistant);
+        
 
         if (databaseSystem == DBMS.MYSQL) {
             mysqlUser = yml.getString("database.mysql.username", mysqlUser);
