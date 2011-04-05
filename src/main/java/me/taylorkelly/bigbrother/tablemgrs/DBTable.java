@@ -40,6 +40,7 @@ public abstract class DBTable {
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return false;
             DatabaseMetaData dbm = conn.getMetaData();
             rs = dbm.getTables(null, null, getTableName(), null);
             if (!rs.next()) {
@@ -59,6 +60,7 @@ public abstract class DBTable {
         Statement st = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return;
             st = conn.createStatement();
             st.executeUpdate(getCreateSyntax());
             conn.commit();
@@ -78,6 +80,7 @@ public abstract class DBTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return false;
             ps = conn.prepareStatement(sql);
             for(int i = 1;i<args.length+1;i++)
                 ps.setObject(i, args[i-1]);

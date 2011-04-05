@@ -41,6 +41,7 @@ public class Fix2 extends Fix {
         Statement st = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return false;
             st = conn.createStatement();
             if (sqlite) {
                 for (int i = 0; i < UPDATE_SQLITE.length; i++) {

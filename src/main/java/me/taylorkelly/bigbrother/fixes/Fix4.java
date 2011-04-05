@@ -52,6 +52,7 @@ public class Fix4 extends Fix {
             Statement st = null;
             try {
                 conn = ConnectionManager.getConnection();
+                if(conn==null) return false;
                 st = conn.createStatement();
                 for (String update : UPDATE_SQL) {
                     st.executeUpdate(update);

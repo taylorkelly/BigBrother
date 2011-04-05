@@ -36,6 +36,7 @@ public class Fix3 extends Fix {
             Statement st = null;
             try {
                 conn = ConnectionManager.getConnection();
+                if(conn==null) return false;
                 st = conn.createStatement();
                 st.executeUpdate(UPDATE_MYSQL);
                 conn.commit();

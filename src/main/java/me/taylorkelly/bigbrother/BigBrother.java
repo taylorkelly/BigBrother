@@ -121,7 +121,7 @@ public class BigBrother extends JavaPlugin {
         } else {
             ConnectionManager.cleanup("onEnable", conn, null, null);
         }
-        
+        ConnectionManager.cleanup("onEnable", conn, null, null);
         
 
         // Initialize tables

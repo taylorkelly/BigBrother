@@ -102,7 +102,7 @@ public class Finder {
         HashMap<BBPlayerInfo, Integer> modifications = new HashMap<BBPlayerInfo, Integer>();
         try {
             conn = ConnectionManager.getConnection();
-
+            if(conn==null) return;
             // TODO maybe more customizable actions?
             String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.LAVA_FLOW.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
             
@@ -177,7 +177,7 @@ public class Finder {
 
         try {
             conn = ConnectionManager.getConnection();
-
+            if(conn==null) return;
             // TODO maybe more customizable actions?
             String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.LAVA_FLOW.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
             ps = conn.prepareStatement("SELECT action, type FROM " + BBSettings.applyPrefix("bbdata") + " WHERE " + actionString

@@ -36,6 +36,7 @@ public class BBUsersH2 extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return null;
             String sql = "SELECT id,name,flags FROM "+getActualTableName()+" WHERE `name`=?";
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
@@ -61,6 +62,7 @@ public class BBUsersH2 extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return;
             if(pi.getNew() && getUserFromDB(pi.getName())==null) {
                 ps = conn.prepareStatement("INSERT INTO "+getActualTableName()+" (name,flags) VALUES (?,?)");
                 ps.setString(1,pi.getName());
@@ -88,6 +90,7 @@ public class BBUsersH2 extends BBUsersTable {
         try {
             String sql = "SELECT id,name,flags FROM " + getActualTableName() + " WHERE `id`=?";
             conn = ConnectionManager.getConnection();
+            if(conn==null) return null;
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
@@ -116,6 +119,7 @@ public class BBUsersH2 extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return;
             String sql = "SELECT id,name,flags FROM "+getActualTableName();
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);

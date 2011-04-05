@@ -88,6 +88,7 @@ public class Cleanser {
             Statement stmt = null;
             try {
                 conn = ConnectionManager.getConnection();
+                if(conn==null) return;
                 stmt = conn.createStatement();
                 long start = System.currentTimeMillis() / 1000;
 
@@ -128,6 +129,7 @@ public class Cleanser {
                 Statement stmt = null;
                 try {
                     conn = ConnectionManager.getConnection();
+                    if(conn==null) return;
                     stmt = conn.createStatement();
                     long start = System.currentTimeMillis() / 1000;
 

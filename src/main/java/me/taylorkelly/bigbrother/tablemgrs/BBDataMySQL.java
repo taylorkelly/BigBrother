@@ -113,6 +113,7 @@ public class BBDataMySQL extends BBDataTable {
         Statement st = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return;
             st = conn.createStatement();
             st.executeUpdate("ALTER TABLE " + tableName + " ENGINE = " + engine);
             conn.commit();
@@ -130,6 +131,7 @@ public class BBDataMySQL extends BBDataTable {
         String engine = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return null;
             stmt = conn.createStatement();
             if (!stmt.execute("SHOW TABLE STATUS WHERE Name = '" + tableName + "'")) {
                 BBLogging.severe("Could not fetch table information for table " + tableName);

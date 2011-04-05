@@ -56,6 +56,7 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return null;
             String sql = "SELECT id,name,flags FROM "+getTableName()+" WHERE `name`=?";
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
@@ -82,6 +83,7 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return;
             if(pi.getNew() && getUserFromDB(pi.getName())==null) {
                 ps = conn.prepareStatement("INSERT INTO "+getTableName()+" (name,flags) VALUES (?,?) ON DUPLICATE KEY UPDATE flags=VALUES(flags)");
                 ps.setString(1,pi.getName());
@@ -109,6 +111,7 @@ public class BBUsersMySQL extends BBUsersTable {
         try {
             String sql = "SELECT id,name,flags FROM " + getTableName() + " WHERE `id`=?;";
             conn = ConnectionManager.getConnection();
+            if(conn==null) return null;
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
@@ -178,6 +181,7 @@ public class BBUsersMySQL extends BBUsersTable {
                 PreparedStatement ps = null;
                 try {
                     conn = ConnectionManager.getConnection();
+                    if(conn==null) return false;
                     ps = conn.prepareStatement("SELECT DISTINCT playerName FROM "+bbdata);
                     rs=ps.executeQuery();
                     
@@ -186,7 +190,7 @@ public class BBUsersMySQL extends BBUsersTable {
                         
                         String desc = String.format("Player %s -> %d",pi.getName(),pi.getID());
                         BBLogging.info("Converting "+desc+"...");
-                        if(executeUpdate(desc,
+                        if(!executeUpdate(desc,
                                 "UPDATE "+bbdata+" SET `player`=? WHERE playerName=?", new Object[]{
                                 pi.getID(),
                                 pi.getName()
@@ -254,6 +258,7 @@ public class BBUsersMySQL extends BBUsersTable {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return;
             String sql = "SELECT id,name,flags FROM "+getTableName();
             BBLogging.debug(sql);
             ps = conn.prepareStatement(sql);

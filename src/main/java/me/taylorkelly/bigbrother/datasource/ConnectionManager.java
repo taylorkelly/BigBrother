@@ -14,18 +14,24 @@ import me.taylorkelly.bigbrother.BBSettings;
 public class ConnectionManager {
 
     private static BigBrother plugin;
-
+    private static boolean failedLink=false;
+    private static boolean shouldReconnect=false;
+    private static Connection connection; // Use one connection.
+    
     public static Connection getConnection() {
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:jdc:jdcpool");
-            conn.setAutoCommit(false);
-            return conn;
-        } catch (SQLException e) {
-            BBLogging.severe("Error getting a connection, disabling BigBrother...", e);
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
-            plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
-            return null;
+        if(failedLink) {
+            if(!shouldReconnect) {
+                return null;
+            } else {
+                if(BBSettings.mysqlPersistant)
+                    initConnection();
+            }
         }
+        
+        if(BBSettings.mysqlPersistant)
+            return connection;
+        else
+            return createConnection();
     }
 
     public static boolean createConnection(BigBrother bb) {
@@ -51,7 +57,29 @@ public class ConnectionManager {
         } catch (IllegalAccessException e) {
             BBLogging.severe("IllegalAccessException", e);
         }
+        if(BBSettings.mysqlPersistant)
+            initConnection();
         return false;
+    }
+
+    private static void initConnection() {
+        connection=createConnection();
+    }
+    private static Connection createConnection() {
+        try {
+            BBLogging.debug("Opening connection");
+            Connection conn = DriverManager.getConnection("jdbc:jdc:jdcpool");
+            conn.setAutoCommit(false);
+            return conn;
+        } catch (SQLException e) {
+            BBLogging.severe("Error getting a connection, disabling BigBrother...", e);
+            BBLogging.severe("Make sure your database settings are correct!");
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            setFailedLink(true);
+            setShouldReconnect(false); // Don't reconnect, MySQL settings are probably wrong.
+            //plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
+            return null;
+        }
     }
 
     public static void cleanup( String caller, Connection conn, Statement stmt, ResultSet rs ) {
@@ -70,13 +98,42 @@ public class ConnectionManager {
         } catch (SQLException e) {
             BBLogging.severe("Error closing statement from '" + caller + "':", e);
         }
-
-        try {
-            if ( null != conn ) {
-                conn.close();
+        if(!BBSettings.mysqlPersistant) {
+            try {
+                if ( null != conn ) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                BBLogging.severe("Error closing connection from '" + caller + "':", e);
             }
-        } catch (SQLException e) {
-            BBLogging.severe("Error closing connection from '" + caller + "':", e);
         }
+    }
+
+    /**
+     * @param doReconnect the doReconnect to set
+     */
+    public static void setShouldReconnect(boolean doReconnect) {
+        ConnectionManager.shouldReconnect = doReconnect;
+    }
+
+    /**
+     * @return the doReconnect
+     */
+    public static boolean getShouldReconnect() {
+        return shouldReconnect;
+    }
+
+    /**
+     * @param failedLink the failedLink to set
+     */
+    public static void setFailedLink(boolean failedLink) {
+        ConnectionManager.failedLink = failedLink;
+    }
+
+    /**
+     * @return the failedLink
+     */
+    public static boolean hasLinkFailed() {
+        return failedLink;
     }
 }

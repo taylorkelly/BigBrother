@@ -125,6 +125,7 @@ public class Rollback {
             PreparedStatement ps = null;
             try {
                 conn = ConnectionManager.getConnection();
+                if(conn==null) return;
                 ps = conn.prepareStatement(undoRollback);
                 ps.execute();
                 conn.commit();
@@ -159,6 +160,7 @@ public class Rollback {
             Connection conn = null;
             try {
                 conn = ConnectionManager.getConnection();
+                if(conn==null) return;
                 ps = conn.prepareStatement(RollbackPreparedStatement.create(Rollback.this, manager));
                 set = ps.executeQuery();
                 conn.commit();

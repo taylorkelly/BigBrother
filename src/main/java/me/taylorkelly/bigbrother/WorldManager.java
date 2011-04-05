@@ -73,6 +73,7 @@ public class WorldManager {
         PreparedStatement ps = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return false;
             ps = conn.prepareStatement("INSERT INTO " + BBSettings.applyPrefix(WORLD_TABLE_NAME) + " (id, name) VALUES (?,?)");
             ps.setInt(1, index);
             ps.setString(2, world);
@@ -94,15 +95,17 @@ public class WorldManager {
         ResultSet set = null;
         try {
             conn = ConnectionManager.getConnection();
-
-            statement = conn.createStatement();
-            set = statement.executeQuery("SELECT * FROM `" + BBSettings.applyPrefix(WORLD_TABLE_NAME) + "`;");
-            int size = 0;
-            while (set.next()) {
-                size++;
-                int index = set.getInt("id");
-                String name = set.getString("name");
-                ret.put(name, index);
+            if(conn!=null) { 
+                
+                statement = conn.createStatement();
+                set = statement.executeQuery("SELECT * FROM `" + BBSettings.applyPrefix(WORLD_TABLE_NAME) + "`;");
+                int size = 0;
+                while (set.next()) {
+                    size++;
+                    int index = set.getInt("id");
+                    String name = set.getString("name");
+                    ret.put(name, index);
+                }
             }
         } catch (SQLException ex) {
             BBLogging.severe("World Load Exception", ex);
@@ -119,6 +122,7 @@ public class WorldManager {
         ResultSet rs = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return false;
             DatabaseMetaData dbm = conn.getMetaData();
             rs = dbm.getTables(null, null, BBSettings.applyPrefix(WORLD_TABLE_NAME), null);
             if (!rs.next()) {
@@ -138,6 +142,7 @@ public class WorldManager {
         Statement st = null;
         try {
             conn = ConnectionManager.getConnection();
+            if(conn==null) return;
             st = conn.createStatement();
             st.executeUpdate(BBSettings.replaceWithPrefix(WORLD_TABLE_SQL,"{P}"));
             conn.commit();
