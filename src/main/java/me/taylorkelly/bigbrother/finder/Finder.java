@@ -111,7 +111,7 @@ public class Finder {
              * list; SQL statement:
              */
             if (BBSettings.usingDBMS(DBMS.H2)) {
-                ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBSettings.applyPrefix("bbdata") + " WHERE " + actionString + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY player, id ORDER BY id DESC");
+                ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBSettings.applyPrefix("bbdata") + " WHERE " + actionString + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY id,player ORDER BY id DESC");
             } else {
                 ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBSettings.applyPrefix("bbdata") + " WHERE " + actionString + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY player ORDER BY id DESC");
             }
