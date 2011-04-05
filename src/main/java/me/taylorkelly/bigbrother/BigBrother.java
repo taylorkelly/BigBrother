@@ -87,9 +87,18 @@ public class BigBrother extends JavaPlugin {
     @Override
     public void onEnable() {
         BBLogging.debug("Debug Mode enabled");
+        
         // Stuff that was in Constructor
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
+        if(version.endsWith("SNAPSHOT")) {
+            BBLogging.info("------------------------------------");
+            BBLogging.info("Hello, and thank you for using the TESTING version of BigBrother!");
+            BBLogging.info("Please note that, since this is far from complete, there will be many bugs.");
+            BBLogging.info("IF YOU FIND ANY BUGS, PLEASE REPORT THEM ON https://github.com/tkelly910/BigBrother/issues");
+            BBLogging.info("Please stay tuned in irc.esper.net #bigbrother for updates and build notifications.");
+            BBLogging.info("------------------------------------");
+        }
 
         // Initialize Settings - Needs to come pretty much first
         BBSettings.initialize(getDataFolder());
