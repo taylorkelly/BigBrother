@@ -58,11 +58,11 @@ public abstract class BBUsersTable extends DBTable {
     
     public abstract boolean importRecords();
 
-    public BBPlayerInfo getUser(String name) {
+    public BBPlayerInfo getUserByName(String name) {
         
         // Check cache first.
         if(knownNames.containsKey(name))
-            return getUser(knownNames.get(name));
+            return getUserByID(knownNames.get(name));
 
         BBPlayerInfo pi = getUserFromDB(name);
         if(pi==null) {
@@ -124,12 +124,14 @@ public abstract class BBUsersTable extends DBTable {
 
     public abstract BBPlayerInfo getUserFromDB(int id);
 
-    public BBPlayerInfo getUser(int id) {
-        if(!knownPlayers.containsKey(id))
+    public BBPlayerInfo getUserByID(int id) {
+        if(knownPlayers.containsKey(id))
             return knownPlayers.get(id);
         BBPlayerInfo pi= this.getUserFromDB(id);
-        knownPlayers.put(pi.getID(), pi);
-        knownNames.put(pi.getName(), pi.getID());
+        if(pi!=null) {
+            knownPlayers.put(pi.getID(), pi);
+            knownNames.put(pi.getName(), pi.getID());
+        }
         return pi;
     }
 }

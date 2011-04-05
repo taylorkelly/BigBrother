@@ -137,6 +137,6 @@ public abstract class BBDataBlock {
         }
     }
     public static BBDataBlock getBBDataBlock(int plyID, Action action, String world, int x, int y, int z, int type, String data) {
-        return getBBDataBlock(BBUsersTable.getInstance().getUser(plyID),action,world,x,y,z,type,data);
+        return getBBDataBlock(BBUsersTable.getInstance().getUserByID(plyID),action,world,x,y,z,type,data);
     }
 }

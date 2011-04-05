@@ -127,7 +127,7 @@ public class Finder {
 
             int size = 0;
             while (rs.next()) {
-                BBPlayerInfo player = BBUsersTable.getInstance().getUser(rs.getInt("player"));
+                BBPlayerInfo player = BBUsersTable.getInstance().getUserByID(rs.getInt("player"));
                 int mods = rs.getInt("modifications");
                 modifications.put(player, mods);
                 size++;

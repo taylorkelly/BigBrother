@@ -50,7 +50,7 @@ public class BlockHistory {
             conn.commit();
 
             while (rs.next()) {
-                BBDataBlock newBlock = BBDataBlock.getBBDataBlock(BBUsersTable.getInstance().getUser(rs.getInt("player")), Action.values()[rs.getInt("action")], rs.getString("world"), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"), rs.getInt("type"), rs.getString("data"));
+                BBDataBlock newBlock = BBDataBlock.getBBDataBlock(BBUsersTable.getInstance().getUserByID(rs.getInt("player")), Action.values()[rs.getInt("action")], rs.getString("world"), rs.getInt("x"), rs.getInt("y"), rs.getInt("z"), rs.getInt("type"), rs.getString("data"));
                 newBlock.date = rs.getLong("date");
                 blockList.add(newBlock);
             }

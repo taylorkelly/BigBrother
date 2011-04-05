@@ -50,7 +50,7 @@ public class BBBlockListener extends BlockListener {
         if (!event.isCancelled()) {
             BBLogging.debug("onBlockBreak");
             Player player = event.getPlayer();
-            BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+            BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
             if (BBSettings.blockBreak && pi.getWatched()) {
                 Block block = event.getBlock();
                 BrokenBlock dataBlock = new BrokenBlock(player.getName(), block, block.getWorld().getName());
@@ -62,7 +62,7 @@ public class BBBlockListener extends BlockListener {
     @Override
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player.getName());
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
         if (BBSettings.blockPlace && pi.getWatched() && !event.isCancelled()) {
             BBLogging.debug("onBlockPlace");
             Block block = event.getBlockPlaced();

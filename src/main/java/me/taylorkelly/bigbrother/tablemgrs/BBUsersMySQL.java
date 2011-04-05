@@ -182,7 +182,7 @@ public class BBUsersMySQL extends BBUsersTable {
                     rs=ps.executeQuery();
                     
                     while(rs.next()) {
-                        BBPlayerInfo pi = getUser(rs.getString("playerName"));
+                        BBPlayerInfo pi = getUserByName(rs.getString("playerName"));
                         
                         String desc = String.format("Player %s -> %d",pi.getName(),pi.getID());
                         BBLogging.info("Converting "+desc+"...");
