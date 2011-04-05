@@ -31,7 +31,7 @@ public class ConnectionManager {
         if(BBSettings.mysqlPersistant)
             return connection;
         else
-            return createConnection();
+            return createConnection(false);
     }
 
     public static boolean createConnection(BigBrother bb) {
@@ -63,21 +63,23 @@ public class ConnectionManager {
     }
 
     private static void initConnection() {
-        connection=createConnection();
+        connection=createConnection(true);
     }
-    private static Connection createConnection() {
+    private static Connection createConnection(boolean firstConnection) {
         try {
             BBLogging.debug("Opening connection");
             Connection conn = DriverManager.getConnection("jdbc:jdc:jdcpool");
             conn.setAutoCommit(false);
             return conn;
         } catch (SQLException e) {
-            BBLogging.severe("Error getting a connection, disabling BigBrother...", e);
-            BBLogging.severe("Make sure your database settings are correct!");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            if(firstConnection) {
+                BBLogging.severe("Error getting a connection, disabling BigBrother...", e);
+                BBLogging.severe("Make sure your database settings are correct!");
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
+                //plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
+            }
             setFailedLink(true);
-            setShouldReconnect(false); // Don't reconnect, MySQL settings are probably wrong.
-            //plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
+            setShouldReconnect(!firstConnection); // Don't reconnect, MySQL settings are probably wrong.
             return null;
         }
     }
@@ -135,5 +137,21 @@ public class ConnectionManager {
      */
     public static boolean hasLinkFailed() {
         return failedLink;
+    }
+
+    public static Connection getFirstConnection() {
+        if(failedLink) {
+            if(!shouldReconnect) {
+                return null;
+            } else {
+                if(BBSettings.mysqlPersistant)
+                    initConnection();
+            }
+        }
+        
+        if(BBSettings.mysqlPersistant)
+            return connection;
+        else
+            return createConnection(true);
     }
 }

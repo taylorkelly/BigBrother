@@ -113,7 +113,7 @@ public class BigBrother extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        Connection conn = ConnectionManager.getConnection();
+        Connection conn = ConnectionManager.getFirstConnection();
         if (conn == null) {
             BBLogging.severe("Could not establish SQL connection. Disabling BigBrother");
             getServer().getPluginManager().disablePlugin(this);
