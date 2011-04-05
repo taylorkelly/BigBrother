@@ -14,11 +14,11 @@ public class Watcher {
 	}
 
 	public boolean watching(Player player) {
-		return BBUsersTable.getInstance().getUser(player.getName()).getWatched();
+		return BBUsersTable.getInstance().getUserByName(player.getName()).getWatched();
 	}
 
 	public boolean toggleWatch(String player) {
-		BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player);
+		BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player);
 		pi.setWatched(!pi.getWatched());
 		return pi.getWatched();
 	}
@@ -45,7 +45,7 @@ public class Watcher {
 	}
 
 	public void watchPlayer(String player) {
-        BBPlayerInfo pi = BBUsersTable.getInstance().getUser(player);
+        BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player);
         pi.setWatched(true);
 	}
 
@@ -53,7 +53,7 @@ public class Watcher {
 		Player[] playerList = server.getOnlinePlayers();
         StringBuilder list = new StringBuilder();
         for (Player name : playerList) {
-            BBPlayerInfo pi = BBUsersTable.getInstance().getUser(name.getName());
+            BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(name.getName());
             if(pi.getWatched()) {
                 list.append(pi.getName());
                 list.append(", ");

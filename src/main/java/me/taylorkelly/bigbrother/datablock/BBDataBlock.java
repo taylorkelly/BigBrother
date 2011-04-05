@@ -51,7 +51,7 @@ public abstract class BBDataBlock {
 
     public BBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
         this.date = System.currentTimeMillis() / 1000;
-        this.player = BBUsersTable.getInstance().getUser(player);
+        this.player = BBUsersTable.getInstance().getUserByName(player);
         this.action = action;
         this.world = world;
         this.x = x;

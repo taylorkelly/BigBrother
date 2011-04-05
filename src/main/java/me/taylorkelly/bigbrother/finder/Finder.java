@@ -163,7 +163,7 @@ public class Finder {
 
     private static final void mysqlFind(final Plugin plugin, final String playerName, final Location location, final int radius, final WorldManager manager, final ArrayList<Player> players) {
         
-        BBPlayerInfo hunted = BBUsersTable.getInstance().getUser(playerName);
+        BBPlayerInfo hunted = BBUsersTable.getInstance().getUserByName(playerName);
         
         PreparedStatement ps = null;
         ResultSet rs = null;
