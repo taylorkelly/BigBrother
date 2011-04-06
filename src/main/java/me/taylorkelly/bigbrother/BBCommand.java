@@ -2,6 +2,7 @@ package me.taylorkelly.bigbrother;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -68,7 +69,7 @@ public class BBCommand implements CommandExecutor {
      * @return Grouped args.
      */
     private String[] groupArgs(String[] preargs) {
-        ArrayList<String> args = new ArrayList<String>();
+        List<String> args = new ArrayList<String>();
         String currentArg="";
         boolean inQuotes=false;
         for(String arg:preargs) {
@@ -87,7 +88,8 @@ public class BBCommand implements CommandExecutor {
                 }
             }
         }
-        return (String[])args.toArray();
+        String[] gargs= new String[args.size()];
+        return args.toArray(gargs);
     }
     
 }
