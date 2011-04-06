@@ -142,7 +142,9 @@ public class Finder {
                         playerList.append("), ");
                     }
                 }
-                playerList.delete(playerList.lastIndexOf(","), playerList.length());
+                if(playerList.indexOf(",")!=-1) {
+                    playerList.delete(playerList.lastIndexOf(","), playerList.length());
+                }
                 //TODO Put into sync'd runnable
                 for (Player player : players) {
                     player.sendMessage(BigBrother.premessage + size + " player(s) have modified this area:");
