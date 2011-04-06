@@ -8,6 +8,7 @@ import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
+import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 
 /**
  * Handle the user tracking table.
@@ -59,6 +60,8 @@ public abstract class BBUsersTable extends DBTable {
     public abstract boolean importRecords();
 
     public BBPlayerInfo getUserByName(String name) {
+        if(name==BBDataBlock.ENVIRONMENT)
+            return BBPlayerInfo.ENVIRONMENT;
         
         // Check cache first.
         if(knownNames.containsKey(name))
