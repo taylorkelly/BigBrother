@@ -1,5 +1,6 @@
 package me.taylorkelly.bigbrother;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.ChatColor;
@@ -24,6 +25,7 @@ public class BBCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
         String commandName = command.getName().toLowerCase();
         
+        args=groupArgs(args);
         if (sender instanceof Player) {
             if (commandName.equals("bb")) {
                 if (args.length == 0)
@@ -51,6 +53,41 @@ public class BBCommand implements CommandExecutor {
             return false;
         }
         return false;
+    }
+
+    /**
+     * A messy parser to group args together if they are surrounded by quotes.
+     * <pre>
+     * String[]{"rollback","\"A","Griefer\"","r:15"}
+     * </pre>
+     * Becomes
+     * <pre>
+     * String[]{"rollback","A Griefer","r:15"}
+     * </pre>
+     * @param preargs Arguments to group.
+     * @return Grouped args.
+     */
+    private String[] groupArgs(String[] preargs) {
+        ArrayList<String> args = new ArrayList<String>();
+        String currentArg="";
+        boolean inQuotes=false;
+        for(String arg:preargs) {
+            if(inQuotes) {
+                currentArg+=" "+arg;
+                if(arg.endsWith("\"")) {
+                    args.add(currentArg.substring(0,currentArg.length()-2));
+                    inQuotes=false;
+                }
+            } else {
+                if(arg.startsWith("\"")) {
+                    inQuotes=true;
+                    currentArg=arg.substring(1,arg.length()-1);
+                } else {
+                    args.add(arg);
+                }
+            }
+        }
+        return (String[])args.toArray();
     }
     
 }
