@@ -52,6 +52,17 @@
 			<version>1</version>
 			<type>jar</type>
 			<scope>compile</scope>
+			<exclusions>
+				<!-- Grabs a fucked version -->
+				<exclusion>
+					<artifactId>permissions</artifactId>
+					<groupId>org.bukkit</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>groupmanager</artifactId>
+					<groupId>org.anjocaido</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<!-- Grabs from 3rdparty repo -->
