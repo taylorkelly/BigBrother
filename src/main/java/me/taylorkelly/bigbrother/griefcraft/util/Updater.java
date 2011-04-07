@@ -48,8 +48,11 @@ public class Updater {
 
 			if (file != null && !file.exists() && !file.isDirectory()) {
 			    String url=UPDATE_SITE+path;
-			    if(path.equalsIgnoreCase("lib/h2.jar"))
+			    if(path.equalsIgnoreCase("lib/h2.jar")) {
 			        url="http://mine.7chan.org/mirror/lib/h2.jar"; // Temporary
+			    } else if(path.equalsIgnoreCase("lib/postgresql.jar")) {
+			    	url="http://minecraft.acechadores.com/gipsyking/lib/postgresql.jar"; // Temporary
+			    }
 				UpdaterFile updaterFile = new UpdaterFile(url);
 				updaterFile.setLocalLocation(path);
 				needsUpdating.add(updaterFile);
