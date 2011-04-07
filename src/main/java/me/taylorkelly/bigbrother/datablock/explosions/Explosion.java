@@ -6,7 +6,7 @@ import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.DeltaChest;
-import me.taylorkelly.bigbrother.datablock.DestroySignText;
+import me.taylorkelly.bigbrother.datablock.SignDestroyed;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -145,7 +145,7 @@ public abstract class Explosion extends BBDataBlock {
     protected final void signCheck(String player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(player, sign, world));
+            bystanders.add(new SignDestroyed(player, block.getTypeId(), block.getData(), sign, world));
         }
     }
 

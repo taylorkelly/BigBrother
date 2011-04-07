@@ -46,7 +46,8 @@ public abstract class BBDataBlock {
         BLOCK_BURN,
         LAVA_FLOW,
         DROP_ITEM,
-        PICKUP_ITEM
+        PICKUP_ITEM, 
+        SIGN_DESTROYED
     }
 
     public BBDataBlock(String player, Action action, String world, int x, int y, int z, int type, String data) {
@@ -132,6 +133,8 @@ public abstract class BBDataBlock {
                 return DropItem.getBBDataBlock(pi, world, x, y, z, type, data);
             case PICKUP_ITEM:
                 return PickupItem.getBBDataBlock(pi, world, x, y, z, type, data);
+            case SIGN_DESTROYED:
+                return SignDestroyed.getBBDataBlock(pi, world, x, y, z, type, data);
             default:
                 return null;
         }

@@ -3,9 +3,7 @@
  */
 package me.taylorkelly.bigbrother.tests;
 
-import static org.junit.Assert.*;
-
-import me.taylorkelly.bigbrother.BBLogging;
+import static org.junit.Assert.fail;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
