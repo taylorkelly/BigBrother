@@ -76,4 +76,10 @@ public class BBLogging {
             log.log(Level.INFO, "[BBDEBUG] " + string);
         }
     }
+
+    public static void debug(String string, Throwable e) {
+        if (BBSettings.debugMode) {
+            log.log(Level.INFO, "[BBDEBUG] " + string,e);
+        }
+    }
 }

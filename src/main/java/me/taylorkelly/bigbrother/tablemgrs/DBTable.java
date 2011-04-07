@@ -9,7 +9,6 @@ import java.sql.Statement;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
-import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 
 public abstract class DBTable {
@@ -65,10 +64,12 @@ public abstract class DBTable {
             st.executeUpdate(getCreateSyntax());
             conn.commit();
         } catch (SQLException e) {
-            // Ignore H2 being a dildo. - N3X
-            if(BBSettings.usingDBMS(DBMS.H2) && !BBSettings.debugMode)
-                return;
             BBLogging.severe("Can't create the "+getTableName()+" table", e);
+        } catch(Throwable e) {
+            if(e.getClass().getCanonicalName().startsWith("org.h2"))
+                BBLogging.debug("H2 crying about the table already existing.  You can safely ignore this message.",e);
+            else
+                BBLogging.severe("Can't create the "+getTableName()+" table", e);
         } finally {
             ConnectionManager.cleanup( "Create Table",  conn, st, null );
         }

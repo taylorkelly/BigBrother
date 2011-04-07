@@ -77,6 +77,8 @@ public class ConnectionManager {
                 BBLogging.severe("Make sure your database settings are correct!");
                 plugin.getServer().getPluginManager().disablePlugin(plugin);
                 //plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
+            } else {
+                BBLogging.severe("Connection failure...", e);
             }
             setFailedLink(true);
             setShouldReconnect(!firstConnection); // Don't reconnect, MySQL settings are probably wrong.
