@@ -5,9 +5,11 @@ package me.taylorkelly.bigbrother.tests;
 
 import static org.junit.Assert.*;
 
+import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
+import me.taylorkelly.bigbrother.griefcraft.util.Updater;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +27,9 @@ public class ConnectionManagerTest {
     public void setUp() throws Exception {
         BBSettings.databaseSystem=DBMS.H2;
         BBSettings.mysqlPersistant=true;
+        Updater updater = new Updater();
+        updater.check();
+        updater.update();
     }
     
     /**
