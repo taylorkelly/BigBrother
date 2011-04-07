@@ -119,7 +119,7 @@ public class Cleanser {
 
         @SuppressWarnings("unused")
         private void cleanByNumber() {
-            if (BBSettings.usingDBMS(DBMS.MYSQL)) {
+            if (BBSettings.usingDBMS(DBMS.MYSQL) || BBSettings.usingDBMS(DBMS.POSTGRES)) {
                 if (BBSettings.maxRecords < 0) {
                     // Fix exception caused when trying to delete -1 records.
                     BBLogging.info("Skipping; max-records is negative.");

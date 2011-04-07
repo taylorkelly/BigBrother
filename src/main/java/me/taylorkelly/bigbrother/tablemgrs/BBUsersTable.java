@@ -36,6 +36,8 @@ public abstract class BBUsersTable extends DBTable {
             BBLogging.debug("BBSettings.databaseSystem="+BBSettings.databaseSystem.toString());
             if(BBSettings.usingDBMS(DBMS.MYSQL))
                 instance=new BBUsersMySQL();
+            else if(BBSettings.usingDBMS(DBMS.POSTGRES))
+                instance=new BBUsersPostgreSQL();
             else
                 instance=new BBUsersH2();
             instance.loadCache();

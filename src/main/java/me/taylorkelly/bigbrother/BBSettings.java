@@ -177,7 +177,7 @@ public class BBSettings {
         //mysqlPersistant = yml.getBoolean("database.use-persistant-connection", mysqlPersistant);
         
 
-        if (databaseSystem == DBMS.MYSQL) {
+        if (databaseSystem == DBMS.MYSQL || databaseSystem == DBMS.POSTGRES) {
             mysqlUser = yml.getString("database.mysql.username", mysqlUser);
             mysqlPass = yml.getString("database.mysql.password", mysqlPass);
             mysqlHost = yml.getString("database.mysql.hostname", mysqlHost);
@@ -343,6 +343,8 @@ public class BBSettings {
     public static String getDSN() {
         if (usingDBMS(DBMS.MYSQL)) {
             return String.format("jdbc:mysql://%s:%d/%s", mysqlHost, mysqlPort, mysqlDatabase);
+        } else if (usingDBMS(DBMS.POSTGRES)) {
+        	return String.format("jdbc:postgresql://%s:%d/%s", mysqlHost, mysqlPort, mysqlDatabase);
         } else if (usingDBMS(DBMS.H2)) {
             return "jdbc:h2:plugins" + File.separator + "BigBrother" + File.separator + "bigbrother";
         } else {
@@ -363,7 +365,7 @@ public class BBSettings {
 
         H2, 
         MYSQL,
-        // POSTGRES,
+        POSTGRES,
     }
 
     /**
