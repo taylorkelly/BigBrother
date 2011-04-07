@@ -65,7 +65,7 @@ public class BBSettings {
     // users can specify flags via the DSN.
     public static String mysqlDSN = "jdbc:mysql://localhost:3306/minecraft";
     // Use persistant connections by default.
-    public static boolean mysqlPersistant = true;
+    public static boolean mysqlPersistant = false;
     public static int sendDelay = 4;
     public static int stickItem = 280;
     // TODO: Get long version of this
@@ -174,7 +174,7 @@ public class BBSettings {
         cleanseAge = TimeParser.parseInterval(yml.getString("database.cleanse-age", "3d"));// "The maximum age of items in the database (can be mixture of #d,h,m,s) (0s to disable)"));
         maxRecords = Long.valueOf(yml.getString("database.max-records", Long.toString(maxRecords)));// "The maximum number of records that you want in your database (-1 to disable)");
         sendDelay = yml.getInt("database.send-delay", sendDelay);// "Delay in seconds to batch send updates to database (4-5 recommended)");
-        mysqlPersistant = yml.getBoolean("database.use-persistant-connection", mysqlPersistant);
+        //mysqlPersistant = yml.getBoolean("database.use-persistant-connection", mysqlPersistant);
         
 
         if (databaseSystem == DBMS.MYSQL) {
