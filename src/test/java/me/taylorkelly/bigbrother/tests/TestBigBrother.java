@@ -22,7 +22,7 @@ public class TestBigBrother {
         dataFolder.mkdirs();
         File settingsFile =new File(dataFolder,"BigBrother.yml");
         BBSettings.initialize(dataFolder);
-        Assert.assertTrue(settingsFile.exists());
+        Assert.assertTrue("Coonfiguration didn't generate.",settingsFile.exists());
     }
     
     @Test
@@ -33,9 +33,10 @@ public class TestBigBrother {
         
         Configuration cfg = new Configuration(settingsFile);
         cfg.setProperty("database.type", "MYSQL");
+        cfg.save();
 
         BBSettings.initialize(dataFolder);
         
-        Assert.assertTrue(BBSettings.usingDBMS(DBMS.MYSQL));
+        Assert.assertTrue("Configuration didn't get saved.",BBSettings.usingDBMS(DBMS.MYSQL));
     }
 }
