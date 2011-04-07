@@ -58,7 +58,7 @@ public class DataBlockSender {
             if (conn == null) {
                 return false;
             }
-            String statementSql = BBDataTable.getInstance().getPreparedDataBlockStatement(conn);
+            String statementSql = BBDataTable.getInstance().getPreparedDataBlockStatement();
             BBLogging.debug(statementSql);
             ps = conn.prepareStatement(statementSql);
             for (BBDataBlock block : collection) {
@@ -88,6 +88,7 @@ public class DataBlockSender {
             return true;
         } catch (SQLException ex) {
             BBLogging.severe("Data Insert SQL Exception when sending blocks", ex);
+            BBLogging.severe("Possible cause of previous SQLException: ", ex.getNextException());
             return false;
         } finally {
             ConnectionManager.cleanup("Data Insert", conn, ps, rs);

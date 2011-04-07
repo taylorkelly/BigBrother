@@ -8,6 +8,7 @@ import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -41,7 +42,7 @@ public class HistoryStick extends StickMode {
 
     @Override
     public ArrayList<String> getInfoOnBlock(Block block, WorldManager manager, boolean ignored) {
-        ArrayList<BBDataBlock> history = BlockHistory.hist(block, manager);
+        ArrayList<BBDataBlock> history = BBDataTable.getInstance().getBlockHistory(block, manager);
 
         ArrayList<String> msgs = new ArrayList<String>();
         if (history.isEmpty()) {

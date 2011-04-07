@@ -1,5 +1,8 @@
 package me.taylorkelly.bigbrother.tablemgrs;
 
+import java.sql.SQLException;
+
+
 
 public class BBDataPostgreSQL extends BBDataMySQL {
     public static String getMySQLIgnore() {
@@ -42,4 +45,36 @@ public class BBDataPostgreSQL extends BBDataMySQL {
         INDEX(\"rbacked\")*/
     }
     
+    @Override
+    public String getPreparedDataBlockStatement() throws SQLException {
+    	// rbacked is truly boolean, unlike in MySQL
+        return "INSERT INTO " + getTableName()
+                + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,false)";
+    }
+    
+	@Override
+	public String getCleanseAged(Long timeAgo, long deletesPerCleansing) {
+		String cleansql = "DELETE FROM \""+getTableName()+"\" WHERE ";
+        if (deletesPerCleansing > 0) {
+        	// LIMIT on DELETE is not supported by postgresql.
+            cleansql += " id IN (SELECT id FROM \""+getTableName()+"\" WHERE date < " + timeAgo + " LIMIT " + deletesPerCleansing+")";
+        } else {
+        	cleansql += " date < " + timeAgo;
+        }
+        cleansql += ";";
+        return cleansql;
+	}
+	
+	@Override
+	public String getCleanseByLimit(Long maxRecords, long deletesPerCleansing) {
+		String cleansql = "DELETE FROM \""+getTableName()+"\" LEFT OUTER JOIN (SELECT \"id\" FROM \"bbdata\" ORDER BY \"id\" DESC LIMIT 0,"
+	    	+ maxRecords
+	    	+ ") AS \"savedValues\" ON \"savedValues.id\" = \"bbdata.id\" WHERE \"savedValues.id\" IS NULL";
+	    if (deletesPerCleansing > 0) {
+	        cleansql += " LIMIT " + deletesPerCleansing;
+	    }
+	    cleansql += ";";
+    	return cleansql;
+	}
+	
 }

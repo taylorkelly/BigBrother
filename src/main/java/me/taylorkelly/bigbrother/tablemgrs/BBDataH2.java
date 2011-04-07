@@ -49,5 +49,21 @@ public class BBDataH2 extends BBDataTable {
         + "CREATE INDEX typeIndex on bbdata (type);" 
         + "CREATE INDEX rbackedIndex on bbdata (rbacked);";
     }
+
+	@Override
+	public String getCleanseAged(Long timeAgo, long deletesPerCleansing) {
+		return "DELETE FROM `"+getTableName()+"` WHERE date < " + timeAgo + ";";
+	}
     
+	@Override
+	public String getCleanseByLimit(Long maxRecords, long deletesPerCleansing) {
+		String cleansql = "DELETE FROM `"+getTableName()+"` LEFT OUTER JOIN (SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0,"
+	    	+ maxRecords
+	    	+ ") AS `savedValues` ON `savedValues`.`id`=`bbdata`.`id` WHERE `savedValues`.`id` IS NULL";
+	    if (deletesPerCleansing > 0) {
+	        cleansql += " LIMIT " + deletesPerCleansing;
+	    }
+	    cleansql += ";";
+    	return cleansql;
+	}
 }
