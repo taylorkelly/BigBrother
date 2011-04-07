@@ -3,20 +3,16 @@ package me.taylorkelly.bigbrother;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
+import me.taylorkelly.bigbrother.tablemgrs.BBWorldsTable;
 
 public class WorldManager {
 
-    public final static String WORLD_TABLE_NAME = "bbworlds";
-    private final static String WORLD_TABLE_SQL =
-            "CREATE TABLE `{P}bbworlds` ("
-            + "`id` INTEGER PRIMARY KEY,"
-            + "`name` varchar(50) NOT NULL DEFAULT 'world');";
+
     private HashMap<String, Integer> worldMap;
 
     public WorldManager() {
@@ -24,10 +20,10 @@ public class WorldManager {
             createWorldTable();
         } else {
             if (BBSettings.debugMode) {
-                BBLogging.debug("`" + BBSettings.applyPrefix(WORLD_TABLE_NAME) + "` table already exists");
+                BBLogging.debug("`" + BBWorldsTable.getInstance().getTableName() + "` table already exists");
             }
         }
-        worldMap = loadWorlds();
+        worldMap = BBWorldsTable.getInstance().getWorlds();
     }
 
     /**
@@ -69,53 +65,10 @@ public class WorldManager {
     }
 
     private boolean saveWorld(String world, int index) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = ConnectionManager.getConnection();
-            if(conn==null) return false;
-            ps = conn.prepareStatement("INSERT INTO " + BBSettings.applyPrefix(WORLD_TABLE_NAME) + " (id, name) VALUES (?,?)");
-            ps.setInt(1, index);
-            ps.setString(2, world);
-            ps.executeUpdate();
-            conn.commit();
-            return true;
-        } catch (SQLException ex) {
-            BBLogging.severe("World Insert Exception", ex);
-            return false;
-        } finally {
-            ConnectionManager.cleanup( "World Insert",  conn, ps, null );
-        }
+    	return BBWorldsTable.getInstance().insertWorld(index, world);
+        
     }
 
-    private HashMap<String, Integer> loadWorlds() {
-        HashMap<String, Integer> ret = new HashMap<String, Integer>();
-        Connection conn = null;
-        Statement statement = null;
-        ResultSet set = null;
-        try {
-            conn = ConnectionManager.getConnection();
-            if(conn!=null) { 
-                
-                statement = conn.createStatement();
-                set = statement.executeQuery("SELECT * FROM `" + BBSettings.applyPrefix(WORLD_TABLE_NAME) + "`;");
-                int size = 0;
-                while (set.next()) {
-                    size++;
-                    int index = set.getInt("id");
-                    String name = set.getString("name");
-                    ret.put(name, index);
-                }
-            }
-        } catch (SQLException ex) {
-            BBLogging.severe("World Load Exception", ex);
-        } finally {
-            ConnectionManager.cleanup( "World Load",  conn, statement, set );
-        }
-
-        BBLogging.debug("Loaded worlds: " + ret.keySet().toString());
-        return ret;
-    }
 
     private static boolean worldTableExists() {
         Connection conn = null;
@@ -124,7 +77,7 @@ public class WorldManager {
             conn = ConnectionManager.getConnection();
             if(conn==null) return false;
             DatabaseMetaData dbm = conn.getMetaData();
-            rs = dbm.getTables(null, null, BBSettings.applyPrefix(WORLD_TABLE_NAME), null);
+            rs = dbm.getTables(null, null, BBWorldsTable.getInstance().getTableName(), null);
             if (!rs.next()) {
                 return false;
             }
@@ -144,7 +97,7 @@ public class WorldManager {
             conn = ConnectionManager.getConnection();
             if(conn==null) return;
             st = conn.createStatement();
-            st.executeUpdate(BBSettings.replaceWithPrefix(WORLD_TABLE_SQL,"{P}"));
+            st.executeUpdate(BBWorldsTable.getInstance().getCreateSyntax());
             conn.commit();
         } catch (SQLException e) {
             BBLogging.severe("Create World Table SQL Exception", e);
