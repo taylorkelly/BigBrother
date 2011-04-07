@@ -52,6 +52,17 @@
 			<version>1</version>
 			<type>jar</type>
 			<scope>compile</scope>
+			<exclusions>
+				<!-- Grabs a fucked version -->
+				<exclusion>
+					<artifactId>permissions</artifactId>
+					<groupId>org.bukkit</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>groupmanager</artifactId>
+					<groupId>org.anjocaido</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<!-- Grabs from 3rdparty repo -->
@@ -59,6 +70,13 @@
 			<artifactId>GroupManager</artifactId>
 			<version>1.0-alpha5</version>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<type>jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -105,6 +123,11 @@
 					<findbugsXmlWithMessages>true</findbugsXmlWithMessages>
 					<xmlOutput>true</xmlOutput>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.8</version>
 			</plugin>
 		</plugins>
 	</build>

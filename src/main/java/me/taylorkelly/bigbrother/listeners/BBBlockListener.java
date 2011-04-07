@@ -9,11 +9,11 @@ import me.taylorkelly.bigbrother.LavaFlowLogger;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock;
 import me.taylorkelly.bigbrother.datablock.BrokenBlock;
 import me.taylorkelly.bigbrother.datablock.CreateSignText;
-import me.taylorkelly.bigbrother.datablock.DestroySignText;
 import me.taylorkelly.bigbrother.datablock.FlintAndSteel;
 import me.taylorkelly.bigbrother.datablock.LavaFlow;
 import me.taylorkelly.bigbrother.datablock.LeafDecay;
 import me.taylorkelly.bigbrother.datablock.PlacedBlock;
+import me.taylorkelly.bigbrother.datablock.SignDestroyed;
 import me.taylorkelly.bigbrother.datablock.explosions.TNTLogger;
 import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
@@ -163,7 +163,7 @@ public class BBBlockListener extends BlockListener {
                 }
             }
             if (oldText) {
-                DestroySignText dataBlock = new DestroySignText(event.getPlayer().getName(), (Sign) event.getBlock().getState(), event.getBlock().getWorld().getName());
+                SignDestroyed dataBlock = new SignDestroyed(event.getPlayer().getName(), event.getBlock().getTypeId(), event.getBlock().getData(),(Sign) event.getBlock().getState(), event.getBlock().getWorld().getName());
                 dataBlock.send();
             }
         }

@@ -91,6 +91,7 @@ public class BigBrother extends JavaPlugin {
         // Stuff that was in Constructor
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
+        
         if(version.endsWith("SNAPSHOT")) {
             BBLogging.info("------------------------------------");
             BBLogging.info("Hello, and thank you for using the TESTING version of BigBrother!");
@@ -117,7 +118,7 @@ public class BigBrother extends JavaPlugin {
         }
 
         // Create Connection
-        if (!ConnectionManager.createConnection(this)) {
+        if (!ConnectionManager.setupConnection()) {
             BBLogging.severe("Error getting a connection, disabling BigBrother...");
             getServer().getPluginManager().disablePlugin(this);
             return;

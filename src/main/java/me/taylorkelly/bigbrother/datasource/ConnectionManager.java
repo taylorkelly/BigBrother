@@ -2,29 +2,26 @@ package me.taylorkelly.bigbrother.datasource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.ResultSet;
-import me.taylorkelly.bigbrother.BBLogging;
-import me.taylorkelly.bigbrother.BBSettings.DBMS;
-import me.taylorkelly.bigbrother.BigBrother;
 
+import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
+import me.taylorkelly.bigbrother.BBSettings.DBMS;
 
 public class ConnectionManager {
-
-    private static BigBrother plugin;
     private static boolean failedLink=false;
     private static boolean shouldReconnect=false;
     private static Connection connection; // Use one connection.
+    private static JDCConnectionDriver driver;
     
     public static Connection getConnection() {
         if(failedLink) {
             if(!shouldReconnect) {
                 return null;
             } else {
-                if(BBSettings.mysqlPersistant)
-                    initConnection();
+                reconnect();
             }
         }
         
@@ -34,16 +31,19 @@ public class ConnectionManager {
             return createConnection(false);
     }
 
-    public static boolean createConnection(BigBrother bb) {
-        plugin = bb;
+    private static void reconnect() {
+        driver.reconnect();
+        if(BBSettings.mysqlPersistant)
+            initConnection();
+    }
+
+    public static boolean setupConnection() {
         try {
             BBLogging.debug("Creating connection using " + BBSettings.databaseSystem + " at " + BBSettings.getDSN());
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
-                new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
-            } else if (BBSettings.usingDBMS(DBMS.POSTGRES)) {
-                new JDCConnectionDriver("org.postgresql.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
-            } else if(BBSettings.usingDBMS(DBMS.H2)) {
-                new JDCConnectionDriver("org.h2.Driver", BBSettings.getDSN(),"sa","");
+                driver=new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
+            } else if (BBSettings.usingDBMS(DBMS.POSTGRES)) {                new JDCConnectionDriver("org.postgresql.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);            } else if(BBSettings.usingDBMS(DBMS.H2)) {
+                driver=new JDCConnectionDriver("org.h2.Driver", BBSettings.getDSN(),"sa","");
             }
             return true;
         } catch (ClassNotFoundException e) {
@@ -75,12 +75,9 @@ public class ConnectionManager {
             return conn;
         } catch (SQLException e) {
             if(firstConnection) {
-                BBLogging.severe("Error getting a connection, disabling BigBrother...", e);
-                BBLogging.severe("Make sure your database settings are correct!");
-                plugin.getServer().getPluginManager().disablePlugin(plugin);
-                //plugin.getServer().broadcastMessage("[BBROTHER]: CONNECTION FAILURE. Please tell the ops to fix the connection and restart BigBrother.");
+                BBLogging.severe("Error getting a connection. Make sure your database settings are correct!",e);
             } else {
-                BBLogging.severe("Connection failure...", e);
+                BBLogging.severe("Connection failure, will try to reconnect is a moment...", e);
             }
             setFailedLink(true);
             setShouldReconnect(!firstConnection); // Don't reconnect, MySQL settings are probably wrong.
@@ -148,8 +145,7 @@ public class ConnectionManager {
             if(!shouldReconnect) {
                 return null;
             } else {
-                if(BBSettings.mysqlPersistant)
-                    initConnection();
+                reconnect();
             }
         }
         

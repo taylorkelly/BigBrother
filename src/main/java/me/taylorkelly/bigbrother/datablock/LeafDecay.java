@@ -138,7 +138,7 @@ public class LeafDecay extends BBDataBlock {
     private void signCheck(String player, Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(player, sign, world));
+            bystanders.add(new SignDestroyed(player, block.getTypeId(), block.getData(), sign, world));
         }
     }
 
@@ -234,7 +234,7 @@ public class LeafDecay extends BBDataBlock {
     private void signCheck(Block block) {
         if (block.getState() instanceof Sign) {
             Sign sign = (Sign) block.getState();
-            bystanders.add(new DestroySignText(ENVIRONMENT, sign, world));
+            bystanders.add(new SignDestroyed(ENVIRONMENT, block.getTypeId(), block.getData(), sign, world));
         }
     }
 
