@@ -48,7 +48,7 @@ public class DeltaChestTest {
     /**
      * Test method for {@link me.taylorkelly.bigbrother.datablock.DeltaChest#rollback(org.bukkit.Server)}.
      */
-    @Test
+    //@Test
     public void testRollback() {
         //fail("Not yet implemented");
     }
@@ -56,7 +56,7 @@ public class DeltaChestTest {
     /**
      * Test method for {@link me.taylorkelly.bigbrother.datablock.DeltaChest#redo(org.bukkit.Server)}.
      */
-    @Test
+    //@Test
     public void testRedo() {
         //fail("Not yet implemented");
     }

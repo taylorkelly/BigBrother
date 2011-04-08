@@ -71,7 +71,7 @@ public class Cleanser {
 
         @Override
         public void run() {
-            BBLogging.info("Starting Cleanser thread...");
+            //BBLogging.info("Starting Cleanser thread...");
             if (BBSettings.cleanseAge != -1) {
                 cleanByAge();
             }
@@ -79,7 +79,7 @@ public class Cleanser {
             if (BBSettings.maxRecords != -1) {
                 //cleanByNumber();
             }
-            BBLogging.info("Ending Cleanser thread...");
+            //BBLogging.info("Ending Cleanser thread...");
             done = true; // Wait for cleanup
         }
 
@@ -102,7 +102,7 @@ public class Cleanser {
 
                 String words = String.format("Cleaned out %d records because of age in %s.", cleanedSoFarAge, timespent);
                 if (player == null) {
-                    BBLogging.info(words);
+                    BBLogging.debug(words);
                 } else {
                     synchronized (player) {
                         player.sendMessage(ChatColor.BLUE + words);
