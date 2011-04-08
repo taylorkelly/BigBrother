@@ -76,7 +76,7 @@ public class BBCommand implements CommandExecutor {
             if(inQuotes) {
                 currentArg+=" "+arg;
                 if(arg.endsWith("\"")) {
-                    args.add(currentArg.substring(0,currentArg.length()-2));
+                    args.add(currentArg.substring(0,currentArg.lastIndexOf("\"")));
                     inQuotes=false;
                 }
             } else {
