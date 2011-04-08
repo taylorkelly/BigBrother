@@ -108,8 +108,7 @@ public class DeltaChest extends BBDataBlock {
         }
         
         private ItemStack parseStack(int i, String[] dchunks) {
-            ItemStack stack=new ItemStack(Integer.valueOf(dchunks[i++]));
-            stack.setTypeId(Integer.valueOf(dchunks[i++]));
+            ItemStack stack=new ItemStack(Integer.valueOf(dchunks[i]));
             stack.setAmount(Integer.valueOf(dchunks[i++]));
             stack.setDurability(Short.valueOf(dchunks[i++]));
             stack.setData(new MaterialData(Byte.valueOf(dchunks[i++])));
