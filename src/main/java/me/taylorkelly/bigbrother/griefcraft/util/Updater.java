@@ -112,11 +112,11 @@ public class Updater {
 		while(iterator.hasNext()) {
 			UpdaterFile item = iterator.next();
 			
-			logger.info(" - Downloading file : " + item.getRemoteLocation());
+			logger.info(" - Downloading file : " + item.getRemoteLocation()+" to "+item.getLocalLocation());
 
 			URL url = new URL(item.getRemoteLocation());
 			File file = new File(item.getLocalLocation());
-
+			logger.info("(Meaning "+file.getAbsolutePath()+")");
 			if (file.exists()) {
 				file.delete();
 			}
