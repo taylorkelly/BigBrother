@@ -61,7 +61,7 @@ public class DeltaChest extends BBDataBlock {
         for(int i = 0;i<chestCapacity;i++) {
             de[i] = new DeltaEntry(i);
         }
-        for(String chunk : data.split(":")) {
+        for(String chunk : data.split(";")) {
             DeltaEntry e = new DeltaEntry(chunk);
             de[e.Slot]=e;
         }
