@@ -50,6 +50,8 @@ public class Updater {
 			    String url=UPDATE_SITE+path;
 			    if(path.equalsIgnoreCase("lib/h2.jar"))
 			        url="http://mine.7chan.org/mirror/lib/h2.jar"; // Temporary
+			    if(path.equalsIgnoreCase("lib/postgresql.jar"))
+			        url="http://mine.7chan.org/mirror/lib/postgresql.jar";
 				UpdaterFile updaterFile = new UpdaterFile(url);
 				updaterFile.setLocalLocation(path);
 				needsUpdating.add(updaterFile);
