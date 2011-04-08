@@ -200,7 +200,7 @@ public class DeltaChest extends BBDataBlock {
                 default:
                     break;
                 }
-                b.append(Amount);
+                b.append((Amount==-1) ? 0 : Amount);
                 b.append(":");
                 b.append(Data);
                 b.append(":");
