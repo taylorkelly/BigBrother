@@ -216,7 +216,13 @@ public class DeltaChest extends BBDataBlock {
             b.append(":");
             b.append(a.getAmount());
             b.append(":");
-            b.append(a.getData().getData());
+            byte dat;
+            // Why do you do this
+            if(a.getData()==null)
+                dat=0;
+            else
+                dat=a.getData().getData();
+            b.append(dat);
             b.append(":");
             b.append(a.getDurability());
             return b.toString();
