@@ -49,6 +49,8 @@ public class JDCConnectionDriver implements Driver {
         if (!url.startsWith(JDCConnectionDriver.URL_PREFIX)) {
             return null;
         }
+        if(pool==null)
+            reconnect();
         return pool.getConnection();
     }
     
