@@ -67,13 +67,13 @@ public class DeltaChest extends BBDataBlock {
         }
         return de;
     }
-    protected static class DeltaEntry {
+    public static class DeltaEntry {
         public int Slot;
         public int ID=0;
         public int Amount=0;
         public short Damage=0;
         public byte Data=0;
-        private DeltaType Type=DeltaType.NO_CHANGE;
+        public DeltaType Type=DeltaType.NO_CHANGE;
         private ItemStack newStack;
         private ItemStack oldStack;
         
