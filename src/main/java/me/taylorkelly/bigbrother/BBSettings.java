@@ -176,8 +176,7 @@ public class BBSettings {
         sendDelay = yml.getInt("database.send-delay", sendDelay);// "Delay in seconds to batch send updates to database (4-5 recommended)");
         //mysqlPersistant = yml.getBoolean("database.use-persistant-connection", mysqlPersistant);
         
-
-        if (databaseSystem == DBMS.MYSQL) {
+        // MySQL crap
             mysqlUser = yml.getString("database.mysql.username", mysqlUser);
             mysqlPass = yml.getString("database.mysql.password", mysqlPass);
             mysqlHost = yml.getString("database.mysql.hostname", mysqlHost);
@@ -186,9 +185,7 @@ public class BBSettings {
             mysqlEngine = yml.getString("database.mysql.engine", mysqlEngine);
             mysqlPrefix = yml.getString("database.mysql.prefix", mysqlPrefix);
             mysqlLowPrioInserts = yml.getBoolean("database.mysql.low-priority-insert", mysqlLowPrioInserts);
-        } else if (databaseSystem == DBMS.H2) {
-            // SQLite stuff here
-        }
+       //H2 Crap
     }
 
     private static void setDBMS(String name) {
