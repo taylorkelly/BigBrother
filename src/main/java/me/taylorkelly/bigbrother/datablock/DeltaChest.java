@@ -128,7 +128,11 @@ public class DeltaChest extends BBDataBlock {
                 ID=latest.getTypeId();
                 Amount=latest.getAmount();
                 Damage=latest.getDurability();
-                Data=latest.getData().getData();
+                // Why do you do this
+                if(orig.getData()==null)
+                    Data=0;
+                else
+                    Data=orig.getData().getData();
             } else {
                 ID=orig.getTypeId();
                 Damage=orig.getDurability();
