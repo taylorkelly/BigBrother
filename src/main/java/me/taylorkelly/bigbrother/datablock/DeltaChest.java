@@ -143,9 +143,9 @@ public class DeltaChest extends BBDataBlock {
                 Amount=orig.getAmount()-latest.getAmount();
                 if(Amount==0)
                     Type=DeltaType.NO_CHANGE;
-                else if(Amount<0)
-                    Type=DeltaType.REMOVED;
                 else if(Amount>0)
+                    Type=DeltaType.REMOVED;
+                else if(Amount<0)
                     Type=DeltaType.ADDED;
             }
         }

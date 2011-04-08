@@ -36,11 +36,11 @@ public class DeltaChestTest {
                 new ItemStack(0)      // no change
         };
         DeltaChest.DeltaEntry[] de = DeltaChest.processDeltaStream(5, DeltaChest.getInventoryDelta(stackOrig, stackNew));
-        assertEquals("Slot 1 (Added 1)",de[0].Type,DeltaType.ADDED);
-        assertEquals("Slot 2 (Removed 1)",de[1].Type,DeltaType.REMOVED);
-        assertEquals("Slot 3 (Replaced)",de[2].Type,DeltaType.REPLACED);
-        assertEquals("Slot 4 (No change)",de[3].Type,DeltaType.NO_CHANGE);
-        assertEquals("Slot 5 (air slot, NC)",de[4].Type,DeltaType.NO_CHANGE);
+        assertEquals("Slot 1 (Added 1)",DeltaType.ADDED,de[0].Type);
+        assertEquals("Slot 2 (Removed 1)",DeltaType.REMOVED,de[1].Type);
+        assertEquals("Slot 3 (Replaced)",DeltaType.REPLACED,de[2].Type);
+        assertEquals("Slot 4 (No change)",DeltaType.NO_CHANGE,de[3].Type);
+        assertEquals("Slot 5 (air slot, NC)",DeltaType.NO_CHANGE,de[4].Type);
     }
     
 
