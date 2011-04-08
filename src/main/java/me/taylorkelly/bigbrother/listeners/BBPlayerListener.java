@@ -14,7 +14,6 @@ import me.taylorkelly.bigbrother.datablock.ButtonPress;
 import me.taylorkelly.bigbrother.datablock.Chat;
 import me.taylorkelly.bigbrother.datablock.ChestOpen;
 import me.taylorkelly.bigbrother.datablock.Command;
-import me.taylorkelly.bigbrother.datablock.DeltaChest;
 import me.taylorkelly.bigbrother.datablock.Disconnect;
 import me.taylorkelly.bigbrother.datablock.DoorOpen;
 import me.taylorkelly.bigbrother.datablock.DropItem;
@@ -41,7 +40,6 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class BBPlayerListener extends PlayerListener {
     
@@ -56,6 +54,7 @@ public class BBPlayerListener extends PlayerListener {
         //plugin.processPsuedotick();
         Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.commands && pi.getWatched()) {
             Command dataBlock = new Command(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
@@ -95,6 +94,7 @@ public class BBPlayerListener extends PlayerListener {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.disconnect && pi.getWatched()) {
             Disconnect dataBlock = new Disconnect(player.getName(), player.getLocation(), player.getWorld().getName());
             dataBlock.send();
@@ -109,6 +109,7 @@ public class BBPlayerListener extends PlayerListener {
         
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.teleport && pi.getWatched() && distance(from, to) > 5 && !event.isCancelled()) {
             Teleport dataBlock = new Teleport(player.getName(), event.getTo());
             dataBlock.send();
@@ -120,6 +121,7 @@ public class BBPlayerListener extends PlayerListener {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.chat && pi.getWatched()) {
             Chat dataBlock = new Chat(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
@@ -130,6 +132,7 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.pickupItem && pi.getWatched()) {
             PickupItem dataBlock = new PickupItem(player.getName(), event.getItem(), event.getItem().getWorld().getName());
             dataBlock.send();
@@ -140,6 +143,7 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.dropItem && pi.getWatched()) {
             DropItem dataBlock = new DropItem(player.getName(), event.getItemDrop(), event.getItemDrop().getWorld().getName());
             dataBlock.send();
@@ -199,7 +203,7 @@ public class BBPlayerListener extends PlayerListener {
                 World world;
                 Block block = event.getClickedBlock();
                 
-                closeChestIfOpen(pi);
+                plugin.closeChestIfOpen(pi);
                 if(block.getState() instanceof Chest) {
                     Chest chest = ((Chest)block.getState());
                     // OH SHI-
@@ -315,24 +319,6 @@ public class BBPlayerListener extends PlayerListener {
                     break;
                 }
             }
-        }
-    }
-    
-    
-    private void closeChestIfOpen(BBPlayerInfo pi) {
-        if(pi.hasOpenedChest()) {
-            World world = pi.getOpenedChest().getWorld();
-            int x = pi.getOpenedChest().getX();
-            int y = pi.getOpenedChest().getY();
-            int z = pi.getOpenedChest().getZ();
-            if(world.getBlockAt(x, y, z).getState() instanceof Chest) {
-                Chest chest = (Chest)world.getBlockAt(x, y, z).getState();
-                ItemStack[] orig = pi.getOldChestContents();
-                ItemStack[] latest = chest.getInventory().getContents();
-                DeltaChest dc = new DeltaChest(pi.getName(), chest, orig, latest);
-                dc.send();
-            }
-            BBUsersTable.getInstance().userOpenedChest(pi.getName(), null, null); // Chest closed.
         }
     }
 
