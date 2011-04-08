@@ -81,10 +81,10 @@ public class DeltaChest extends BBDataBlock {
             Slot=slot;
         }
         public DeltaEntry(String chunk) {
-            String[] schunks = chunk.split("=");
-            String[] dchunks=schunks[0].split(":");
+            String[] dchunks=chunk.split(":");
             Slot=Integer.valueOf(dchunks[0]);
             if(chunk.contains("=")) {
+                String[] schunks = chunk.split("=");
                 oldStack=parseStack(1,schunks[0].split(":"));
                 newStack=parseStack(0,schunks[1].split(":"));
                 ID=newStack.getTypeId();
