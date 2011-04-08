@@ -30,6 +30,8 @@ public abstract class BBDataTable extends DBTable {
             //BBLogging.info("BBSettings.databaseSystem="+BBSettings.databaseSystem.toString());
             if(BBSettings.usingDBMS(DBMS.MYSQL))
                 instance=new BBDataMySQL();
+            else if(BBSettings.usingDBMS(DBMS.POSTGRES))
+                instance=new BBDataPostgreSQL();
             else
                 instance=new BBDataH2();
         }

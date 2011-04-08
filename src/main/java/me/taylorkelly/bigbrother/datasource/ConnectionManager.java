@@ -42,6 +42,8 @@ public class ConnectionManager {
             BBLogging.debug("Creating connection using " + BBSettings.databaseSystem + " at " + BBSettings.getDSN());
             if (BBSettings.usingDBMS(DBMS.MYSQL)) {
                 driver=new JDCConnectionDriver("com.mysql.jdbc.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
+            } else if (BBSettings.usingDBMS(DBMS.POSTGRES)) {
+                driver=new JDCConnectionDriver("org.postgresql.Driver", BBSettings.getDSN(), BBSettings.mysqlUser, BBSettings.mysqlPass);
             } else if(BBSettings.usingDBMS(DBMS.H2)) {
                 driver=new JDCConnectionDriver("org.h2.Driver", BBSettings.getDSN(),"sa","");
             }

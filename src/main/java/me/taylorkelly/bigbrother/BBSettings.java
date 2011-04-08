@@ -176,7 +176,7 @@ public class BBSettings {
         sendDelay = yml.getInt("database.send-delay", sendDelay);// "Delay in seconds to batch send updates to database (4-5 recommended)");
         //mysqlPersistant = yml.getBoolean("database.use-persistant-connection", mysqlPersistant);
         
-        // MySQL crap
+        // MySQL/Postgres crap
             mysqlUser = yml.getString("database.mysql.username", mysqlUser);
             mysqlPass = yml.getString("database.mysql.password", mysqlPass);
             mysqlHost = yml.getString("database.mysql.hostname", mysqlHost);
@@ -340,6 +340,8 @@ public class BBSettings {
     public static String getDSN() {
         if (usingDBMS(DBMS.MYSQL)) {
             return String.format("jdbc:mysql://%s:%d/%s", mysqlHost, mysqlPort, mysqlDatabase);
+        } else if (usingDBMS(DBMS.POSTGRES)) {
+        	return String.format("jdbc:postgresql://%s:%d/%s", mysqlHost, mysqlPort, mysqlDatabase);
         } else if (usingDBMS(DBMS.H2)) {
             return "jdbc:h2:plugins" + File.separator + "BigBrother" + File.separator + "bigbrother";
         } else {
@@ -360,7 +362,7 @@ public class BBSettings {
 
         H2, 
         MYSQL,
-        // POSTGRES,
+        POSTGRES,
     }
 
     /**

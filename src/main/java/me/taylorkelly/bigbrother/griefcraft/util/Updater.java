@@ -40,7 +40,8 @@ public class Updater {
 	}
 
 	public void check() {
-		String[] paths = new String[] { "lib/h2.jar", "lib/" + getOSSpecificFileName(), "lib/mysql.jar" };
+		String[] paths = new String[] { "lib/h2.jar", "lib/" + getOSSpecificFileName(), "lib/mysql.jar",
+				"lib/postgresql.jar" };
 
 		for (String path : paths) {
 			File file = new File(path);
