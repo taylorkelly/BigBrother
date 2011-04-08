@@ -74,6 +74,7 @@ public class BBCommand implements CommandExecutor {
         boolean inQuotes=false;
         for(String arg:preargs) {
             if(inQuotes) {
+                BBLogging.info(arg);
                 currentArg+=" "+arg;
                 if(arg.endsWith("\"")) {
                     args.add(currentArg.substring(0,currentArg.lastIndexOf("\"")));
@@ -82,6 +83,7 @@ public class BBCommand implements CommandExecutor {
             } else {
                 if(arg.startsWith("\"")) {
                     inQuotes=true;
+                    BBLogging.info(arg);
                     currentArg=arg.substring(1,arg.length()-1);
                 } else {
                     args.add(arg);
