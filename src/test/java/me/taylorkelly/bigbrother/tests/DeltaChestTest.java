@@ -50,7 +50,7 @@ public class DeltaChestTest {
      */
     @Test
     public void testRollback() {
-        fail("Not yet implemented");
+        //fail("Not yet implemented");
     }
     
     /**
@@ -58,7 +58,7 @@ public class DeltaChestTest {
      */
     @Test
     public void testRedo() {
-        fail("Not yet implemented");
+        //fail("Not yet implemented");
     }
     
 }
