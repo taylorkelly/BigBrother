@@ -2,7 +2,9 @@ package me.taylorkelly.bigbrother.tablemgrs;
 
 import java.util.Hashtable;
 
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
@@ -136,5 +138,10 @@ public abstract class BBUsersTable extends DBTable {
             knownNames.put(pi.getName(), pi.getID());
         }
         return pi;
+    }
+    public void userOpenedChest(String player, Chest c, ItemStack[] contents) {
+        BBPlayerInfo pi = getUserByName(player);
+        pi.setHasOpenedChest(c,contents);
+        knownPlayers.put(pi.getID(),pi);
     }
 }

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.BBSettings;
-import org.bukkit.Material;
+import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
-import org.bukkit.inventory.ItemStack;
 
 public class BrokenBlock extends BBDataBlock {
 
@@ -37,23 +37,8 @@ public class BrokenBlock extends BBDataBlock {
     private void chestCheck(String player, Block block) {
         if (block.getState() instanceof Chest) {
             Chest chest = (Chest) block.getState();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < chest.getInventory().getSize(); i++) {
-                ItemStack stack = chest.getInventory().getItem(i);
-                if (stack != null && stack.getAmount() != 0) {
-                    builder.append(stack.getTypeId());
-                    if (stack.getData() != null && stack.getData().getData() != 0) {
-                        builder.append(":");
-                        builder.append(stack.getData().getData());
-                    }
-                    builder.append(",");
-                    builder.append("-").append(stack.getAmount());
-                }
-                if (i + 1 < chest.getInventory().getSize()) {
-                    builder.append(";");
-                }
-            }
-            bystanders.add(new DeltaChest(player, chest, builder.toString(), world));
+            BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player);
+            bystanders.add(new DeltaChest(player, chest, pi.getOldChestContents(), chest.getInventory().getContents()));
         }
     }
 
