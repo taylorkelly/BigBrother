@@ -155,8 +155,10 @@ public class DeltaChest extends BBDataBlock {
         }
 
         private ItemStack fixStack(ItemStack stack) {
-            if(stack==null)
+            if(stack==null) {
                 stack = new ItemStack(0);
+                stack.setData(new MaterialData(0));
+            }
             
             // If air, data, durability, and damage are always 0.
             if(stack.getType().equals(Material.AIR))
