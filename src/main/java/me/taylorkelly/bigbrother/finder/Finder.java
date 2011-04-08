@@ -125,12 +125,10 @@ public class Finder {
             rs = ps.executeQuery();
             conn.commit();
 
-            int size = 0;
             while (rs.next()) {
                 BBPlayerInfo player = BBUsersTable.getInstance().getUserByID(rs.getInt("player"));
                 int mods = rs.getInt("modifications");
                 modifications.put(player, mods);
-                size++;
             }
             if (size > 0) {
                 StringBuilder playerList = new StringBuilder();
@@ -147,7 +145,7 @@ public class Finder {
                 }
                 //TODO Put into sync'd runnable
                 for (Player player : players) {
-                    player.sendMessage(BigBrother.premessage + size + " player(s) have modified this area:");
+                    player.sendMessage(BigBrother.premessage + playerList.length() + " player(s) have modified this area:");
                     player.sendMessage(playerList.toString());
                 }
             } else {
