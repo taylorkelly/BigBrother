@@ -64,7 +64,7 @@ public abstract class BBUsersTable extends DBTable {
     public abstract boolean importRecords();
 
     public BBPlayerInfo getUserByName(String name) {
-        if(name==BBDataBlock.ENVIRONMENT)
+        if(name.equalsIgnoreCase(BBDataBlock.ENVIRONMENT))
             return BBPlayerInfo.ENVIRONMENT;
         
         // Check cache first.
