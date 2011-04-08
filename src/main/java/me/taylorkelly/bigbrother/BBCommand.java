@@ -68,7 +68,7 @@ public class BBCommand implements CommandExecutor {
      * @param preargs Arguments to group.
      * @return Grouped args.
      */
-    private String[] groupArgs(String[] preargs) {
+    public static String[] groupArgs(String[] preargs) {
         List<String> args = new ArrayList<String>();
         String currentArg="";
         boolean inQuotes=false;
