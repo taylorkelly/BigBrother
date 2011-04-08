@@ -4,6 +4,9 @@
 package me.taylorkelly.bigbrother.tests;
 
 import static org.junit.Assert.fail;
+
+import java.io.File;
+
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -23,6 +26,7 @@ public class ConnectionManagerTest {
      */
     @Before
     public void setUp() throws Exception {
+        BBSettings.initialize(new File("."));
         BBSettings.databaseSystem=DBMS.H2;
         BBSettings.mysqlPersistant=true;
         Updater updater = new Updater();
@@ -36,7 +40,7 @@ public class ConnectionManagerTest {
     @Test
     public void testGetConnection() {
         createConnection();
-        if(ConnectionManager.getConnection()==null) {
+        if(ConnectionManager.getFirstConnection()==null) {
             fail("Connection is null");
         }
     }
