@@ -4,6 +4,7 @@ import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
 
 public class Teleport extends BBDataBlock {
 	public Teleport(String player, Location to) {
@@ -18,6 +19,6 @@ public class Teleport extends BBDataBlock {
 		super(player, Action.TELEPORT, world, x, y, z, type, data);
 	}
 
-	public void rollback(Server server) {}
+	public void rollback(World wld) {}
 	public void redo(Server server) {}
 }

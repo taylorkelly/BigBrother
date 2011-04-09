@@ -5,6 +5,7 @@ import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class Login extends BBDataBlock {
@@ -21,7 +22,7 @@ public class Login extends BBDataBlock {
 		super(player, Action.LOGIN, world, x, y, z, type, data);
 	}
 
-	public void rollback(Server server) {}
+	public void rollback(World wld) {}
 	public void redo(Server server) {}
 
 }

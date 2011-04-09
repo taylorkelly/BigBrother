@@ -24,7 +24,7 @@ public class ConnectionManagerTest {
     /**
      * @throws java.lang.Exception
      */
-    //@Before
+    @Before
     public void setUp() throws Exception {
         BBSettings.initialize(new File("."));
         BBSettings.databaseSystem=DBMS.H2;
@@ -37,7 +37,7 @@ public class ConnectionManagerTest {
     /**
      * Test method for {@link me.taylorkelly.bigbrother.datasource.ConnectionManager#getConnection()}.
      */
-    //@Test
+    @Test
     public void testGetConnection() {
         createConnection();
         if(ConnectionManager.getFirstConnection()==null) {

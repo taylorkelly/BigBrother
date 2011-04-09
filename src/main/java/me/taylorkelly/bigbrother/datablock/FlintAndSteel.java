@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class FlintAndSteel extends BBDataBlock {
@@ -15,7 +16,7 @@ public class FlintAndSteel extends BBDataBlock {
         super(player, Action.FLINT_AND_STEEL, world, x, y, z, type, data);
     }
 
-    public void rollback(Server server) {
+    public void rollback(World wld) {
     }
 
     public void redo(Server server) {

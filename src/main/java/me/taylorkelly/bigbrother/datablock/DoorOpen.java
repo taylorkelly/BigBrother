@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class DoorOpen extends BBDataBlock {
@@ -11,7 +12,7 @@ public class DoorOpen extends BBDataBlock {
         super(player, Action.DOOR_OPEN, world, door.getX(), door.getY(), door.getZ(), 324, door.getData() + "");
     }
 
-    public void rollback(Server server) {
+    public void rollback(World wld) {
     }
 
     public void redo(Server server) {

@@ -4,11 +4,16 @@
 package me.taylorkelly.bigbrother.tests;
 
 import static org.junit.Assert.*;
-
+import me.taylorkelly.bigbrother.BBPlayerInfo;
 import me.taylorkelly.bigbrother.datablock.DeltaChest;
 import me.taylorkelly.bigbrother.datablock.DeltaChest.DeltaType;
 
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -16,6 +21,15 @@ import org.junit.Test;
  *
  */
 public class DeltaChestTest {
+    private World world;
+    private ItemStack[] stateA;
+    private BBPlayerInfo douchebag;
+
+    @Before
+    public void setUp() {
+        this.world = TestUtils.createSimpleWorld();
+    }
+    
     @Test
     public void testDelta() {
         ItemStack[] stackOrig,stackNew;
@@ -48,9 +62,41 @@ public class DeltaChestTest {
     /**
      * Test method for {@link me.taylorkelly.bigbrother.datablock.DeltaChest#rollback(org.bukkit.Server)}.
      */
-    //@Test
+    @Test
     public void testRollback() {
-        //fail("Not yet implemented");
+        // Create chest
+        Block blockA = world.getBlockAt(0,0,0);
+        blockA.setTypeId(Material.CHEST.getId());
+        Chest c = (Chest)blockA.getState();
+        
+        // Clear any leftovers
+        c.getInventory().clear();
+        
+        // Add 64 gold ingots.
+        c.getInventory().addItem(new ItemStack(Material.GOLD_INGOT.getId(),64));
+        stateA=c.getInventory().getContents();
+        
+        //Create fake player.
+        douchebag = new BBPlayerInfo(1, "Douchebag", 1); // ID #1: Douchebag (Watched)
+        
+        // Simulate player stealing gold.
+        douchebag.setHasOpenedChest(c, stateA);
+        c.getInventory().clear();
+        
+        // Record theft
+        World world = douchebag.getOpenedChest().getWorld();
+        int x = douchebag.getOpenedChest().getX();
+        int y = douchebag.getOpenedChest().getY();
+        int z = douchebag.getOpenedChest().getZ();
+        Chest chest = (Chest)world.getBlockAt(x, y, z).getState();
+        ItemStack[] orig = douchebag.getOldChestContents();
+        ItemStack[] latest = chest.getInventory().getContents();
+        DeltaChest dc = new DeltaChest(douchebag.getName(), chest, orig, latest);
+        //dc.send();
+        
+        dc.rollback(world);
+        
+        assertArrayEquals("Rollback failed",stateA,c.getInventory().getContents());
     }
     
     /**
@@ -58,7 +104,7 @@ public class DeltaChestTest {
      */
     //@Test
     public void testRedo() {
-        //fail("Not yet implemented");
+        fail("Not yet implemented");
     }
     
 }

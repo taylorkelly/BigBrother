@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class Command extends BBDataBlock {
@@ -11,7 +12,7 @@ public class Command extends BBDataBlock {
 		super(player.getName(), Action.COMMAND, world, player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ(), 0, command);
 	}
 
-	public void rollback(Server server) {}
+	public void rollback(World wld) {}
 	public void redo(Server server) {}
 
 

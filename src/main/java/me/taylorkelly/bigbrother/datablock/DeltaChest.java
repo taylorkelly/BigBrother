@@ -229,19 +229,19 @@ public class DeltaChest extends BBDataBlock {
     }
 
     @Override
-    public void rollback(Server server) {
-        World currWorld = server.getWorld(world);
+    public void rollback(World wld) {
+        World currWorld = wld;
         if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
             currWorld.loadChunk(x >> 4, z >> 4);
         }
         Block block = currWorld.getBlockAt(x, y, z);
         if(data.startsWith("{")) { // Check for new marker!
-            do_NewRollback(server,currWorld,block);
+            do_NewRollback(currWorld,block);
         } else {
-            do_OldRollback(server,currWorld,block);
+            do_OldRollback(currWorld,block);
         }
     }
-    private void do_NewRollback(Server server, World currWorld, Block block) {
+    private void do_NewRollback(World currWorld, Block block) {
         if (block.getState() instanceof Chest) {
             Chest chest = (Chest) block.getState();
             DeltaEntry[] diff = processDeltaStream(chest.getInventory().getSize(),data);
@@ -265,7 +265,7 @@ public class DeltaChest extends BBDataBlock {
         }
     }
 
-    public void do_OldRollback(Server server, World currWorld,Block block) {
+    public void do_OldRollback(World currWorld,Block block) {
         String[] changes = data.split(";");
         if (block.getState() instanceof Chest) {
             Chest chest = (Chest) block.getState();
