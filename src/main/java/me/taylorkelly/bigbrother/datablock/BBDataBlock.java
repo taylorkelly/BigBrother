@@ -8,6 +8,7 @@ import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 
 public abstract class BBDataBlock {
 
@@ -77,7 +78,7 @@ public abstract class BBDataBlock {
         DataBlockSender.offer(this);
     }
 
-    public abstract void rollback(Server server);
+    public abstract void rollback(World world);
 
     public abstract void redo(Server server);
 

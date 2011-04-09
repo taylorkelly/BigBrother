@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class ButtonPress extends BBDataBlock {
@@ -11,7 +12,7 @@ public class ButtonPress extends BBDataBlock {
 		super(player, Action.BUTTON_PRESS, world, button.getX(), button.getY(), button.getZ(), 77, Byte.toString(button.getData()));
 	}
 
-	public void rollback(Server server) {}
+	public void rollback(World wld) {}
 	public void redo(Server server) {}
 
 	public static BBDataBlock getBBDataBlock(BBPlayerInfo pi, String world, int x, int y, int z, int type, String data) {

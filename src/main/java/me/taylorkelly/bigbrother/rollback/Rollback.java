@@ -234,7 +234,7 @@ public class Rollback {
                 if (dataBlock != null) {
                     lastRollback.addFirst(dataBlock);
                     try {
-                        dataBlock.rollback(server);
+                        dataBlock.rollback(server.getWorld(dataBlock.world));
                     } catch (Exception e) {
                         BBLogging.warning("Caught exception when rolling back a " + dataBlock.action);
                     }

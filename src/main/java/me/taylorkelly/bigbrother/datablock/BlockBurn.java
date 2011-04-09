@@ -40,9 +40,9 @@ public class BlockBurn extends BBDataBlock {
         super.send();
     }
 
-    public void rollback(Server server) {
+    public void rollback(World wld) {
         if (type != 51 || BBSettings.restoreFire) {
-            World currWorld = server.getWorld(world);
+            World currWorld = wld;//server.getWorld(world);
             if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
                 currWorld.loadChunk(x >> 4, z >> 4);
             }

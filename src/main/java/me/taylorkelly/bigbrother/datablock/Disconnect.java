@@ -4,6 +4,7 @@ import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
 
 public class Disconnect extends BBDataBlock {
 	public Disconnect(String player, Location location, String world) {
@@ -18,7 +19,7 @@ public class Disconnect extends BBDataBlock {
 		super(player, Action.DISCONNECT, world, x, y, z, type, data);
 	}
 
-	public void rollback(Server server) {}
+	public void rollback(World wld) {}
 	public void redo(Server server) {}
 
 }

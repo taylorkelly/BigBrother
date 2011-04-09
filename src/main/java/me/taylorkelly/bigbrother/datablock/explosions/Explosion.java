@@ -40,29 +40,15 @@ public abstract class Explosion extends BBDataBlock {
     private void chestCheck(String player, Block block) {
         if (block.getState() instanceof Chest) {
             Chest chest = (Chest) block.getState();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < chest.getInventory().getSize(); i++) {
-                ItemStack stack = chest.getInventory().getItem(i);
-                if (stack != null && stack.getAmount() != 0) {
-                    builder.append(stack.getTypeId());
-                    if (stack.getData() != null && stack.getData().getData() != 0) {
-                        builder.append(":");
-                        builder.append(stack.getData().getData());
-                    }
-                    builder.append(",");
-                    builder.append("-").append(stack.getAmount());
-                }
-                if (i + 1 < chest.getInventory().getSize()) {
-                    builder.append(";");
-                }
-            }
-            bystanders.add(new DeltaChest(player, chest, builder.toString(), world));
+            ItemStack[] destroyedStack=new ItemStack[chest.getInventory().getSize()];
+            ItemStack[] contents = chest.getInventory().getContents();
+            bystanders.add(new DeltaChest(player, chest, contents,destroyedStack));
         }
     }
 
-    public void rollback(Server server) {
+    public void rollback(World wld) {
         if (type != 51 || BBSettings.restoreFire) {
-            World currWorld = server.getWorld(world);
+            World currWorld = wld;//server.getWorld(world);
             if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
                 currWorld.loadChunk(x >> 4, z >> 4);
             }

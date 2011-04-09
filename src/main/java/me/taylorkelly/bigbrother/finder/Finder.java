@@ -147,7 +147,7 @@ public class Finder {
                 }
                 //TODO Put into sync'd runnable
                 for (Player player : players) {
-                    player.sendMessage(BigBrother.premessage + size + " player(s) have modified this area:");
+                    player.sendMessage(BigBrother.premessage + playerList.length() + " player(s) have modified this area:");
                     player.sendMessage(playerList.toString());
                 }
             } else {

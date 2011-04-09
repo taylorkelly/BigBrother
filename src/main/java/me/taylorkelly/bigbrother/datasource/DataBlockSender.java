@@ -158,7 +158,7 @@ public class DataBlockSender {
             case DELTA_CHEST:
                 return "changed chest";
             case COMMAND:
-                return "command";
+                return "exec'd command";
             case CHAT:
                 return "chat";
             case DISCONNECT:
@@ -172,15 +172,15 @@ public class DataBlockSender {
             case LEVER_SWITCH:
                 return "lever";
             case CREATE_SIGN_TEXT:
-                return "created sign text";
+                return "set sign text";
             case LEAF_DECAY:
-                return "decayed leafe";
+                return "decayed leaf";
             case FLINT_AND_STEEL:
-                return "flint'd";
+                return "ignited";
             case TNT_EXPLOSION:
-                return "TNT-exploded";
+                return "detonated TNT";
             case CREEPER_EXPLOSION:
-                return "Creeper-exploded";
+                return "Creeper'd";
             case MISC_EXPLOSION:
                 return "Misc-exploded";
             case OPEN_CHEST:
@@ -192,7 +192,9 @@ public class DataBlockSender {
             case DROP_ITEM:
                 return "dropped item";
             case PICKUP_ITEM:
-                return "pickedup item";
+                return "picked up item";
+            case SIGN_DESTROYED:
+                return "broke a sign";
             default:
                 return action.name();
         }

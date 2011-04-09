@@ -34,7 +34,10 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public class BBBlockListener extends BlockListener {
 
+    private BigBrother plugin;
+
     public BBBlockListener(BigBrother plugin) {
+        this.plugin=plugin;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class BBBlockListener extends BlockListener {
             BBLogging.debug("onBlockBreak");
             Player player = event.getPlayer();
             BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+            plugin.closeChestIfOpen(pi);
             if (BBSettings.blockBreak && pi.getWatched()) {
                 Block block = event.getBlock();
                 BrokenBlock dataBlock = new BrokenBlock(player.getName(), block, block.getWorld().getName());
@@ -63,6 +67,7 @@ public class BBBlockListener extends BlockListener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.blockPlace && pi.getWatched() && !event.isCancelled()) {
             BBLogging.debug("onBlockPlace");
             Block block = event.getBlockPlaced();

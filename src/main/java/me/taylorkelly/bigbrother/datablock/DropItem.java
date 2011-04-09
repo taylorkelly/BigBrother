@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Item;
 
 public class DropItem extends BBDataBlock {
@@ -11,7 +12,7 @@ public class DropItem extends BBDataBlock {
         super(player, Action.DROP_ITEM, world, item.getLocation().getBlockX(), item.getLocation().getBlockY(), item.getLocation().getBlockZ(), item.getItemStack().getTypeId(), item.getItemStack().getAmount() + ";" + item.getItemStack().getData().getData() + ";" + item.getItemStack().getDurability());
     }
 
-    public void rollback(Server server) {
+    public void rollback(World wld) {
     }
 
     public void redo(Server server) {

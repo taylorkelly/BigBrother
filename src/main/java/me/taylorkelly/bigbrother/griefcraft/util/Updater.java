@@ -48,11 +48,10 @@ public class Updater {
 
 			if (file != null && !file.exists() && !file.isDirectory()) {
 			    String url=UPDATE_SITE+path;
-			    if(path.equalsIgnoreCase("lib/h2.jar")) {
+			    if(path.equalsIgnoreCase("lib/h2.jar"))
 			        url="http://mine.7chan.org/mirror/lib/h2.jar"; // Temporary
-			    } else if(path.equalsIgnoreCase("lib/postgresql.jar")) {
-			    	url="http://minecraft.acechadores.com/gipsyking/lib/postgresql.jar"; // Temporary
-			    }
+			    if(path.equalsIgnoreCase("lib/postgresql.jar"))
+			        url="http://mine.7chan.org/mirror/lib/postgresql.jar";
 				UpdaterFile updaterFile = new UpdaterFile(url);
 				updaterFile.setLocalLocation(path);
 				needsUpdating.add(updaterFile);
@@ -113,11 +112,11 @@ public class Updater {
 		while(iterator.hasNext()) {
 			UpdaterFile item = iterator.next();
 			
-			logger.info(" - Downloading file : " + item.getRemoteLocation());
+			logger.info(" - Downloading file : " + item.getRemoteLocation()+" to "+item.getLocalLocation());
 
 			URL url = new URL(item.getRemoteLocation());
 			File file = new File(item.getLocalLocation());
-
+			logger.info("(Meaning "+file.getAbsolutePath()+")");
 			if (file.exists()) {
 				file.delete();
 			}

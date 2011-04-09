@@ -3,6 +3,7 @@ package me.taylorkelly.bigbrother.datablock;
 import me.taylorkelly.bigbrother.BBPlayerInfo;
 
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class LeverSwitch extends BBDataBlock {
@@ -11,7 +12,7 @@ public class LeverSwitch extends BBDataBlock {
 		super(player, Action.LEVER_SWITCH, world, lever.getX(), lever.getY(), lever.getZ(), 69, Byte.toString(lever.getData()));
 	}
 
-	public void rollback(Server server) {}
+	public void rollback(World wld) {}
 	public void redo(Server server) {}
 
 

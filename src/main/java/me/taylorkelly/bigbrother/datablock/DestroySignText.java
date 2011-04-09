@@ -39,8 +39,8 @@ public class DestroySignText extends BBDataBlock {
     }
 
     @Override
-    public void rollback(Server server) {
-        World currWorld = server.getWorld(world);
+    public void rollback(World wld) {
+        World currWorld = wld;//server.getWorld(world);
         if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
             currWorld.loadChunk(x >> 4, z >> 4);
         }

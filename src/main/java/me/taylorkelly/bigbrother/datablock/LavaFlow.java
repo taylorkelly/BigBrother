@@ -34,8 +34,8 @@ public class LavaFlow extends BBDataBlock {
         super(player, Action.LAVA_FLOW, world, x, y, z, type, data);
     }
 
-    public void rollback(Server server) {
-        World currWorld = server.getWorld(world);
+    public void rollback(World wld) {
+        World currWorld = wld;//server.getWorld(world);
         if (!currWorld.isChunkLoaded(x >> 4, z >> 4)) {
             currWorld.loadChunk(x >> 4, z >> 4);
         }

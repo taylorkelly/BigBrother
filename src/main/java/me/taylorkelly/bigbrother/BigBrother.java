@@ -36,6 +36,7 @@ import me.taylorkelly.bigbrother.commands.UpdateCommand;
 import me.taylorkelly.bigbrother.commands.VersionCommand;
 import me.taylorkelly.bigbrother.commands.WatchCommand;
 import me.taylorkelly.bigbrother.commands.WatchedCommand;
+import me.taylorkelly.bigbrother.datablock.DeltaChest;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
 import me.taylorkelly.bigbrother.datasource.DataBlockSender;
 import me.taylorkelly.bigbrother.finder.Sticker;
@@ -50,9 +51,12 @@ import me.taylorkelly.bigbrother.listeners.BBBlockListener;
 import me.taylorkelly.bigbrother.listeners.BBEntityListener;
 import me.taylorkelly.bigbrother.listeners.BBPlayerListener;
 import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
+import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -294,5 +298,24 @@ public class BigBrother extends JavaPlugin {
 
     public boolean leftClickStick(Player player) {
         return sticker.leftClickStick(player);
+    }
+    
+    public void closeChestIfOpen(BBPlayerInfo pi) {
+        if(pi.hasOpenedChest()) {
+            if(BBSettings.chestChanges) {
+                World world = pi.getOpenedChest().getWorld();
+                int x = pi.getOpenedChest().getX();
+                int y = pi.getOpenedChest().getY();
+                int z = pi.getOpenedChest().getZ();
+                if(world.getBlockAt(x, y, z).getState() instanceof Chest) {
+                    Chest chest = (Chest)world.getBlockAt(x, y, z).getState();
+                    ItemStack[] orig = pi.getOldChestContents();
+                    ItemStack[] latest = chest.getInventory().getContents();
+                    DeltaChest dc = new DeltaChest(pi.getName(), chest, orig, latest);
+                    dc.send();
+                }
+            }
+            BBUsersTable.getInstance().userOpenedChest(pi.getName(), null, null); // Chest closed.
+        }
     }
 }

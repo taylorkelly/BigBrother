@@ -5,6 +5,9 @@ package me.taylorkelly.bigbrother;
 
 import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
+
 /**
  * @author N3X15
  * 
@@ -24,11 +27,13 @@ public class BBPlayerInfo {
     /**
      * Are we waiting for this guy to do something after he opens a chest? (Workaround for lack of inventory update events)
      */
-    private boolean isScrewingWithChest=false;
+    private ItemStack[] chestContents=null;
     
     private String name = "";
     private int flags = 0; // bitfield flags
     private int id = -1;
+
+    private Chest myOpenChest=null;
     
     /**
      * For caching a new player.
@@ -138,17 +143,17 @@ public class BBPlayerInfo {
      * Set false when they move/do stuff that can only be done outside of inventory.
      * @param b
      */
-    public void setHasOpenedChest(boolean b) {
-        isScrewingWithChest=b;
+    public void setHasOpenedChest(Chest c,ItemStack[] contents) {
+        myOpenChest=c;
+        chestContents=contents;
     }
     
     /**
      * True if the user is most likely messing around with their chest inventory.
-     * @param b
      * @return
      */
-    public boolean getHasOpenedChest(boolean b) {
-        return isScrewingWithChest;
+    public boolean hasOpenedChest() {
+        return chestContents!=null;
     }
     
     /**
@@ -162,5 +167,13 @@ public class BBPlayerInfo {
         }
         */
         return player;
+    }
+
+    public ItemStack[] getOldChestContents() {
+        return chestContents;
+    }
+
+    public Chest getOpenedChest() {
+        return myOpenChest;
     }
 }

@@ -28,6 +28,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -53,6 +54,7 @@ public class BBPlayerListener extends PlayerListener {
         //plugin.processPsuedotick();
         Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.commands && pi.getWatched()) {
             Command dataBlock = new Command(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
@@ -92,6 +94,7 @@ public class BBPlayerListener extends PlayerListener {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.disconnect && pi.getWatched()) {
             Disconnect dataBlock = new Disconnect(player.getName(), player.getLocation(), player.getWorld().getName());
             dataBlock.send();
@@ -106,6 +109,7 @@ public class BBPlayerListener extends PlayerListener {
         
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.teleport && pi.getWatched() && distance(from, to) > 5 && !event.isCancelled()) {
             Teleport dataBlock = new Teleport(player.getName(), event.getTo());
             dataBlock.send();
@@ -117,6 +121,7 @@ public class BBPlayerListener extends PlayerListener {
         //plugin.processPsuedotick();
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.chat && pi.getWatched()) {
             Chat dataBlock = new Chat(player, event.getMessage(), player.getWorld().getName());
             dataBlock.send();
@@ -127,6 +132,7 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.pickupItem && pi.getWatched()) {
             PickupItem dataBlock = new PickupItem(player.getName(), event.getItem(), event.getItem().getWorld().getName());
             dataBlock.send();
@@ -137,6 +143,7 @@ public class BBPlayerListener extends PlayerListener {
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         final Player player = event.getPlayer();
         BBPlayerInfo pi = BBUsersTable.getInstance().getUserByName(player.getName());
+        plugin.closeChestIfOpen(pi);
         if (BBSettings.dropItem && pi.getWatched()) {
             DropItem dataBlock = new DropItem(player.getName(), event.getItemDrop(), event.getItemDrop().getWorld().getName());
             dataBlock.send();
@@ -195,6 +202,14 @@ public class BBPlayerListener extends PlayerListener {
                 PlacedBlock dataBlock;
                 World world;
                 Block block = event.getClickedBlock();
+                
+                plugin.closeChestIfOpen(pi);
+                if(block.getState() instanceof Chest) {
+                    Chest chest = ((Chest)block.getState());
+                    // OH SHI-
+                    BBUsersTable.getInstance().userOpenedChest(player.getName(),chest,chest.getInventory().getContents());
+                    return;
+                }
                 switch (event.getMaterial()) {
                 //TODO Door logging
                 case LAVA_BUCKET:
@@ -306,8 +321,7 @@ public class BBPlayerListener extends PlayerListener {
             }
         }
     }
-    
-    
+
     private double distance(Location from, Location to) {
         return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2) + Math.pow(from.getZ() - to.getZ(), 2));
     }

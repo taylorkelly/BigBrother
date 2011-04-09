@@ -68,21 +68,23 @@ public class BBCommand implements CommandExecutor {
      * @param preargs Arguments to group.
      * @return Grouped args.
      */
-    private String[] groupArgs(String[] preargs) {
+    public static String[] groupArgs(String[] preargs) {
         List<String> args = new ArrayList<String>();
         String currentArg="";
         boolean inQuotes=false;
         for(String arg:preargs) {
             if(inQuotes) {
+                BBLogging.info(arg);
                 currentArg+=" "+arg;
                 if(arg.endsWith("\"")) {
-                    args.add(currentArg.substring(0,currentArg.length()-2));
+                    args.add(currentArg.substring(0,currentArg.lastIndexOf("\"")));
                     inQuotes=false;
                 }
             } else {
                 if(arg.startsWith("\"")) {
                     inQuotes=true;
-                    currentArg=arg.substring(1,arg.length()-1);
+                    BBLogging.info(arg);
+                    currentArg=arg.substring(1,arg.length());
                 } else {
                     args.add(arg);
                 }

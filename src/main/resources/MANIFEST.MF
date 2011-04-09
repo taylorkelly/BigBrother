@@ -1,3 +1,2 @@
 Manifest-Version: 1.0
 Class-Path: ../lib/h2.jar ../lib/mysql.jar ../lib/postgresql.jar Permissions.jar Help.jar GroupManager.jar
-
