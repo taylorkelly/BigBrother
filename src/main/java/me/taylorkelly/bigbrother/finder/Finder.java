@@ -125,12 +125,12 @@ public class Finder {
             rs = ps.executeQuery();
             conn.commit();
 
-            //int size = 0;
+            int size = 0;
             while (rs.next()) {
                 BBPlayerInfo player = BBUsersTable.getInstance().getUserByID(rs.getInt("player"));
                 int mods = rs.getInt("modifications");
                 modifications.put(player, mods);
-                //size++;
+                size++;
             }
             if (size > 0) {
                 StringBuilder playerList = new StringBuilder();
