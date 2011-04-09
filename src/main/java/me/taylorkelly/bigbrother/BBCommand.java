@@ -84,7 +84,7 @@ public class BBCommand implements CommandExecutor {
                 if(arg.startsWith("\"")) {
                     inQuotes=true;
                     BBLogging.info(arg);
-                    currentArg=arg.substring(1,arg.length()-1);
+                    currentArg=arg.substring(1,arg.length());
                 } else {
                     args.add(arg);
                 }
