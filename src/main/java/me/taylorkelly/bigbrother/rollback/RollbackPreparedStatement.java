@@ -7,6 +7,9 @@ import me.taylorkelly.bigbrother.WorldManager;
 
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
+import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
+import me.taylorkelly.bigbrother.tablemgrs.BBWorldsTable;
 
 public abstract class RollbackPreparedStatement {
 	
@@ -27,9 +30,9 @@ public abstract class RollbackPreparedStatement {
     public String create(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("SELECT bbdata.id, date, player, action, x, y, z, type, data, rbacked, bbworlds.name AS `world`");
         statement.append(" FROM");
-        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata,");
-        statement.append(" "+BBSettings.applyPrefix("bbworlds")+" AS bbworlds, ");
-        statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
+        statement.append(" "+BBDataTable.getInstance().getTableName() + " AS bbdata,");
+        statement.append(" "+BBWorldsTable.getInstance().getTableName()+" AS bbworlds, ");
+        statement.append(" "+BBUsersTable.getInstance().getTableName()+" AS usr ");
         statement.append(" WHERE ");
         statement.append(" bbworlds.id = bbdata.world AND bbdata.player = usr.id AND ");
         statement.append(getActionString());
@@ -148,8 +151,8 @@ public abstract class RollbackPreparedStatement {
 
     public String update(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata,");
-        statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
+        statement.append(" "+BBDataTable.getInstance().getTableName() + " AS bbdata,");
+        statement.append(" "+BBUsersTable.getInstance().getTableName()+" AS usr ");
         statement.append(" SET rbacked = '1'");
         statement.append(" WHERE ");
         statement.append(" bbdata.player = usr.id AND ");
@@ -216,8 +219,8 @@ public abstract class RollbackPreparedStatement {
 
     public String undoStatement(Rollback rollback, WorldManager manager) {
         StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(" "+BBSettings.applyPrefix("bbdata") + " AS bbdata,");
-        statement.append(" "+BBSettings.applyPrefix("bbusers")+" AS usr ");
+        statement.append(" "+BBDataTable.getInstance().getTableName() + " AS bbdata,");
+        statement.append(" "+BBUsersTable.getInstance().getTableName()+" AS usr ");
         statement.append(" SET rbacked = '0'");
         statement.append(" WHERE ");
         statement.append(" bbdata.player = usr.id AND ");

@@ -134,16 +134,15 @@ public class RollbackPreparedStatementPostgreSQL extends
     }
 
     public String update(Rollback rollback, WorldManager manager) {
-        StringBuilder statement = new StringBuilder("UPDATE ");
-        statement.append(" "+BBDataTable.getInstance().getTableName() + " AS bbdata,");
-        statement.append(" "+BBUsersTable.getInstance().getTableName()+" AS usr ");
+        StringBuilder statement = new StringBuilder("UPDATE");
+        statement.append(" " + BBDataTable.getInstance().getTableName());
         statement.append(" SET rbacked = '1'");
         statement.append(" WHERE ");
-        statement.append(" bbdata.player = usr.id AND ");
         statement.append(getActionString());
         if (!rollback.rollbackAll) {
-            statement.append(" AND ");
+            statement.append(" AND player IN (SELECT id FROM " + BBUsersTable.getInstance().getTableName()+" AS usr WHERE ");
             statement.append(getPlayerString(rollback.players));
+            statement.append(")");
         }
         if (rollback.blockTypes.size() > 0) {
             statement.append(" AND ");

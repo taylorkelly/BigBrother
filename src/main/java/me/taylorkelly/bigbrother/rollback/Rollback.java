@@ -202,7 +202,7 @@ public class Rollback {
                         conn.commit();
                         undoRollback = RollbackPreparedStatement.getInstance().undoStatement(Rollback.this, manager);
                     } catch (SQLException ex) {
-                        BBLogging.severe("Rollback edit SQL Exception", ex);
+                        BBLogging.severe("Rollback edit SQL Exception: "+RollbackPreparedStatement.getInstance().update(Rollback.this, manager), ex);
                     }
                 } else {
                     for (Player player : recievers) {
