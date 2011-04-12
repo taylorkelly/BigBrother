@@ -14,6 +14,7 @@ import me.taylorkelly.bigbrother.BigBrother;
 import me.taylorkelly.bigbrother.WorldManager;
 import me.taylorkelly.bigbrother.datablock.BBDataBlock.Action;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 import me.taylorkelly.bigbrother.tablemgrs.BBUsersTable;
 
 import org.bukkit.*;
@@ -110,10 +111,10 @@ public class Finder {
              * org.h2.jdbc.JdbcSQLException: Column "ID" must be in the GROUP BY
              * list; SQL statement:
              */
-            if (BBSettings.usingDBMS(DBMS.H2)) {
-                ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBSettings.applyPrefix("bbdata") + " WHERE " + actionString + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY id,player ORDER BY id DESC");
+            if (BBSettings.usingDBMS(DBMS.H2) || BBSettings.usingDBMS(DBMS.POSTGRES)) {
+                ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataTable.getInstance().getTableName() + " WHERE " + actionString + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY id,player ORDER BY id DESC");
             } else {
-                ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBSettings.applyPrefix("bbdata") + " WHERE " + actionString + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY player ORDER BY id DESC");
+                ps = conn.prepareStatement("SELECT player, count(player) AS modifications FROM " + BBDataTable.getInstance().getTableName() + " WHERE " + actionString + " AND rbacked = '0' AND x < ? AND x > ? AND y < ? AND y > ? AND z < ? AND z > ? AND world = ? GROUP BY player ORDER BY id DESC");
             }
             ps.setInt(1, location.getBlockX() + radius);
             ps.setInt(2, location.getBlockX() - radius);
@@ -182,7 +183,7 @@ public class Finder {
             if(conn==null) return;
             // TODO maybe more customizable actions?
             String actionString = "action IN('" + Action.BLOCK_BROKEN.ordinal() + "', '" + Action.BLOCK_PLACED.ordinal() + "', '" + Action.LEAF_DECAY.ordinal() + "', '" + Action.TNT_EXPLOSION.ordinal() + "', '" + Action.CREEPER_EXPLOSION.ordinal() + "', '" + Action.MISC_EXPLOSION.ordinal() + "', '" + Action.LAVA_FLOW.ordinal() + "', '" + Action.BLOCK_BURN.ordinal() + "')";
-            ps = conn.prepareStatement("SELECT action, type FROM " + BBSettings.applyPrefix("bbdata") + " WHERE " + actionString
+            ps = conn.prepareStatement("SELECT action, type FROM " + BBDataTable.getInstance().getTableName() + " WHERE " + actionString
                     + " AND rbacked = 0 AND x < ? AND x > ? AND y < ? AND y > ?  AND z < ? AND z > ? AND player = ? AND world = ? order by date desc");
 
             ps.setInt(1, location.getBlockX() + radius);

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import me.taylorkelly.bigbrother.BBLogging;
 import me.taylorkelly.bigbrother.BBSettings;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
@@ -36,7 +35,7 @@ public class BBDataMySQL extends BBDataTable {
     }
     
     @Override
-    public String getPreparedDataBlockStatement(Connection conn) throws SQLException {
+    public String getPreparedDataBlockStatement() throws SQLException {
         return "INSERT "+getMySQLIgnore()+" INTO " + getTableName()
                 + " (date, player, action, world, x, y, z, type, data, rbacked) VALUES (?,?,?,?,?,?,?,?,?,0)";
     }
@@ -147,4 +146,32 @@ public class BBDataMySQL extends BBDataTable {
         }
         return engine;
     }
+
+
+
+	@Override
+	public String getCleanseAged(Long timeAgo, long deletesPerCleansing) {
+		String cleansql = "DELETE FROM `"+getTableName()+"` WHERE date < " + timeAgo;
+        if (BBSettings.deletesPerCleansing > 0) {
+            cleansql += " LIMIT " + Long.valueOf(BBSettings.deletesPerCleansing);
+        }
+        cleansql += ";";
+        return cleansql;
+	}
+
+
+
+	@Override
+	public String getCleanseByLimit(Long maxRecords, long deletesPerCleansing) {
+		String cleansql = "DELETE FROM `"+getTableName()+"` LEFT OUTER JOIN (SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0,"
+	    	+ maxRecords
+	    	+ ") AS `savedValues` ON `savedValues`.`id`=`bbdata`.`id` WHERE `savedValues`.`id` IS NULL";
+	    if (deletesPerCleansing > 0) {
+	        cleansql += " LIMIT " + deletesPerCleansing;
+	    }
+	    cleansql += ";";
+    	return cleansql;
+	}
+
+
 }

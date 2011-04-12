@@ -161,7 +161,7 @@ public class Rollback {
             try {
                 conn = ConnectionManager.getConnection();
                 if(conn==null) return;
-                ps = conn.prepareStatement(RollbackPreparedStatement.create(Rollback.this, manager));
+                ps = conn.prepareStatement(RollbackPreparedStatement.getInstance().create(Rollback.this, manager));
                 set = ps.executeQuery();
                 conn.commit();
 
@@ -197,12 +197,12 @@ public class Rollback {
                         for (Player player : recievers) {
                             player.sendMessage(BigBrother.premessage + "Successfully rollback'd.");
                         }
-                        ps = conn.prepareStatement(RollbackPreparedStatement.update(Rollback.this, manager));
+                        ps = conn.prepareStatement(RollbackPreparedStatement.getInstance().update(Rollback.this, manager));
                         ps.execute();
                         conn.commit();
-                        undoRollback = RollbackPreparedStatement.undoStatement(Rollback.this, manager);
+                        undoRollback = RollbackPreparedStatement.getInstance().undoStatement(Rollback.this, manager);
                     } catch (SQLException ex) {
-                        BBLogging.severe("Rollback edit SQL Exception", ex);
+                        BBLogging.severe("Rollback edit SQL Exception: "+RollbackPreparedStatement.getInstance().update(Rollback.this, manager), ex);
                     }
                 } else {
                     for (Player player : recievers) {

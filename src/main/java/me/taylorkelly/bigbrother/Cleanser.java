@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.taylorkelly.bigbrother.BBSettings.DBMS;
 import me.taylorkelly.bigbrother.datasource.ConnectionManager;
+import me.taylorkelly.bigbrother.tablemgrs.BBDataTable;
 import me.taylorkelly.util.Time;
 
 // Rule 1 - If you end up using ResultSet, you're doing it wrong.
@@ -92,12 +93,8 @@ public class Cleanser {
                 stmt = conn.createStatement();
                 long start = System.currentTimeMillis() / 1000;
 
-                String cleansql = "DELETE FROM `"+BBSettings.applyPrefix("bbdata")+"` WHERE date < " + Long.valueOf(Time.ago(BBSettings.cleanseAge));
-                if (BBSettings.deletesPerCleansing > 0 && !BBSettings.usingDBMS(DBMS.H2)) {
-                    cleansql += " LIMIT " + Long.valueOf(BBSettings.deletesPerCleansing);
-                }
-                cleansql += ";";
-                cleanedSoFarAge = stmt.executeUpdate(cleansql);
+                cleanedSoFarAge = stmt.executeUpdate(BBDataTable.getInstance().getCleanseAged(Long.valueOf(Time.ago(BBSettings.cleanseAge)),
+                		BBSettings.deletesPerCleansing));
                 String timespent = Time.formatDuration(System.currentTimeMillis() / 1000 - start);
 
                 String words = String.format("Cleaned out %d records because of age in %s.", cleanedSoFarAge, timespent);
@@ -133,13 +130,8 @@ public class Cleanser {
                     stmt = conn.createStatement();
                     long start = System.currentTimeMillis() / 1000;
 
-                    String cleansql = "DELETE FROM `"+BBSettings.applyPrefix("bbdata")+"` LEFT OUTER JOIN (SELECT `id` FROM `bbdata` ORDER BY `id` DESC LIMIT 0," + Long.valueOf(BBSettings.maxRecords) + ") AS `savedValues` ON `savedValues`.`id`=`bbdata`.`id` WHERE `savedValues`.`id` IS NULL";
-                    System.out.println(cleansql);
-                    if (BBSettings.deletesPerCleansing > 0) {
-                        cleansql += " LIMIT " + Long.valueOf(BBSettings.deletesPerCleansing);
-                    }
-                    cleansql += ";";
-                    cleanedSoFarNumber = stmt.executeUpdate(cleansql);
+                    cleanedSoFarNumber = stmt.executeUpdate(BBDataTable.getInstance().getCleanseByLimit(Long.valueOf(BBSettings.maxRecords),
+                    		BBSettings.deletesPerCleansing));
 
                     String timespent = Time.formatDuration(System.currentTimeMillis() / 1000 - start);
 
