@@ -170,6 +170,9 @@ public class BBPlayerInfo {
     }
 
     public ItemStack[] getOldChestContents() {
+        if(chestContents==null) {
+            BBLogging.severe("getOldChestContents is about to return a null.  Please report this.");
+        }
         return chestContents;
     }
 
