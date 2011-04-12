@@ -1,6 +1,7 @@
 BigBrother
 ===========
 
+**WARNING:** Repository may be moving soon so we have the extra functions needed to add contributors and downloads, since tkelly is currently away.
 
 Compilation
 -----------
