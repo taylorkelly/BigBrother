@@ -46,15 +46,21 @@ public class BBDataPostgreSQL extends BBDataMySQL {
         + "\"type\" smallint NOT NULL DEFAULT '0',"
         + "\"data\" varchar(500) NOT NULL DEFAULT '',"
         + "\"rbacked\" boolean NOT NULL DEFAULT '0',"
-        + "PRIMARY KEY (\"id\"))";
-    	/*, 
-        INDEX(\"world\"), 
-        INDEX(\"x\",\"y\",\"z\"), 
-        INDEX(\"player\"),
-        INDEX(\"action\"), 
-        INDEX(\"date\"), 
-        INDEX(\"type\"), 
-        INDEX(\"rbacked\")*/
+        + "PRIMARY KEY (\"id\"));"
+        + "CREATE INDEX \""+getTableName()+"_index_world\""
+        +" ON \""+getTableName()+"\" (id);"
+        +"CREATE INDEX \""+getTableName()+"_index_x_y_z\""
+        +" ON \""+getTableName()+"\" (x, y, z);"
+        +"CREATE INDEX \""+getTableName()+"_index_player\""
+        +" ON \""+getTableName()+"\" (player);"
+        +"CREATE INDEX \""+getTableName()+"_index_action\""
+        +" ON \""+getTableName()+"\" (action);"
+        +"CREATE INDEX \""+getTableName()+"_index_date\""
+        +" ON \""+getTableName()+"\" (date);"
+        +"CREATE INDEX \""+getTableName()+"_index_type\""
+        +" ON \""+getTableName()+"\" (type);"
+        +"CREATE INDEX \""+getTableName()+"_index_rbacked\""
+        +" ON \""+getTableName()+"\" (rbacked);";
     }
     
     @Override
