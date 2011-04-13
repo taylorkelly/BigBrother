@@ -64,12 +64,10 @@ public abstract class DBTable {
             st.executeUpdate(getCreateSyntax());
             conn.commit();
         } catch (SQLException e) {
-            BBLogging.severe("Can't create the "+getTableName()+" table", e);
-        } catch(Throwable e) {
-            if(e.getClass().getCanonicalName().startsWith("org.h2"))
-                BBLogging.debug("H2 crying about the table already existing.  You can safely ignore this message.",e);
-            else
+            if(!e.getMessage().contains("already exists")) 
                 BBLogging.severe("Can't create the "+getTableName()+" table", e);
+            else 
+                BBLogging.debug("H2 crying about the table already existing.  You can safely ignore this message.",e);
         } finally {
             ConnectionManager.cleanup( "Create Table",  conn, st, null );
         }
