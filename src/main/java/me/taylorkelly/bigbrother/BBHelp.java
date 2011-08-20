@@ -14,7 +14,6 @@ public class BBHelp {
             helpPlugin.registerCommand("bb watch [player]", "Toggle the watch on [player]", plugin, permissions[0]);
             helpPlugin.registerCommand("bb watched", "Displays the list of watched players", plugin, permissions[1]);
             helpPlugin.registerCommand("bb unwatched", "Displays the list of unwatched players", plugin, permissions[1]);
-            helpPlugin.registerCommand("bb stick (#)", "Tools to examine block history", plugin, true, permissions[1]);
             helpPlugin.registerCommand("bb here", "An overview of the block history around you", plugin, true, permissions[1]);
             helpPlugin.registerCommand("bb here [#]", "An overview of [#] blocks around you", plugin, permissions[1]);
             helpPlugin.registerCommand("bb here [player]", "Displays [player]'s changes around you", plugin, permissions[1]);
